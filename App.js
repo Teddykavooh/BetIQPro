@@ -1,35 +1,35 @@
 // App.js
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Login from './components/login';
-import Signup from './components/signup';
-import Dashboard from './components/dashboard';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./components/login";
+import Signup from "./components/signup";
+import Dashboard from "./components/dashboard";
 const Stack = createStackNavigator();
 function MyStack() {
   return (
     <Stack.Navigator
       initialRouteName="Signup"
       screenOptions={{
-        headerTitleAlign: 'center',
+        headerTitleAlign: "center",
         headerStyle: {
-          backgroundColor: '#3740FE',
+          backgroundColor: "#3740FE",
         },
-        headerTintColor: '#fff',
+        headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
       }}>
       <Stack.Screen
         name="Signup"
         component={Signup}
-        options={{ title: 'Signup' }}
+        options={{ title: "Signup" }}
       />
       <Stack.Screen
         name="Login"
         component={Login}
         options={
-          {title: 'Login'},
+          {title: "Login"},
           {headerLeft: null}
         }
       />
@@ -37,8 +37,8 @@ function MyStack() {
        name="Dashboard"
        component={Dashboard}
        options={
-         { title: 'Dashboard' },
-         {headerLeft: null}
+        {title: "Dashboard"},
+        {headerLeft: null}
        }
       />
     </Stack.Navigator>

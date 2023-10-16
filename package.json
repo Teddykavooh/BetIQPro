@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "@expo/webpack-config": "^19.0.0",
+    "@expo/webpack-config": "^0.12.52",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
-    "expo": "^49.0.3",
+    "expo": "^44.0.6",
     "expo-asset": "~8.10.1",
-    "expo-cli": "^6.3.10",
+    "expo-cli": "^4.0.17",
     "expo-constants": "~14.4.2",
-    "expo-splash-screen": "~0.20.4",
+    "expo-splash-screen": "^0.10.3",
     "expo-updates": "~0.18.16",
     "firebase": "^10.5.0",
     "react": "18.2.0",
@@ -17,6 +17,8 @@
     "react-navigation": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3"
+    "@babel/core": "^7.19.3",
+    "eslint": "^8.51.0",
+    "eslint-plugin-react": "^7.33.2"
   }
 }
