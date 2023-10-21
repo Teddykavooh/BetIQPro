@@ -10,8 +10,19 @@ import {
 	ActivityIndicator,
 } from "react-native";
 import firebase from "../database/firebase";
+import PropTypes from "prop-types"; // Import prop-types
 
 export default class Signup extends Component {
+	static navigationOptions = ({ navigation }) => {
+		return {
+			headerLeft: () => (
+				<Button
+					title="Back" onPress={() => navigation.navigate("Dashboard")}
+				/>
+			),
+		};
+	};
+
 	constructor() {
 		super();
 		this.state = {
@@ -22,9 +33,8 @@ export default class Signup extends Component {
 		};
 	}
 	updateInputVal = (val, prop) => {
-		const state = this.state;
-		state[prop] = val;
-		this.setState(state);
+		// const state = this.state;
+		this.setState({ [prop]: val });
 	};
 	registerUser = () => {
 		if (this.state.email === "" && this.state.password === "") {
@@ -97,6 +107,12 @@ export default class Signup extends Component {
 		);
 	};
 }
+
+// Add prop type validation for the navigation prop
+Signup.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
