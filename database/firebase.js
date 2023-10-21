@@ -13,9 +13,12 @@ const firebaseConfig = {
   storageBucket: "betiqpro.appspot.com",
   messagingSenderId: "583792942825",
   appId: "1:583792942825:web:e589c41c4191e11c9a5a78",
-  measurementId: "G-EN562LYCDQ"
+  measurementId: "G-EN562LYCDQ",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+// eslint-disable-next-line no-unused-vars
 const analytics = getAnalytics(app);
+
+export default app; // Export the app as the default export
