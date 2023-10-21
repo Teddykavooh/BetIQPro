@@ -1,21 +1,22 @@
 // components/dashboard.js
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
-import firebase from '../database/firebase';
+import React, { Component } from "react";
+import { StyleSheet, View, Text, Button } from "react-native";
+import firebase from "../database/firebase";
+import PropTypes from "prop-types"; // Import prop-types
 
 export default class Dashboard extends Component {
   constructor() {
     super();
     this.state = {
-      uid: ''
+      uid: ""
     };
   }
   signOut = () => {
     firebase.auth().signOut().then(() => {
-      this.props.navigation.navigate('Login')
+      this.props.navigation.navigate("Login");
     })
-    .catch(error => this.setState({ errorMessage: error.message }))
-  }
+    .catch(error => this.setState({ errorMessage: error.message }));
+  };
   render() {
     this.state = {
       displayName: firebase.auth().currentUser.displayName,
@@ -34,16 +35,21 @@ export default class Dashboard extends Component {
       </View>
     );
   }
+}
+
+// Add prop type validation for the navigation prop
+Dashboard.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: "flex",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 35,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   textStyle: {
     fontSize: 15,
