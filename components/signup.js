@@ -10,6 +10,7 @@ import {
 	ActivityIndicator,
 } from "react-native";
 import app from "../database/firebase";
+require("firebase/auth");
 import PropTypes from "prop-types"; // Import prop-types
 
 export default class Signup extends Component {
@@ -146,3 +147,5 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 	},
 });
+
+
