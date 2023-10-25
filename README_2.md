@@ -3,7 +3,7 @@
 ## NOTE
 
 Some dependencies are incompatible with the installed expo version i.e 49.0:
-  
+
 > @expo/webpack-config@18.1.3 - expected version: ^19.0.0
 >
 > expo-splash-screen@0.10.3 - expected version: ~0.20.5
