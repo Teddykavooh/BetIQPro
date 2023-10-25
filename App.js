@@ -6,10 +6,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./components/login";
 import Signup from "./components/signup";
 import Dashboard from "./components/dashboard";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+// import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 
 function MyStack() {
   return (
@@ -33,37 +33,38 @@ function MyStack() {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={
-          {title: "Login"},
-          {headerLeft: null}
-        }
+        options={{
+          title: "Login",
+          headerLeft: null
+        }}
       />
       <Stack.Screen
-       name="Dashboard"
-       component={Dashboard}
-       options={
-        {title: "Dashboard"},
-        {headerLeft: null}
-       }
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          title: "Dashboard",
+          headerLeft: null
+        }}
       />
     </Stack.Navigator>
   );
 }
 
-const drawerNavigator = () => {
-  return (
-    <Drawer.Navigator initialRouteName="Dashboard">
-      <Drawer.Screen name="Signup" component={Signup} />
-      <Drawer.Screen name="Login" component={Login} />
-      <Drawer.Screen name="Dashboard" component={Dashboard} />
-    </Drawer.Navigator>
-  );
-};
+// Failed Drawer Navigation
+// const drawerNavigator = () => {
+//   return (
+//     <Drawer.Navigator initialRouteName="Dashboard">
+//       <Drawer.Screen name="Signup" component={Signup} />
+//       <Drawer.Screen name="Login" component={Login} />
+//       <Drawer.Screen name="Dashboard" component={Dashboard} />
+//     </Drawer.Navigator>
+//   );
+// };
 
 export default function App() {
   return (
     <NavigationContainer>
-      {drawerNavigator()}
+      {/* {drawerNavigator()} */}
       <MyStack />
     </NavigationContainer>
   );
