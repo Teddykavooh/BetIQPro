@@ -7,5 +7,5 @@
     "jsxBracketSameLine": false,
     "arrowParens": "avoid",
     "bracketSpacing": true,
-    "endOfLine": "lf"
+    "endOfLine": "crlf"
 }
