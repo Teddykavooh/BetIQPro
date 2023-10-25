@@ -9,7 +9,8 @@ import {
 	Alert,
 	ActivityIndicator,
 } from "react-native";
-import firebase from "../database/firebase";
+import app from "../database/firebase";
+require("firebase/auth");
 import PropTypes from "prop-types"; // Import prop-types
 
 export default class Signup extends Component {
@@ -43,7 +44,7 @@ export default class Signup extends Component {
 			this.setState({
 				isLoading: true,
 			});
-			firebase
+			app
 				.auth()
 				.createUserWithEmailAndPassword(this.state.email, this.state.password)
 				.then((res) => {
@@ -146,3 +147,5 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 	},
 });
+
+

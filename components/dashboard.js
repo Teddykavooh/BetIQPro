@@ -18,7 +18,7 @@ export default class Dashboard extends Component {
     .catch(error => this.setState({ errorMessage: error.message }));
   };
   render() {
-    this.state = {
+    this.setState = {
       displayName: firebase.auth().currentUser.displayName,
       uid: firebase.auth().currentUser.uid
     };
