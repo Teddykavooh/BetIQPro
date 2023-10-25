@@ -1,11 +1,30 @@
-export default ({ config }) => ({
-  ...config,
-  icon:
-    "https://github.com/expo/expo/blob/master/templates/expo-template-blank/assets/icon.png?raw=true",
-  splash: {
-    image:
-      "https://github.com/expo/expo/blob/master/templates/expo-template-blank/assets/splash.png?raw=true",
-    resizeMode: "contain",
-    backgroundColor: "#ffffff",
+export default {
+  expo: {
+    name: "BetIqPro",
+    slug: "betiqpro",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
+    },
+    updates: {
+      fallbackToCacheTimeout: 0,
+    },
+    assetBundlePatterns: ["**/*"],
+    ios: {
+      supportsTablet: true,
+    },
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#ffffff",
+      },
+    },
+    web: {
+      favicon: "./assets/favicon.png",
+    },
   },
-});
+};
