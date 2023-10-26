@@ -12,7 +12,11 @@ import {
 } from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types"; // Import prop-types
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  sendSignInLinkToEmail,
+} from "firebase/auth";
+import actionCodeSettings from "../database/emailLinkAuthConfigs";
 
 export default class Login extends Component {
   constructor() {
@@ -57,6 +61,30 @@ export default class Login extends Component {
         });
     }
   };
+
+  // Add magick link sign-in
+  emailLinkAuth = async () => {
+    await sendSignInLinkToEmail(
+      FIREBASE_AUTH,
+      this.state.email,
+      actionCodeSettings,
+    )
+      .then(() => {
+        window.localStorage.setItem("emailForSignIn", this.state.email);
+        Alert.alert("Link sent to your email!! :)");
+        this.setState({
+          isLoading: false,
+          email: "",
+          password: "",
+        });
+        this.props.navigation.navigate("Dashboard");
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Magic SignIn Error: " + errorCode + ": " + errorMessage);
+      });
+  };
   render() {
     if (this.state.isLoading) {
       return (
@@ -87,6 +115,12 @@ export default class Login extends Component {
             title="Signin"
             onPress={() => this.userLogin()}
           />
+          <Text
+            style={styles.loginText}
+            onPress={() => this.emailLinkAuth()}
+          >
+            Can&apos;t remember your password? Get a login link
+          </Text>
           <Text
             style={styles.loginText}
             onPress={() => this.props.navigation.navigate("Signup")}
