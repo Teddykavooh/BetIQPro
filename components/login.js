@@ -8,9 +8,11 @@ import {
   Button,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
-import app from "../database/firebase";
+import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types"; // Import prop-types
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default class Login extends Component {
   constructor() {
@@ -26,19 +28,22 @@ export default class Login extends Component {
     state[prop] = val;
     this.setState(state);
   };
-  userLogin = () => {
+  userLogin = async () => {
     if (this.state.email === "" && this.state.password === "") {
       Alert.alert("Enter details to signin!");
     } else {
       this.setState({
         isLoading: true,
       });
-      app
-        .auth()
-        .signInWithEmailAndPassword(this.state.email, this.state.password)
+      await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        this.state.email,
+        this.state.password,
+      )
         .then(res => {
           console.log(res);
           console.log("User logged-in successfully!");
+          Alert.alert("User logged-in successfully! :)");
           this.setState({
             isLoading: false,
             email: "",
@@ -46,7 +51,10 @@ export default class Login extends Component {
           });
           this.props.navigation.navigate("Dashboard");
         })
-        .catch(error => this.setState({ errorMessage: error.message }));
+        .catch(error => {
+          this.setState({ errorMessage: error.message });
+          Alert.alert("User logged-in Failed! :(");
+        });
     }
   };
   render() {
@@ -59,31 +67,33 @@ export default class Login extends Component {
     }
     return (
       <View style={styles.container}>
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Email"
-          value={this.state.email}
-          onChangeText={val => this.updateInputVal(val, "email")}
-        />
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Password"
-          value={this.state.password}
-          onChangeText={val => this.updateInputVal(val, "password")}
-          maxLength={15}
-          secureTextEntry={true}
-        />
-        <Button
-          color="#3740FE"
-          title="Signin"
-          onPress={() => this.userLogin()}
-        />
-        <Text
-          style={styles.loginText}
-          onPress={() => this.props.navigation.navigate("Signup")}
-        >
-          Don&apos;t have account? Click here to signup
-        </Text>
+        <KeyboardAvoidingView behavior="padding">
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Email"
+            value={this.state.email}
+            onChangeText={val => this.updateInputVal(val, "email")}
+          />
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Password"
+            value={this.state.password}
+            onChangeText={val => this.updateInputVal(val, "password")}
+            maxLength={15}
+            secureTextEntry={true}
+          />
+          <Button
+            color="#3740FE"
+            title="Signin"
+            onPress={() => this.userLogin()}
+          />
+          <Text
+            style={styles.loginText}
+            onPress={() => this.props.navigation.navigate("Signup")}
+          >
+            Don&apos;t have account? Click here to signup
+          </Text>
+        </KeyboardAvoidingView>
       </View>
     );
   }

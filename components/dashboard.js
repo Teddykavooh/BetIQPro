@@ -1,37 +1,47 @@
 // components/dashboard.js
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import firebase from "../database/firebase";
+import { StyleSheet, View, Text, Button, Alert } from "react-native";
+import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types"; // Import prop-types
 
 export default class Dashboard extends Component {
   constructor() {
     super();
     this.state = {
-      uid: ""
+      displayName: "",
+      uid: "",
+      errorMessage: "",
     };
   }
+
+  componentDidMount() {
+    // Get the currently authenticated user
+    const user = FIREBASE_AUTH.currentUser;
+    if (user) {
+      this.setState({
+        displayName: user.displayName || "Display Name Not Set",
+        uid: user.uid,
+      });
+      // console.log(
+      //   "Me data: " + "\nUsername: " + user.displayName + "\nuid: " + user.uid,
+      // );
+    }
+  }
+
   signOut = () => {
-    firebase.auth().signOut().then(() => {
-      this.props.navigation.navigate("Login");
-    })
-    .catch(error => this.setState({ errorMessage: error.message }));
+    FIREBASE_AUTH.signOut()
+      .then(() => {
+        console.log("Signed Out");
+        Alert.alert("Logout successfull, See you soon!! :)");
+        this.props.navigation.navigate("Login");
+      })
+      .catch(error => this.setState({ errorMessage: error.message }));
   };
   render() {
-    this.setState = {
-      displayName: firebase.auth().currentUser.displayName,
-      uid: firebase.auth().currentUser.uid
-    };
     return (
       <View style={styles.container}>
-        <Text style = {styles.textStyle}>
-          Hello, {this.state.displayName}
-        </Text>
-        <Button
-          color="#3740FE"
-          title="Logout"
-          onPress={() => this.signOut()}
-        />
+        <Text style={styles.textStyle}>Hello, {this.state.displayName}</Text>
+        <Button color="#3740FE" title="Logout" onPress={() => this.signOut()} />
       </View>
     );
   }
