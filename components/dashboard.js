@@ -69,13 +69,28 @@ export default class Dashboard extends Component {
         Alert.alert("Logout successfull, See you soon!! :)");
         this.props.navigation.navigate("Login");
       })
-      .catch(error => this.setState({ errorMessage: error.message }));
+      .catch(error => {
+        this.setState({ errorMessage: error.message });
+        // Display the error message to the user, if needed.
+        console.log("Sign-out error: " + error.message);
+      });
   };
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.textStyle}>Hello, {this.state.displayName}</Text>
-        <Button color="#3740FE" title="Logout" onPress={() => this.signOut()} />
+        <View style={styles.buttonContainer}>
+          <Button
+            color="#3740FE"
+            title="Proceed"
+            onPress={() => this.props.navigation.navigate("History")}
+          />
+          <Button
+            color="#3740FE"
+            title="Logout"
+            onPress={() => this.signOut()}
+          />
+        </View>
       </View>
     );
   }
@@ -93,10 +108,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 35,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   textStyle: {
     fontSize: 15,
-    marginBottom: 20
-  }
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+  },
 });

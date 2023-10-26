@@ -42,7 +42,7 @@ function MyStack() {
         name="Dashboard"
         component={Dashboard}
         options={{
-          title: "Dashboard",
+          title: "Welcome",
           headerLeft: null
         }}
       />
