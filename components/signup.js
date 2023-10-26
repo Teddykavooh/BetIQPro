@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types"; // Import prop-types
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 export default class Signup extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -53,7 +53,11 @@ export default class Signup extends Component {
           FIREBASE_AUTH,
           this.state.email,
           this.state.password,
+          FIREBASE_AUTH.CU,
         );
+        await updateProfile(FIREBASE_AUTH.currentUser, {
+          displayName: this.state.displayName,
+        }).catch(error => console.log(error));
         console.log("Me response: " + JSON.stringify(response));
         console.log("User registered successfully!");
         Alert.alert("Successful user registration :)");
