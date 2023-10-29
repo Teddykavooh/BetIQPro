@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     // Define any common styles for the logo text here.
     fontStyle: "italic",
     fontWeight: "bold",
+    fontSize: 30,
   },
   whiteText: {
     color: "white", // Set the color to white for the "IQ" letters.
