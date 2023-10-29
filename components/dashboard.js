@@ -1,6 +1,6 @@
 // components/dashboard.js
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Button, Alert } from "react-native";
+import { StyleSheet, View, Text, Button, Alert, Image } from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types"; // Import prop-types
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
@@ -78,7 +78,14 @@ export default class Dashboard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.textStyle}>Hello, {this.state.displayName}</Text>
+        <Text style={styles.textStyle}>
+          Hello, <b>{this.state.displayName}</b>
+        </Text>
+        <Image
+          source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
+          style={styles.myImage} // Adjust the width and height as needed
+          resizeMode="contain"
+        />
         <View style={styles.buttonContainer}>
           <Button
             color="#3740FE"
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   textStyle: {
-    fontSize: 15,
+    fontSize: 25,
     marginBottom: 20,
   },
   buttonContainer: {
@@ -119,5 +126,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
+  },
+  myImage: {
+    width: 150,
+    height: 300,
   },
 });

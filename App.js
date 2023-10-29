@@ -6,7 +6,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./components/login";
 import Signup from "./components/signup";
 import Dashboard from "./components/dashboard";
+import History from "./components/history";
 // import { createDrawerNavigator } from "@react-navigation/drawer";
+import HeaderLogo from "./components/header";
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -24,7 +26,8 @@ function MyStack() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-      }}>
+      }}
+    >
       <Stack.Screen
         name="Signup"
         component={Signup}
@@ -35,7 +38,7 @@ function MyStack() {
         component={Login}
         options={{
           title: "Login",
-          headerLeft: null
+          headerLeft: null,
         }}
       />
       <Stack.Screen
@@ -43,7 +46,18 @@ function MyStack() {
         component={Dashboard}
         options={{
           title: "Welcome",
-          headerLeft: null
+          headerLeft: null,
+        }}
+      />
+      <Stack.Screen
+        name="History"
+        component={History}
+        options={{
+          headerTitle: () => <HeaderLogo />,
+          headerLeft: null,
+          headerStyle: {
+            backgroundColor: "#FEF202",
+          },
         }}
       />
     </Stack.Navigator>
