@@ -148,6 +148,11 @@ export default class Signup extends Component {
           >
             Already Registered? Click here to login
           </Text>
+          <Button
+            color="#3740FE"
+            title="Proceed"
+            onPress={() => this.props.navigation.navigate("History")}
+          />
         </KeyboardAvoidingView>
       </View>
     );
