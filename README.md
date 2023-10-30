@@ -2,9 +2,9 @@
 
 * **NOTE:**
     > Node version used: `v16.14.2`
-
+    
     > Recommended version: `< v17.0.0`
-    * Download link: <https://nodejs.org/dist/v17.0.0/>
+    > * Download link: <https://nodejs.org/dist/v17.0.0/>
 
 * To initiliase project:
     1. Make sure node is installed. `node -v`
