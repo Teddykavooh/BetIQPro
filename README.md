@@ -15,7 +15,7 @@
 
 * If at some point you run into this error:
     > Some dependencies are incompatible with the installed expo package version:
-        > * The fix is: `npx expo install --fix`
+    > * The fix is: `npx expo install --fix`
   
     > The above error could be a result of differing versions to that of expo.
 
