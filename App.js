@@ -9,7 +9,6 @@ import Dashboard from "./components/dashboard";
 import History from "./components/history";
 // import { createDrawerNavigator } from "@react-navigation/drawer";
 import HeaderLogo from "./components/header";
-import TabTrial from "./components/history";
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();

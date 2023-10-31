@@ -6,13 +6,21 @@ function TableView() {
   return (
     <View style={styles.tableContainer}>
       <View style={styles.tableColumn1}>
-        <Text>Time</Text>
+        <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+          Time
+        </Text>
       </View>
       <View style={styles.tableColumn2}>
-        <Text>League</Text>
+        <Text style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}>
+          League
+        </Text>
         <View style={styles.textLayout1}>
-          <Text>Home</Text>
-          <Text>Away</Text>
+          <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+            Home
+          </Text>
+          <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+            Away
+          </Text>
         </View>
         <View style={styles.textLayout1}>
           <Text style={styles.cl2_oddLabel}>ODD Label</Text>
@@ -183,6 +191,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
+    fontWeight: "bold",
   },
   cl2_odd: {
     color: "#4C0400",
@@ -190,6 +199,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
+    fontWeight: "bold",
   },
   cl3_odd: {
     color: "#55C147",
