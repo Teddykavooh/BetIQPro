@@ -1,24 +1,46 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TextInput,
+  Switch,
+  Picker,
+} from "react-native";
 
 function DetailsView() {
   return (
     <View>
       <View style={styles.detail_view}>
         <View style={styles.d_v_cl1}>
-          <Text>League</Text>
-          <Text>Home</Text>
-          <Text style={{ color: "#FEF202", backgroundColor: "black" }}>
+          <Text style={styles.d_text}>League</Text>
+          <Text style={styles.d_text}>Home</Text>
+          <Text
+            style={{
+              color: "#FEF202",
+              borderWidth: 1,
+              borderColor: "#FEF202",
+              padding: 3,
+            }}
+          >
             Predictions
           </Text>
         </View>
         <View style={styles.d_v_cl2}>
-          <Text>Vs</Text>
+          <Text style={{ color: "white", fontWeight: "bold" }}>Vs</Text>
         </View>
         <View style={styles.d_v_cl1}>
-          <Text>Time</Text>
-          <Text>Away</Text>
-          <Text style={{ color: "black", backgroundColor: "#FEF202" }}>
+          <Text style={styles.d_text}>Time</Text>
+          <Text style={styles.d_text}>Away</Text>
+          <Text
+            style={{
+              color: "black",
+              backgroundColor: "#FEF202",
+              padding: 3,
+              fontWeight: "bold",
+            }}
+          >
             Odds
           </Text>
         </View>
@@ -31,22 +53,22 @@ function DetailsView() {
         }}
       >
         <Button
-          style={{
-            color: "black",
-            backgroundColor: "#FEF202",
-            borderRadius: 15,
-          }}
-        >
-          Publish
-        </Button>
+          color="#AF640D"
+          title="Publish"
+          onPress={() => console.log("Publish")}
+        ></Button>
       </View>
     </View>
   );
 }
 
-export default function addGames() {
+export default function AddGames() {
+  const [isLost, setIsLost] = React.useState(false); // Initial value: false (Won)
+  const [isShow, setIsShow] = React.useState(true); // Initial value: true (Show)
+  const [category, setCategory] = React.useState("Daily 3"); // Initial value: "Daily 3"
+
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Add Games</Text>
         <Text style={styles.headerText}>Calender</Text>
@@ -54,55 +76,97 @@ export default function addGames() {
 
       <View style={styles.content}>
         <DetailsView />
-        <Text style={{fontWeight: "bold", color: "white", fontSize: 15}}>Date</Text>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: "white",
+            fontSize: 15,
+            alignSelf: "center",
+            margin: 10,
+          }}
+        >
+          Date
+        </Text>
         <View style={styles.row_layout}>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Time</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>League</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
         </View>
         <View style={styles.row_layout}>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Home</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text or control" />
           </View>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Away</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
         </View>
         <View style={styles.row_layout}>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Predictions</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>ODDs</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
         </View>
         <View style={styles.row_layout}>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Status</Text>
-            <Text>Some Text or control</Text>
+            <Picker
+              selectedValue={isLost ? "Lost" : isLost === false ? "Won" : "N/A"}
+              onValueChange={value => {
+                if (value === "Lost") {
+                  setIsLost(true);
+                } else if (value === "Won") {
+                  setIsLost(false);
+                } else {
+                  setIsLost(null);
+                }
+              }}
+            >
+              <Picker.Item label="Won" value="Won" />
+              <Picker.Item label="Lost" value="Lost" />
+              <Picker.Item label="N/A" value="N/A" />
+            </Picker>
           </View>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Score</Text>
-            <Text>Some Text or control</Text>
+            <TextInput placeholder="Some text" />
           </View>
         </View>
         <View style={styles.row_layout}>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Category</Text>
-            <Text>Some Text or control</Text>
+            <Picker
+              selectedValue={category}
+              onValueChange={value => setCategory(value)}
+            >
+              <Picker.Item label="Daily 3" value="Daily 3" />
+              <Picker.Item label="Daily 5" value="Daily 5" />
+              <Picker.Item label="Daily 10+" value="Daily 10+" />
+              <Picker.Item label="Daily 25+" value="Daily 25+" />
+              <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+              <Picker.Item label="Alternative VIP" value="Alternative VIP" />
+            </Picker>
           </View>
           <View style={styles.fieldSet}>
             <Text style={styles.legend}>Display</Text>
-            <Text>Some Text or control</Text>
+            <View style={styles.toggleContainer}>
+              <Text>Hide</Text>
+              <Switch
+                value={isShow}
+                onValueChange={value => setIsShow(value)}
+              />
+              <Text>Show</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -136,27 +200,47 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     padding: 10,
+    justifyContent: "center",
   },
   contentText: {
     fontSize: 16,
     color: "white",
   },
   detail_view: {
+    display: "flex",
+    flexDirection: "row",
+    height: 100,
+    padding: 5,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 13,
   },
   d_v_cl1: {
+    flex: 0.4,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-evenly",
   },
   d_v_cl2: {
+    flex: 0.2,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    color: "#FEF202",
+    justifyContent: "center",
+  },
+  d_v_cl3: {
+    flex: 0.4,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  d_text: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
   },
   row_layout: {
     display: "flex",
@@ -170,14 +254,28 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderRadius: 5,
     borderWidth: 1,
-    alignItems: "center",
-    borderColor: "#000",
+    // alignItems: "center",
+    borderColor: "#FFF",
+    height: 50,
+    width: 150,
+    backgroundColor: "#FFF",
+    display: "flex",
+    justifyContent: "center",
   },
   legend: {
     position: "absolute",
     top: -10,
     left: 10,
     fontWeight: "bold",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    width: 80,
+    paddingLeft: 4,
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 5,
   },
 });

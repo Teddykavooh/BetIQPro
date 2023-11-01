@@ -9,6 +9,7 @@ import Dashboard from "./components/dashboard";
 import History from "./components/history";
 // import { createDrawerNavigator } from "@react-navigation/drawer";
 import HeaderLogo from "./components/header";
+import addGames from "./components/admin/addGames";
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -49,9 +50,9 @@ function MyStack() {
           headerLeft: null,
         }}
       />
-      {/* <Stack.Screen
-        name="History"
-        component={History}
+      <Stack.Screen
+        name="Admin"
+        component={addGames}
         options={{
           headerTitle: () => <HeaderLogo />,
           headerLeft: null,
@@ -59,7 +60,7 @@ function MyStack() {
             backgroundColor: "#FEF202",
           },
         }}
-      /> */}
+      />
       <Stack.Screen
         name="History"
         component={History}
