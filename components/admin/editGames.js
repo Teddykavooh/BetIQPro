@@ -1,54 +1,55 @@
 import * as React from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 
-function DetailsView() {
-  return (
-    <View>
-      <View style={styles.detail_view}>
-        <View style={styles.d_v_cl1}>
-          <Text>League</Text>
-          <Text>Home</Text>
-          <Text style={{ color: "#FEF202", backgroundColor: "black" }}>
-            Predictions
-          </Text>
+export default function EditGames() {
+
+  function DetailsView() {
+    return (
+      <View>
+        <View style={styles.detail_view}>
+          <View style={styles.d_v_cl1}>
+            <Text>League</Text>
+            <Text>Home</Text>
+            <Text style={{ color: "#FEF202", backgroundColor: "black" }}>
+              Predictions
+            </Text>
+          </View>
+          <View style={styles.d_v_cl2}>
+            <Text>Vs</Text>
+          </View>
+          <View style={styles.d_v_cl1}>
+            <Text>Time</Text>
+            <Text>Away</Text>
+            <Text style={{ color: "black", backgroundColor: "#FEF202" }}>
+              Odds
+            </Text>
+          </View>
         </View>
-        <View style={styles.d_v_cl2}>
-          <Text>Vs</Text>
-        </View>
-        <View style={styles.d_v_cl1}>
-          <Text>Time</Text>
-          <Text>Away</Text>
-          <Text style={{ color: "black", backgroundColor: "#FEF202" }}>
-            Odds
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
+        <View
           style={{
-            color: "black",
-            backgroundColor: "#FEF202",
-            borderRadius: 15,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Publish
-        </Button>
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#FEF202",
+              borderRadius: 15,
+            }}
+          >
+            Publish
+          </Button>
+        </View>
       </View>
-    </View>
-  );
-}
+    );
+  }
 
-export default function editGames() {
   return (
     <View>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Add Games</Text>
+        <Text style={styles.headerText}>Edit Games</Text>
         <Text style={styles.headerText}>Calender</Text>
       </View>
 

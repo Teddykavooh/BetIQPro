@@ -155,8 +155,8 @@ export default class Signup extends Component {
           />
           <Button
             color="#3740FE"
-            title="Add Games"
-            onPress={() => this.props.navigation.navigate("Admin")}
+            title="Edit Games"
+            onPress={() => this.props.navigation.navigate("AdminEditGames")}
           />
         </KeyboardAvoidingView>
       </View>

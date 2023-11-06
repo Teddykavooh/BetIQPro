@@ -10,6 +10,7 @@ import History from "./components/history";
 // import { createDrawerNavigator } from "@react-navigation/drawer";
 import HeaderLogo from "./components/header";
 import addGames from "./components/admin/addGames";
+import EditGames from "./components/admin/editGames";
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -53,6 +54,17 @@ function MyStack() {
       <Stack.Screen
         name="Admin"
         component={addGames}
+        options={{
+          headerTitle: () => <HeaderLogo />,
+          headerLeft: null,
+          headerStyle: {
+            backgroundColor: "#FEF202",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="AdminEditGames"
+        component={EditGames}
         options={{
           headerTitle: () => <HeaderLogo />,
           headerLeft: null,
