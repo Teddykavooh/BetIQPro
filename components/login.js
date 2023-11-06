@@ -33,32 +33,37 @@ export default class Login extends Component {
     this.setState(state);
   };
   userLogin = async () => {
-    if (this.state.email === "" && this.state.password === "") {
-      Alert.alert("Enter details to signin!");
-    } else {
-      this.setState({
-        isLoading: true,
-      });
-      await signInWithEmailAndPassword(
-        FIREBASE_AUTH,
-        this.state.email,
-        this.state.password,
-      )
-        .then(res => {
-          console.log(res);
-          console.log("User logged-in successfully!");
-          Alert.alert("User logged-in successfully! :)");
-          this.setState({
-            isLoading: false,
-            email: "",
-            password: "",
-          });
-          this.props.navigation.navigate("Dashboard");
-        })
-        .catch(error => {
-          this.setState({ errorMessage: error.message });
-          Alert.alert("User logged-in Failed! :(");
+    try {
+      if (this.state.email === "" && this.state.password === "") {
+        Alert.alert("Enter details to signin!");
+      } else {
+        this.setState({
+          isLoading: true,
         });
+
+        const res = await signInWithEmailAndPassword(
+          FIREBASE_AUTH,
+          this.state.email,
+          this.state.password,
+        );
+
+        console.log(res);
+        console.log("User logged-in successfully!");
+        Alert.alert("User logged-in successfully! :)");
+        this.setState({
+          isLoading: false,
+          email: "",
+          password: "",
+        });
+
+        this.props.navigation.navigate("Dashboard");
+      }
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+      Alert.alert("User logged-in Failed! :(");
+      this.setState({
+        isLoading: false,
+      });
     }
   };
 
@@ -115,10 +120,7 @@ export default class Login extends Component {
             title="Signin"
             onPress={() => this.userLogin()}
           />
-          <Text
-            style={styles.loginText}
-            onPress={() => this.emailLinkAuth()}
-          >
+          <Text style={styles.loginText} onPress={() => this.emailLinkAuth()}>
             Can&apos;t remember your password? Get a login link
           </Text>
           <Text
