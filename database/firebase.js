@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+// import * as firebaseAuth from "firebase/auth";
+// import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,6 +20,7 @@ const firebaseConfig = {
   measurementId: "G-EN562LYCDQ",
 };
 
+// const reactNativePersistence = firebaseAuth.getReactNativePersistence;
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars

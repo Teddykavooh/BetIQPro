@@ -6,170 +6,357 @@ import {
   Button,
   TextInput,
   Switch,
-  Picker,
+  Modal,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { Calendar } from "react-native-calendars";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import PropTypes from "prop-types"; // Import prop-types;
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { FIRESTORE_DB } from "../../database/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
-function DetailsView() {
+const CalendarIcon = ({ onPress }) => {
   return (
-    <View>
-      <View style={styles.detail_view}>
-        <View style={styles.d_v_cl1}>
-          <Text style={styles.d_text}>League</Text>
-          <Text style={styles.d_text}>Home</Text>
-          <Text
-            style={{
-              color: "#FEF202",
-              borderWidth: 1,
-              borderColor: "#FEF202",
-              padding: 3,
-            }}
-          >
-            Predictions
-          </Text>
-        </View>
-        <View style={styles.d_v_cl2}>
-          <Text style={{ color: "white", fontWeight: "bold" }}>Vs</Text>
-        </View>
-        <View style={styles.d_v_cl1}>
-          <Text style={styles.d_text}>Time</Text>
-          <Text style={styles.d_text}>Away</Text>
-          <Text
-            style={{
-              color: "black",
-              backgroundColor: "#FEF202",
-              padding: 3,
-              fontWeight: "bold",
-            }}
-          >
-            Odds
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          color="#AF640D"
-          title="Publish"
-          onPress={() => console.log("Publish")}
-        ></Button>
-      </View>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <FontAwesome name="calendar" size={30} color="#000" />
+    </TouchableOpacity>
   );
-}
+};
+
+CalendarIcon.propTypes = {
+  onPress: PropTypes.func, // Define the onPress prop
+};
 
 export default function AddGames() {
-  const [isLost, setIsLost] = React.useState(false); // Initial value: false (Won)
+  const saveDataToFirestore = async () => {
+    try {
+      setIsLoading(true);
+      const dataToAdd = {
+        away,
+        category,
+        selectDate,
+        isShow,
+        home,
+        league,
+        predictions, // Replace with your actual odd label
+        odds,
+        score,
+        time,
+        status: {
+          "N/A": isLost === null, // Replace with the values from your component state
+          lost: isLost === true, // Check if it's "Lost"
+          won: isLost === false, // Check if it's "Won"
+        },
+      };
+
+      const docRef = await addDoc(
+        collection(FIRESTORE_DB, "betiqpro"),
+        dataToAdd,
+      );
+      console.log("Data saved with ID: ", docRef.id);
+      setIsLoading(false);
+      Alert.alert("Game published successfully :)");
+    } catch (error) {
+      console.error("Error saving data: ", error);
+      Alert.alert("Game publishing failed :(");
+      setIsLoading(false);
+    }
+  };
+
+  function DetailsView() {
+    return (
+      <View>
+        <View style={styles.detail_view}>
+          <View style={styles.d_v_cl1}>
+            <Text style={styles.d_text}>{league}</Text>
+            <Text style={styles.d_text}>{home}</Text>
+            <Text
+              style={{
+                color: "#FEF202",
+                borderWidth: 1,
+                borderColor: "#FEF202",
+                padding: 3,
+              }}
+            >
+              {predictions}
+            </Text>
+          </View>
+          <View style={styles.d_v_cl2}>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Vs</Text>
+          </View>
+          <View style={styles.d_v_cl1}>
+            <Text style={styles.d_text}>{time}</Text>
+            <Text style={styles.d_text}>{away}</Text>
+            <Text
+              style={{
+                color: "black",
+                backgroundColor: "#FEF202",
+                padding: 3,
+                fontWeight: "bold",
+              }}
+            >
+              {odds}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            color="#AF640D"
+            title="Publish"
+            onPress={() => {
+              console.log("Publish: " + isLost);
+              saveDataToFirestore();
+            }}
+          ></Button>
+        </View>
+      </View>
+    );
+  }
+
+  const [isLost, setIsLost] = React.useState(null); // Initial value: false (Won)
   const [isShow, setIsShow] = React.useState(true); // Initial value: true (Show)
   const [category, setCategory] = React.useState("Daily 3"); // Initial value: "Daily 3"
+  const [showModal, setShowModal] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [score, setScore] = React.useState("");
+  const [selectDate, setSelectDate] = React.useState("");
+  const [predictions, setPredictions] = React.useState("");
+  const [home, setHome] = React.useState("");
+  const [away, setAway] = React.useState("");
+  const [odds, setOdds] = React.useState(0);
+  const [time, setTime] = React.useState("");
+  const [league, setLeague] = React.useState("");
+
+  // const updateInputVal = (val, prop) => {
+  //   // const state = this.state;
+  //   this.setState({ [prop]: val });
+  // };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Add Games</Text>
-        <Text style={styles.headerText}>Calender</Text>
-      </View>
-
-      <View style={styles.content}>
-        <DetailsView />
-        <Text
-          style={{
-            fontWeight: "bold",
-            color: "white",
-            fontSize: 15,
-            alignSelf: "center",
-            margin: 10,
-          }}
+        <Modal
+          visible={showModal}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setShowModal(false)}
         >
-          Date
-        </Text>
-        <View style={styles.row_layout}>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Time</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>League</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-        </View>
-        <View style={styles.row_layout}>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Home</Text>
-            <TextInput placeholder="Some text or control" />
-          </View>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Away</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-        </View>
-        <View style={styles.row_layout}>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Predictions</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>ODDs</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-        </View>
-        <View style={styles.row_layout}>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Status</Text>
-            <Picker
-              selectedValue={isLost ? "Lost" : isLost === false ? "Won" : "N/A"}
-              onValueChange={value => {
-                if (value === "Lost") {
-                  setIsLost(true);
-                } else if (value === "Won") {
-                  setIsLost(false);
-                } else {
-                  setIsLost(null);
-                }
+          <View
+            style={{
+              flex: 0.5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                width: 350,
+                height: 200,
               }}
             >
-              <Picker.Item label="Won" value="Won" />
-              <Picker.Item label="Lost" value="Lost" />
-              <Picker.Item label="N/A" value="N/A" />
-            </Picker>
-          </View>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Score</Text>
-            <TextInput placeholder="Some text" />
-          </View>
-        </View>
-        <View style={styles.row_layout}>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Category</Text>
-            <Picker
-              selectedValue={category}
-              onValueChange={value => setCategory(value)}
-            >
-              <Picker.Item label="Daily 3" value="Daily 3" />
-              <Picker.Item label="Daily 5" value="Daily 5" />
-              <Picker.Item label="Daily 10+" value="Daily 10+" />
-              <Picker.Item label="Daily 25+" value="Daily 25+" />
-              <Picker.Item label="Weekly 70+" value="Weekly 70+" />
-              <Picker.Item label="Alternative VIP" value="Alternative VIP" />
-            </Picker>
-          </View>
-          <View style={styles.fieldSet}>
-            <Text style={styles.legend}>Display</Text>
-            <View style={styles.toggleContainer}>
-              <Text>Hide</Text>
-              <Switch
-                value={isShow}
-                onValueChange={value => setIsShow(value)}
+              {/* Content of the small view modal */}
+              <Calendar
+                onDayPress={day => {
+                  console.log("selected day", day);
+                  setSelectDate(day.dateString);
+                  setShowModal(false);
+                }}
+                renderArrow={direction => {
+                  if (direction == "left")
+                    return (
+                      <FontAwesome name="chevron-left" size={20} color="#000" />
+                    );
+                  if (direction == "right")
+                    return (
+                      <FontAwesome
+                        name="chevron-right"
+                        size={20}
+                        color="#000"
+                      />
+                    );
+                }}
               />
-              <Text>Show</Text>
+              <TouchableOpacity
+                onPress={() => setShowModal(false)}
+                style={{
+                  alignSelf: "center",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  width: 100,
+                }}
+              >
+                <MaterialIcons name="cancel" size={30} color="#000" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <CalendarIcon
+          onPress={() => {
+            setShowModal(true), console.log("Calendar pressed");
+          }}
+        />
+      </View>
+      {isLoading ? ( // Check isLoading state
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E" />
+        </View>
+      ) : (
+        <View style={styles.content}>
+          <DetailsView />
+          <View
+            style={{
+              margin: 10,
+              borderColor: "yellow",
+              borderRadius: 10,
+              borderWidth: 2,
+              width: 100,
+              height: 35,
+              alignSelf: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "white",
+                fontSize: 15,
+              }}
+            >
+              {selectDate}
+            </Text>
+          </View>
+          <View style={styles.row_layout}>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Time</Text>
+              <TextInput
+                placeholder="Enter Time"
+                value={time}
+                onChangeText={text => setTime(text)}
+              />
+            </View>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>League</Text>
+              <TextInput
+                placeholder="Enter League"
+                value={league}
+                onChangeText={text => setLeague(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.row_layout}>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Home</Text>
+              <TextInput
+                placeholder="Enter Home Team"
+                value={home}
+                onChangeText={text => setHome(text)}
+              />
+            </View>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Away</Text>
+              <TextInput
+                placeholder="Enter Away Team"
+                value={away}
+                onChangeText={text => setAway(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.row_layout}>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Predictions</Text>
+              <TextInput
+                placeholder="Enter Predictions"
+                value={predictions}
+                onChangeText={text => setPredictions(text)}
+              />
+            </View>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Odds</Text>
+              <TextInput
+                inputMode="decimal"
+                placeholder="Enter Odds"
+                value={odds ? odds.toString() : ""}
+                onChangeText={text => {
+                  const parsedValue = text.replace(/[^0-9.]/g, "");
+                  if (!isNaN(parsedValue)) {
+                    setOdds(parsedValue);
+                  }
+                }}
+              />
+            </View>
+          </View>
+          <View style={styles.row_layout}>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Status</Text>
+              <Picker
+                selectedValue={
+                  isLost === true ? "Lost" : isLost === false ? "Won" : "N/A"
+                }
+                onValueChange={value => {
+                  if (value === "Lost") {
+                    setIsLost(true);
+                  } else if (value === "Won") {
+                    setIsLost(false);
+                  } else {
+                    setIsLost(null);
+                  }
+                }}
+              >
+                <Picker.Item label="Won" value="Won" />
+                <Picker.Item label="Lost" value="Lost" />
+                <Picker.Item label="N/A" value="N/A" />
+              </Picker>
+            </View>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Score</Text>
+              <TextInput
+                placeholder="Enter Score"
+                value={score}
+                onChangeText={text => setScore(text)}
+              />
+            </View>
+          </View>
+          <View style={styles.row_layout}>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Category</Text>
+              <Picker
+                selectedValue={category}
+                onValueChange={value => setCategory(value)}
+              >
+                <Picker.Item label="Daily 3" value="Daily 3" />
+                <Picker.Item label="Daily 5" value="Daily 5" />
+                <Picker.Item label="Daily 10+" value="Daily 10+" />
+                <Picker.Item label="Daily 25+" value="Daily 25+" />
+                <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+                <Picker.Item label="Alternative VIP" value="Alternative VIP" />
+              </Picker>
+            </View>
+            <View style={styles.fieldSet}>
+              <Text style={styles.legend}>Display</Text>
+              <View style={styles.toggleContainer}>
+                <Text>Hide</Text>
+                <Switch
+                  value={isShow}
+                  onValueChange={value => setIsShow(value)}
+                />
+                <Text>Show</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }
@@ -183,6 +370,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -257,7 +446,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     borderColor: "#FFF",
     height: 50,
-    width: 150,
+    width: 180,
     backgroundColor: "#FFF",
     display: "flex",
     justifyContent: "center",
@@ -269,7 +458,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: "#FFF",
     borderRadius: 5,
-    width: 80,
+    width: 95,
     paddingLeft: 4,
   },
   toggleContainer: {
@@ -277,5 +466,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 200,
+    height: 200,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
   },
 });
