@@ -3,17 +3,19 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   Modal,
-  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import PropTypes from "prop-types"; // Import prop-types;
+import { FIRESTORE_DB } from "../../database/firebase";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const CalendarIcon = ({ onPress }) => {
   return (
@@ -31,111 +33,167 @@ export default function EditGames() {
   const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [dataUpdated, setDataUpdated] = React.useState(false);
+  const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const dataArr = [];
+      querySnapshot.forEach(doc => {
+        // doc.data() is never undefined for query doc snapshots
+        dataArr.push({ id: doc.id, data: doc.data() });
+        console.log(doc.id, " => ", doc.data());
+      });
+      setData(dataArr);
+      setIsLoading(false);
+    };
+    if (fetchDataOnMount) {
+      fetchData();
+      setFetchDataOnMount(false);
+    }
+    // Triggers to the useEffect()
+  }, [dataUpdated, fetchDataOnMount]);
+
+  const handleDeleteItem = async itemId => {
+    try {
+      setIsLoading(true);
+      console.log("Delete initiated for ID:", itemId);
+      console.log("setDataUpdated1: " + dataUpdated);
+      await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
+      console.log("Delete successful for ID:", itemId);
+      setDataUpdated(!dataUpdated);
+      console.log("setDataUpdated2: " + dataUpdated);
+      setIsLoading(false);
+      Alert.alert("Item deletion successful :)");
+    } catch (error) {
+      setIsLoading(false);
+      console.log("Item deletion failed: " + error);
+      Alert.alert("Item deletion failed :(" + error);
+    }
+  };
 
   function DetailsView() {
     return (
       <View>
-        <View style={styles.detail_view}>
-          <View style={styles.d_v_cl1}>
-            <Text style={styles.d_text}>League</Text>
-            <Text style={styles.d_text}>Home</Text>
-            <Text
+        {data.map(item => (
+          <View key={item.id} style={styles.detail_view}>
+            <View style={styles.d_v_cl1}>
+              <Text style={styles.d_text}>{item.data.league}</Text>
+              <Text style={styles.d_text}>{item.data.home}</Text>
+              <Text
+                style={{
+                  color: "#FEF202",
+                  borderWidth: 1,
+                  borderColor: "#FEF202",
+                  padding: 3,
+                }}
+              >
+                {item.data.predictions}
+              </Text>
+            </View>
+            <View style={styles.d_v_cl2}>
+              <Text style={{ color: "white", fontWeight: "bold" }}>Vs</Text>
+            </View>
+            <View style={styles.d_v_cl1}>
+              <Text style={styles.d_text}>{item.data.time}</Text>
+              <Text style={styles.d_text}>{item.data.away}</Text>
+              <Text
+                style={{
+                  color: "black",
+                  backgroundColor: "#FEF202",
+                  padding: 3,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.data.odds}
+              </Text>
+            </View>
+            <View
               style={{
-                color: "#FEF202",
-                borderWidth: 1,
-                borderColor: "#FEF202",
-                padding: 3,
+                display: "flex",
+                // flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
               }}
             >
-              Predictions
-            </Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.button,
+                  {
+                    backgroundColor: pressed ? "#FFD700" : "transparent",
+                    borderWidth: 2,
+                    borderColor: pressed ? null : "#AF640D",
+                  },
+                ]}
+                onPress={() => {
+                  console.log("Edit initiated");
+                }}
+              >
+                {({ pressed }) => (
+                  <View style={styles.buttonText}>
+                    <Text
+                      style={[
+                        styles.text,
+                        { color: pressed ? "black" : "white" },
+                      ]}
+                    >
+                      Edit
+                    </Text>
+                    <AntDesign
+                      name="edit"
+                      size={20}
+                      color={pressed ? "black" : "white"}
+                    />
+                  </View>
+                )}
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.button,
+                  {
+                    backgroundColor: pressed ? "#FFD700" : "transparent",
+                    borderWidth: 2,
+                    borderColor: pressed ? null : "#AF640D",
+                  },
+                ]}
+                onPress={() => handleDeleteItem(item.id)}
+              >
+                {({ pressed }) => (
+                  <View style={styles.buttonText}>
+                    <Text
+                      style={[
+                        styles.text,
+                        { color: pressed ? "black" : "white" },
+                      ]}
+                    >
+                      Delete
+                    </Text>
+                    <AntDesign
+                      name="delete"
+                      size={20}
+                      color={pressed ? "black" : "white"}
+                    />
+                  </View>
+                )}
+              </Pressable>
+            </View>
           </View>
-          <View style={styles.d_v_cl2}>
-            <Text style={{ color: "white", fontWeight: "bold" }}>Vs</Text>
-          </View>
-          <View style={styles.d_v_cl1}>
-            <Text style={styles.d_text}>Time</Text>
-            <Text style={styles.d_text}>Away</Text>
-            <Text
-              style={{
-                color: "black",
-                backgroundColor: "#FEF202",
-                padding: 3,
-                fontWeight: "bold",
-              }}
-            >
-              Odds
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              {
-                backgroundColor: pressed ? "#FFD700" : "transparent",
-                borderWidth: 2,
-                borderColor: pressed ? null : "#AF640D",
-              },
-            ]}
-            onPress={() => {
-              console.log("Edit initiated");
-            }}
-          >
-            {({ pressed }) => (
-              <View style={styles.buttonText}>
-                <Text
-                  style={[styles.text, { color: pressed ? "black" : "white" }]}
-                >
-                  Edit
-                </Text>
-                <AntDesign
-                  name="edit"
-                  size={25}
-                  color={pressed ? "black" : "white"}
-                />
-              </View>
-            )}
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              {
-                backgroundColor: pressed ? "#FFD700" : "transparent",
-                borderWidth: 2,
-                borderColor: pressed ? null : "#AF640D",
-              },
-            ]}
-            onPress={() => {
-              console.log("Delete initiated");
-            }}
-          >
-            {({ pressed }) => (
-              <View style={styles.buttonText}>
-                <Text
-                  style={[styles.text, { color: pressed ? "black" : "white" }]}
-                >
-                  Delete
-                </Text>
-                <AntDesign
-                  name="delete"
-                  size={25}
-                  color={pressed ? "black" : "white"}
-                />
-              </View>
-            )}
-          </Pressable>
-        </View>
+        ))}
       </View>
     );
   }
+
+  DetailsView.propTypes = {
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        data: PropTypes.object.isRequired,
+      }),
+    ).isRequired,
+  };
 
   return (
     <View style={styles.container}>
@@ -198,6 +256,8 @@ export default function EditGames() {
         </Modal>
         <CalendarIcon
           onPress={() => {
+            // Prevent reload on calender click
+            // setDataUpdated(false);
             setShowModal(true), console.log("Calendar pressed");
           }}
         />
@@ -208,7 +268,11 @@ export default function EditGames() {
         </View>
       ) : (
         <View style={styles.content}>
-          <DetailsView />
+          <DetailsView
+            data={data}
+            dataUpdated={dataUpdated}
+            setDataUpdated={setDataUpdated}
+          />
         </View>
       )}
     </View>
@@ -340,7 +404,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   button: {
-    width: 85,
+    width: 70,
     height: 35,
     alignItems: "center",
     justifyContent: "center",
@@ -350,10 +414,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: 2,
   },
   text: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 14,
   },
 });
