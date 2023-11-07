@@ -114,7 +114,7 @@ export default function AddGames() {
             color="#AF640D"
             title="Publish"
             onPress={() => {
-              console.log("Publish: " + isLost);
+              console.log("Publish initiated");
               saveDataToFirestore();
             }}
           ></Button>
