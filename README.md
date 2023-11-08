@@ -1,7 +1,7 @@
 # BetIqPro
 
 * **NOTE:**
-    > Node version used: `v16.14.2`
+    > Node version used: `v17.0.0`
     
     > Recommended version: `<= v18.0.0`
     > * Download link: <https://nodejs.org/dist/v17.0.0/>
