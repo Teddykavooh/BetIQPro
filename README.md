@@ -19,4 +19,7 @@
   
     > The above error could result from differing versions to that of expo.
 
+* For dev purposes:
+    > `npm install -g firebase-tools`
+
 * Goodluck!!!
