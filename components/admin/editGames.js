@@ -30,6 +30,18 @@ CalendarIcon.propTypes = {
   onPress: PropTypes.func, // Define the onPress prop
 };
 
+const FilterIcon = ({ onPress }) => {
+  return (
+    <Pressable onPress={onPress}>
+      <FontAwesome name="filter" size={30} color="#000" />
+    </Pressable>
+  );
+};
+
+FilterIcon.propTypes = {
+  onPress: PropTypes.func, // Define the onPress prop
+};
+
 export default function EditGames() {
   const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState("");
@@ -202,6 +214,7 @@ export default function EditGames() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Edit Games</Text>
+        <FilterIcon onPress={() => console.log("Filter Menu initiated")} />
         <Modal
           visible={showModal}
           animationType="fade"
@@ -302,7 +315,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
   },
   headerText: {
     fontSize: 20,
