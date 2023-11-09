@@ -7,7 +7,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HeaderLogo from "./components/header";
 import Login from "./components/login";
 import Signup from "./components/signup";
-import Dashboard from "./components/dashboard";
+// import Dashboard from "./components/dashboard";
 import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
@@ -15,10 +15,10 @@ import EditGames from "./components/admin/editGames";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function AuthStack() {
+function SignupD() {
   return (
     <Stack.Navigator
-      initialRouteName="Signup"
+      // initialRouteName="Signup"
       screenOptions={{
         headerTitleAlign: "center",
         headerStyle: {
@@ -35,6 +35,25 @@ function AuthStack() {
         component={Signup}
         options={{ title: "Signup" }}
       />
+      </Stack.Navigator>
+  );
+}
+
+function LoginD() {
+  return (
+    <Stack.Navigator
+      // initialRouteName="Signup"
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: "#000",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}
+    >
       <Stack.Screen
         name="Login"
         component={Login}
@@ -72,7 +91,7 @@ function UserStack() {
   );
 }
 
-function AdminStack() {
+function AddGamesD() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -84,10 +103,18 @@ function AdminStack() {
           headerStyle: {
             backgroundColor: "#FEF202",
           },
+          headerTitleAlign: "center",
         }}
       />
+      </Stack.Navigator>
+  );
+}
+
+function EditGamesD() {
+  return (
+    <Stack.Navigator>
       <Stack.Screen
-        name="AdminEditGames"
+        name="Edit Games"
         component={EditGames}
         options={{
           headerTitle: () => <HeaderLogo />,
@@ -95,6 +122,7 @@ function AdminStack() {
           headerStyle: {
             backgroundColor: "#FEF202",
           },
+          headerTitleAlign: "center",
         }}
       />
     </Stack.Navigator>
@@ -103,25 +131,37 @@ function AdminStack() {
 
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator initialRouteName="History">
+    <Drawer.Navigator screenOptions={{drawerActiveTintColor: "#000", fontWeight: "bold"}}>
       <Drawer.Screen
-        name="Auth"
-        component={AuthStack}
-        options={{ headerTitle: () => <HeaderLogo />, headerStyle: {
-          backgroundColor: "#FEF202",
-        }, headerTitleAlign: "center" }}
-      />
-      <Drawer.Screen
-        name="User"
+        name="Home"
         component={UserStack}
         options={{ headerTitle: () => <HeaderLogo />, headerStyle: {
           backgroundColor: "#FEF202",
         }, headerTitleAlign: "center" }}
       />
       <Drawer.Screen
-        name="Admin"
-        component={[AdminStack, UserStack]}
-        options={{ title: "Admin", headerTitleAlign: "center" }}
+        name="SignUp"
+        component={SignupD}
+        options={{ headerTitle: () => <HeaderLogo />, headerStyle: {
+          backgroundColor: "#FEF202",
+        }, headerTitleAlign: "center" }}
+      />
+      <Drawer.Screen
+        name="LogIn"
+        component={LoginD}
+        options={{ headerTitle: () => <HeaderLogo />, headerStyle: {
+          backgroundColor: "#FEF202",
+        }, headerTitleAlign: "center" }}
+      />
+      <Drawer.Screen
+        name="Add Games"
+        component={AddGamesD}
+        options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
+      />
+      <Drawer.Screen
+        name="Edit Games"
+        component={EditGamesD}
+        options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
       />
     </Drawer.Navigator>
   );

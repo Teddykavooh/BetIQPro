@@ -79,31 +79,6 @@ export default class Signup extends Component {
       } finally {
         this.setState({ isLoading: false });
       }
-
-      /*await createUserWithEmailAndPassword(
-        FIREBASE_AUTH,
-        this.state.email,
-        this.state.password,
-      )
-        .then(res => {
-          res.user.updateProfile({
-            displayName: this.state.displayName,
-          });
-          console.log("User registered successfully!");
-          Alert.alert("Successful user registration :)");
-          this.setState({
-            isLoading: false,
-            displayName: "",
-            email: "",
-            password: "",
-          });
-          this.props.navigation.navigate("Login");
-        })
-        .catch(error => {
-          console.log("Registration error: " + this.state.errorMessage);
-          Alert.alert("User registration failure! :(");
-          this.setState({ isLoading: false, errorMessage: error.message });
-        });*/
     }
   };
   render = () => {
@@ -138,7 +113,7 @@ export default class Signup extends Component {
             secureTextEntry={true}
           />
           <Button
-            color="#3740FE"
+            color="#000"
             title="Signup"
             onPress={() => this.registerUser()}
           />
@@ -148,7 +123,7 @@ export default class Signup extends Component {
           >
             Already Registered? Click here to login
           </Text>
-          <Button
+          {/* <Button
             color="#3740FE"
             title="Proceed"
             onPress={() => this.props.navigation.navigate("History")}
@@ -157,7 +132,7 @@ export default class Signup extends Component {
             color="#3740FE"
             title="Edit Games"
             onPress={() => this.props.navigation.navigate("AdminEditGames")}
-          />
+          /> */}
         </KeyboardAvoidingView>
       </View>
     );
@@ -187,7 +162,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   loginText: {
-    color: "#3740FE",
+    color: "#000",
     marginTop: 25,
     textAlign: "center",
   },
