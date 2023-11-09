@@ -2,50 +2,92 @@ import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
+import { FIRESTORE_DB } from "../database/firebase";
+import { collection, getDocs, doc } from "firebase/firestore";
 
-function TableView() {
-  return (
-    <View style={styles.tableContainer}>
-      <View style={styles.tableColumn1}>
-        <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-          Time
-        </Text>
-      </View>
-      <View style={styles.tableColumn2}>
-        <Text style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}>
-          League
-        </Text>
-        <View style={styles.textLayout1}>
-          <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-            Home
-          </Text>
-          <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-            Away
-          </Text>
-        </View>
-        <View style={styles.textLayout1}>
-          <Text style={styles.cl2_oddLabel}>ODD Label</Text>
-          <Text style={styles.cl2_odd}>ODDs</Text>
-        </View>
-      </View>
-      <View style={styles.tableColumn3}>
-        <Text style={styles.cl3_odd}>Status</Text>
-        <Text style={styles.cl3_odd}>Score</Text>
-      </View>
-    </View>
-  );
-}
 
 function FreeTips() {
+
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const dataArr = [];
+      querySnapshot.forEach(doc => {
+        // doc.data() is never undefined for query doc snapshots
+        const data = doc.data();
+        const status = data.status;
+        let trueKey = null;
+        // Find the key where the value is true
+        for (const key in status) {
+          if (status[key] === true) {
+            trueKey = key;
+            break;
+          }
+        }
+        dataArr.push({ id: doc.id, data: doc.data(), trueKey: trueKey });
+        console.log(doc.id, " => ", doc.data());
+      });
+      setData(dataArr);
+      setIsLoading(false);
+    };
+    fetchData();
+    // Triggers to the useEffect()
+  }, []);
+
+  function TableView() {
+    return (
+      <View>
+        {data.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+            <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+              {item.data.time}
+            </Text>
+          </View>
+          <View style={styles.tableColumn2}>
+            <Text style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}>
+              {item.data.league}
+            </Text>
+            <View style={styles.textLayout1}>
+              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+                {item.data.home}
+              </Text>
+              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
+                {item.data.away}
+              </Text>
+            </View>
+            <View style={styles.textLayout1}>
+              <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+              <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+            </View>
+          </View>
+          <View style={styles.tableColumn3}>
+            <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+            <Text style={styles.cl3_odd}>{item.data.score}</Text>
+          </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
+  // Get today's date
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTextRounded}>Today</Text>
-        <Text style={styles.headerTextRounded}>Date</Text>
+        <Text style={styles.headerTextRounded}>{formattedDate}</Text>
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.contentText}>Content Section</Text>
+        {/* <Text style={styles.contentText}>Content Section</Text> */}
         <ScrollView>
           <TableView />
         </ScrollView>
@@ -151,7 +193,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tableColumn1: {
-    backgroundColor: "red",
+    backgroundColor: "#141C31",
     flex: 0.2,
     borderWidth: 1,
     borderColor: "white",
@@ -162,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tableColumn2: {
-    backgroundColor: "green",
+    backgroundColor: "#141C31",
     flex: 0.6,
     borderWidth: 1,
     borderColor: "white",
@@ -172,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   tableColumn3: {
-    backgroundColor: "blue",
+    backgroundColor: "#141C31",
     flex: 0.2,
     borderWidth: 1,
     borderColor: "white",
@@ -195,6 +237,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
     fontWeight: "bold",
+    fontSize: 17,
   },
   cl2_odd: {
     color: "#4C0400",
@@ -203,6 +246,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
     fontWeight: "bold",
+    fontSize: 17,
   },
   cl3_odd: {
     color: "#55C147",
@@ -210,5 +254,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
+    fontSize: 18,
   },
 });
