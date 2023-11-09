@@ -404,6 +404,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 13,
+    backgroundColor: "#141C31",
   },
   d_v_cl1: {
     flex: 0.4,
