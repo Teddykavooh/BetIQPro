@@ -16,6 +16,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import PropTypes from "prop-types"; // Import prop-types;
 import { FIRESTORE_DB } from "../../database/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { ScrollView } from "react-native-gesture-handler";
 
 const CalendarIcon = ({ onPress }) => {
   return (
@@ -61,11 +62,13 @@ export default function EditGames() {
     try {
       setIsLoading(true);
       console.log("Delete initiated for ID:", itemId);
+      console.log("setfetch1: " + fetchDataOnMount);
       console.log("setDataUpdated1: " + dataUpdated);
       await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
       console.log("Delete successful for ID:", itemId);
       setDataUpdated(!dataUpdated);
       console.log("setDataUpdated2: " + dataUpdated);
+      console.log("setfetch2: " + fetchDataOnMount);
       setIsLoading(false);
       Alert.alert("Item deletion successful :)");
     } catch (error) {
@@ -258,7 +261,16 @@ export default function EditGames() {
           onPress={() => {
             // Prevent reload on calender click
             // setDataUpdated(false);
-            setShowModal(true), console.log("Calendar pressed");
+            setShowModal(true);
+            console.log("Calendar pressed");
+            // Debugger
+            // console.log("Me status_update: " + dataUpdated);
+            // console.log("Me status_fetch: " + fetchDataOnMount);
+            // console.log("......Updating.......");
+            // setDataUpdated(true);
+            // console.log("Me status_update: " + dataUpdated);
+            // setFetchDataOnMount(true);
+            // console.log("Me status_fetch: " + fetchDataOnMount);
           }}
         />
       </View>
@@ -268,11 +280,13 @@ export default function EditGames() {
         </View>
       ) : (
         <View style={styles.content}>
-          <DetailsView
-            data={data}
-            dataUpdated={dataUpdated}
-            setDataUpdated={setDataUpdated}
-          />
+          <ScrollView>
+            <DetailsView
+              data={data}
+              dataUpdated={dataUpdated}
+              setDataUpdated={setDataUpdated}
+            />
+          </ScrollView>
         </View>
       )}
     </View>

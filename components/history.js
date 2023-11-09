@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { ScrollView } from "react-native-gesture-handler";
 
 function TableView() {
   return (
@@ -45,7 +46,9 @@ function FreeTips() {
 
       <View style={styles.content}>
         <Text style={styles.contentText}>Content Section</Text>
-        <TableView />
+        <ScrollView>
+          <TableView />
+        </ScrollView>
       </View>
     </View>
   );
