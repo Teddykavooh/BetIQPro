@@ -40,3 +40,24 @@ Your project may not work correctly until you install the correct versions of th
 To install the correct versions of these packages, please run: `expo install [package-name ...]`
 
 ## NOTE_3
+
+> WARN  [2023-11-09T08:31:46.483Z]  @firebase/auth: Auth (10.5.2):
+You are initializing Firebase Auth for React Native without providing
+AsyncStorage. Auth state will default to memory persistence and will not
+persist between sessions. In order to persist auth state, install the package
+"@react-native-async-storage/async-storage" and provide it to
+initializeAuth:
+
+> import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
+## NOTE_4
+* b component error is caused by the component dashboard, eliminated by commenting the dashboard screen
+
+## NOTE_5
+* In Kali OS drawer seems to work well without issues.
+* > node version: `v18.13.0`
+

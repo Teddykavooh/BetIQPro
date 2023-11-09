@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 // import { getReactNativePersistence } from "firebase/auth";
@@ -24,8 +24,18 @@ const firebaseConfig = {
 // const reactNativePersistence = firebaseAuth.getReactNativePersistence;
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
-// eslint-disable-next-line no-unused-vars
-const analytics = getAnalytics(FIREBASE_APP);
+
+
+// // Get Firebase Analytics instance
+// const analytics = getAnalytics(FIREBASE_APP);
+
+// // Example: Track a custom event
+// analytics.logEvent("button_click", {
+//   button_name: "example_button",
+//   page: "example_page",
+// });
+
+// // You can track more events or user interactions here
 
 // Initialize Firebase Authentication and get a reference to the service
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
