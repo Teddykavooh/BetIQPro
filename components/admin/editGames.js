@@ -15,8 +15,16 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import PropTypes from "prop-types"; // Import prop-types;
 import { FIRESTORE_DB } from "../../database/firebase";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { ScrollView } from "react-native-gesture-handler";
+import { Picker } from "@react-native-picker/picker";
 
 const CalendarIcon = ({ onPress }) => {
   return (
@@ -33,7 +41,17 @@ CalendarIcon.propTypes = {
 const FilterIcon = ({ onPress }) => {
   return (
     <Pressable onPress={onPress}>
-      <FontAwesome name="filter" size={30} color="#000" />
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 5,
+        }}
+      >
+        <FontAwesome name="filter" size={30} color="#000" />
+        <Text style={styles.headerText}>Filter</Text>
+      </View>
     </Pressable>
   );
 };
@@ -44,17 +62,22 @@ FilterIcon.propTypes = {
 
 export default function EditGames() {
   const [showModal, setShowModal] = React.useState(false);
-  const [selectDate, setSelectDate] = React.useState("");
+  const [selectDate, setSelectDate] = React.useState("Select Date from Calendar");
   const [isLoading, setIsLoading] = React.useState(false);
   const [dataUpdated, setDataUpdated] = React.useState(false);
   const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
   const [data, setData] = React.useState([]);
+  const [showFilterModal, setFilterModal] = React.useState(false);
+  const [filter, setFilter] = React.useState(null);
+  const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
+    React.useState(true);
+  let dataArr = [];
 
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
-      const dataArr = [];
+      // const dataArr = [];
       querySnapshot.forEach(doc => {
         // doc.data() is never undefined for query doc snapshots
         dataArr.push({ id: doc.id, data: doc.data() });
@@ -69,6 +92,41 @@ export default function EditGames() {
     }
     // Triggers to the useEffect()
   }, [dataUpdated, fetchDataOnMount]);
+
+  React.useEffect(() => {
+    const fetchDataByQuery = async () => {
+      setIsLoading(true);
+      //Empty array
+      dataArr = [];
+      const q = query(
+        collection(FIRESTORE_DB, "betiqpro"),
+        where("TzAXQoDXNIx2h2q7IT6Q", "==", "away"),
+      );
+      // const q = query(
+      //   collection(FIRESTORE_DB, "betiqpro"),
+      //   where("selectDate", "==", filter),
+      // );
+      const querySnapshot = await getDocs(q);
+      // const dataArr = [];
+      querySnapshot.forEach(doc => {
+        // doc.data() is never undefined for query doc snapshots
+        dataArr.push({ id: doc.id, data: doc.data() });
+        // console.log(doc.id, " => ", doc.data());
+      });
+      setData(dataArr);
+      setIsLoading(false);
+    };
+
+    if (filter !== "All" && filter !== null) {
+      fetchDataByQuery();
+      setFetchDataByQueryOnMount(false);
+    } else {
+      setFilter(null);
+      setFetchDataByQueryOnMount(false);
+      // setFetchDataOnMount(true);
+    }
+    // Triggers to the useEffect()
+  }, [filter, fetchDataByQueryOnMount]);
 
   const handleDeleteItem = async itemId => {
     try {
@@ -169,9 +227,9 @@ export default function EditGames() {
                 style={({ pressed }) => [
                   styles.button,
                   {
-                    backgroundColor: pressed ? "#FFD700" : "transparent",
+                    backgroundColor: pressed ? "#C73681" : "transparent",
                     borderWidth: 2,
-                    borderColor: pressed ? null : "#AF640D",
+                    borderColor: pressed ? null : "#D63E8B",
                   },
                 ]}
                 onPress={() => handleDeleteItem(item.id)}
@@ -210,11 +268,54 @@ export default function EditGames() {
     ).isRequired,
   };
 
+  function FilterPicker() {
+    return (
+      <View
+        style={{
+          // flex: 0.5,
+          justifyContent: "center",
+          // alignItems: "center",
+          backgroundColor: "#DDD",
+        }}
+      >
+        <Picker
+          selectedValue={filter}
+          onValueChange={value => {
+            setFilter(value);
+            setFilterModal(false);
+          }}
+        >
+          <Picker.Item label={selectDate}></Picker.Item>
+          <Picker.Item label="Daily 3" value="Daily 3" />
+          <Picker.Item label="Daily 5" value="Daily 5" />
+          <Picker.Item label="Daily 10+" value="Daily 10+" />
+          <Picker.Item label="Daily 25+" value="Daily 25+" />
+          <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+          <Picker.Item label="Alternative VIP" value="Alternative VIP" />
+          <Picker.Item label="All"></Picker.Item>
+        </Picker>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Edit Games</Text>
-        <FilterIcon onPress={() => console.log("Filter Menu initiated")} />
+        <FilterIcon
+          onPress={() => {
+            console.log("Filter Menu initiated");
+            setFilterModal(true);
+          }}
+        />
+        <Modal
+          visible={showFilterModal}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setFilterModal(false)}
+        >
+          <FilterPicker />
+        </Modal>
         <Modal
           visible={showModal}
           animationType="fade"
@@ -315,10 +416,10 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "bold",
   },
   headerTextRounded: {
@@ -432,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   button: {
-    width: 70,
+    width: 75,
     height: 35,
     alignItems: "center",
     justifyContent: "center",

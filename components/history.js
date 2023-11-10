@@ -5,9 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
 import { collection, getDocs, doc } from "firebase/firestore";
 
-
 function FreeTips() {
-
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
 
@@ -44,31 +42,39 @@ function FreeTips() {
         {data.map(item => (
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
-            <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-              {item.data.time}
-            </Text>
-          </View>
-          <View style={styles.tableColumn2}>
-            <Text style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}>
-              {item.data.league}
-            </Text>
-            <View style={styles.textLayout1}>
-              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-                {item.data.home}
-              </Text>
-              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-                {item.data.away}
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
               </Text>
             </View>
-            <View style={styles.textLayout1}>
-              <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
-              <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.tableColumn3}>
-            <Text style={styles.cl3_odd}>{item.trueKey}</Text>
-            <Text style={styles.cl3_odd}>{item.data.score}</Text>
-          </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
           </View>
         ))}
       </View>
@@ -132,7 +138,11 @@ function VipSuccess() {
           }
         }
         // Filter VIP games
-        if (!(data.category === "Daily 3+") && !(data.category === "Daily 5+")) {
+        if (
+          data.category === "Daily 3+"
+          // &&
+          // !(data.category === "Daily 5+")
+        ) {
           dataArr.push({ id: doc.id, data: doc.data(), trueKey: trueKey });
           // console.log(doc.id, " => ", doc.data());
         }
@@ -150,31 +160,39 @@ function VipSuccess() {
         {data.map(item => (
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
-            <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-              {item.data.time}
-            </Text>
-          </View>
-          <View style={styles.tableColumn2}>
-            <Text style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}>
-              {item.data.league}
-            </Text>
-            <View style={styles.textLayout1}>
-              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-                {item.data.home}
-              </Text>
-              <Text style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}>
-                {item.data.away}
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
               </Text>
             </View>
-            <View style={styles.textLayout1}>
-              <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
-              <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.tableColumn3}>
-            <Text style={styles.cl3_odd}>{item.trueKey}</Text>
-            <Text style={styles.cl3_odd}>{item.data.score}</Text>
-          </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
           </View>
         ))}
       </View>
@@ -315,7 +333,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 15,
   },
   cl2_odd: {
     color: "#4C0400",
@@ -324,7 +342,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 15,
   },
   cl3_odd: {
     color: "#55C147",
@@ -332,6 +350,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
-    fontSize: 18,
+    fontSize: 16,
   },
 });
