@@ -114,7 +114,7 @@ function EditGamesD() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Edit Games"
+        name="AdminEditGames"
         component={EditGames}
         options={{
           headerTitle: () => <HeaderLogo />,
