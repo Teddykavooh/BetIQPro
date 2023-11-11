@@ -62,7 +62,9 @@ FilterIcon.propTypes = {
 
 export default function EditGames() {
   const [showModal, setShowModal] = React.useState(false);
-  const [selectDate, setSelectDate] = React.useState("Select Date from Calendar");
+  const [selectDate, setSelectDate] = React.useState(
+    "Select Date from Calendar",
+  );
   const [isLoading, setIsLoading] = React.useState(false);
   const [dataUpdated, setDataUpdated] = React.useState(false);
   const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
@@ -90,6 +92,10 @@ export default function EditGames() {
       fetchData();
       setFetchDataOnMount(false);
     }
+    if (dataUpdated) {
+      fetchData();
+      setDataUpdated(false);
+    }
     // Triggers to the useEffect()
   }, [dataUpdated, fetchDataOnMount]);
 
@@ -98,32 +104,51 @@ export default function EditGames() {
       setIsLoading(true);
       //Empty array
       dataArr = [];
-      const q = query(
-        collection(FIRESTORE_DB, "betiqpro"),
-        where("TzAXQoDXNIx2h2q7IT6Q", "==", "away"),
-      );
-      // const q = query(
-      //   collection(FIRESTORE_DB, "betiqpro"),
-      //   where("selectDate", "==", filter),
-      // );
-      const querySnapshot = await getDocs(q);
-      // const dataArr = [];
-      querySnapshot.forEach(doc => {
-        // doc.data() is never undefined for query doc snapshots
-        dataArr.push({ id: doc.id, data: doc.data() });
-        // console.log(doc.id, " => ", doc.data());
+      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      let q;
+      if (filter.type === "selectDate") {
+        q = query(
+          collection(FIRESTORE_DB, "betiqpro"),
+          where(doc.id, "selectDate", "==", filter),
+        );
+      }
+      if (filter.type === "category") {
+        q = query(
+          collection(FIRESTORE_DB, "betiqpro"),
+          where(doc.id, "category", "==", filter),
+        );
+      }
+      querySnapshot.forEach(async () => {
+        try {
+          const querySnapshot2 = await getDocs(q);
+          querySnapshot2.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            dataArr.push({ id: doc.id, data: doc.data() });
+            // console.log(doc.id, " => ", doc.data());
+          });
+          setData(dataArr);
+          setIsLoading(false);
+          Alert.alert("Query successful :)");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          // Handle the error as needed
+          setIsLoading(false);
+          Alert.alert("Error fetching data by query :(");
+        }
       });
-      setData(dataArr);
-      setIsLoading(false);
     };
 
-    if (filter !== "All" && filter !== null) {
+    if (
+      filter !== "All" &&
+      filter !== null &&
+      filter !== "Select Date from Calendar"
+    ) {
       fetchDataByQuery();
       setFetchDataByQueryOnMount(false);
     } else {
       setFilter(null);
       setFetchDataByQueryOnMount(false);
-      // setFetchDataOnMount(true);
+      setFetchDataOnMount(true);
     }
     // Triggers to the useEffect()
   }, [filter, fetchDataByQueryOnMount]);
@@ -269,6 +294,26 @@ export default function EditGames() {
   };
 
   function FilterPicker() {
+    const getCategoryFromValue = value => {
+      switch (value) {
+        case { selectDate }:
+          return { date: { selectDate } };
+        case "Daily 3+":
+          return { category: "Daily 3+" };
+        case "Daily 5+":
+          return { category: "Daily 5+" };
+        case "Daily 10+":
+          return { category: "Daily 10+" };
+        case "Daily 25+":
+          return { category: "Daily 25+" };
+        case "Weekly 70+":
+          return { category: "Weekly 70+" };
+        case "Alternative VIP":
+          return { category: "Alternative VIP" };
+        default:
+          return "All";
+      }
+    };
     return (
       <View
         style={{
@@ -281,18 +326,19 @@ export default function EditGames() {
         <Picker
           selectedValue={filter}
           onValueChange={value => {
-            setFilter(value);
+            const newFilterValue = getCategoryFromValue(value);
+            setFilter(newFilterValue);
             setFilterModal(false);
           }}
         >
-          <Picker.Item label={selectDate}></Picker.Item>
-          <Picker.Item label="Daily 3" value="Daily 3" />
-          <Picker.Item label="Daily 5" value="Daily 5" />
+          <Picker.Item label={selectDate} value={selectDate} />
+          <Picker.Item label="Daily 3+" value="Daily 3+" />
+          <Picker.Item label="Daily 5+" value="Daily 5+" />
           <Picker.Item label="Daily 10+" value="Daily 10+" />
           <Picker.Item label="Daily 25+" value="Daily 25+" />
           <Picker.Item label="Weekly 70+" value="Weekly 70+" />
           <Picker.Item label="Alternative VIP" value="Alternative VIP" />
-          <Picker.Item label="All"></Picker.Item>
+          <Picker.Item label="All" value="All" />
         </Picker>
       </View>
     );
