@@ -181,13 +181,11 @@ export default function EditGames() {
     try {
       setIsLoading(true);
       console.log("Delete initiated for ID:", itemId);
-      console.log("setfetch1: " + fetchDataOnMount);
       console.log("setDataUpdated1: " + dataUpdated);
       await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
       console.log("Delete successful for ID:", itemId);
       setDataUpdated(!dataUpdated);
       console.log("setDataUpdated2: " + dataUpdated);
-      console.log("setfetch2: " + fetchDataOnMount);
       setIsLoading(false);
       Alert.alert("Item deletion successful :)");
     } catch (error) {
