@@ -66,13 +66,13 @@ export default function EditGames() {
     "Select Date from Calendar",
   );
   const [isLoading, setIsLoading] = React.useState(false);
-  const [dataUpdated, setDataUpdated] = React.useState(false);
-  const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
+  const [dataUpdated, setDataUpdated] = React.useState(true);
+  // const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [showFilterModal, setFilterModal] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
-  const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
-    React.useState(true);
+  // const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
+  //   React.useState(true);
   let dataArr = [];
 
   React.useEffect(() => {
@@ -80,62 +80,84 @@ export default function EditGames() {
       setIsLoading(true);
       const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
       // const dataArr = [];
+      console.log("Query Snapshot Size:", querySnapshot.size);
       querySnapshot.forEach(doc => {
         // doc.data() is never undefined for query doc snapshots
         dataArr.push({ id: doc.id, data: doc.data() });
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
       });
       setData(dataArr);
       setIsLoading(false);
     };
-    if (fetchDataOnMount) {
-      fetchData();
-      setFetchDataOnMount(false);
-    }
+    // if (fetchDataOnMount) {
+    //   fetchData();
+    //   setFetchDataOnMount(false);
+    // }
     if (dataUpdated) {
       fetchData();
       setDataUpdated(false);
     }
     // Triggers to the useEffect()
-  }, [dataUpdated, fetchDataOnMount]);
+  }, [dataUpdated]);
 
   React.useEffect(() => {
     const fetchDataByQuery = async () => {
       setIsLoading(true);
       //Empty array
       dataArr = [];
-      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const filterType = filter.type;
+      // console.log("My filter: " + filterType + " Typeof: " + typeof filterType + " Value: " + filter.value + ", " + typeof filter.value);
       let q;
-      if (filter.type === "selectDate") {
+      if (filterType === "date") {
         q = query(
           collection(FIRESTORE_DB, "betiqpro"),
-          where(doc.id, "selectDate", "==", filter),
+          where("selectDate", "==", filter.value),
         );
+        // console.log("Confirmation: " + (filter.value === "2023-11-09"));
       }
-      if (filter.type === "category") {
+      if (filterType === "category") {
         q = query(
           collection(FIRESTORE_DB, "betiqpro"),
-          where(doc.id, "category", "==", filter),
+          where("category", "==", filter.value),
         );
       }
-      querySnapshot.forEach(async () => {
-        try {
-          const querySnapshot2 = await getDocs(q);
-          querySnapshot2.forEach(doc => {
-            // doc.data() is never undefined for query doc snapshots
-            dataArr.push({ id: doc.id, data: doc.data() });
-            // console.log(doc.id, " => ", doc.data());
-          });
-          setData(dataArr);
-          setIsLoading(false);
-          Alert.alert("Query successful :)");
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          // Handle the error as needed
-          setIsLoading(false);
-          Alert.alert("Error fetching data by query :(");
-        }
-      });
+      try {
+        const querySnapshot2 = await getDocs(q);
+        console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        querySnapshot2.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log("Do i get here?");
+          dataArr.push({ id: doc.id, data: doc.data() });
+          // console.log("My query data: " + "\n" + doc.id, " => ", doc.data());
+        });
+        setData(dataArr);
+        // console.log("My dataArr: " + dataArr);
+        setIsLoading(false);
+        Alert.alert("Query successful :)");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error as needed
+        setIsLoading(false);
+        Alert.alert("Error fetching data by query :(");
+        setFilter(null);
+      }
+      //   try {
+      //     const querySnapshot2 = await getDocs(q);
+      //     querySnapshot2.forEach(doc => {
+      //       // doc.data() is never undefined for query doc snapshots
+      //       dataArr.push({ id: doc.id, data: doc.data() });
+      //       // console.log(doc.id, " => ", doc.data());
+      //     });
+      //     setData(dataArr);
+      //     setIsLoading(false);
+      //     // Alert.alert("Query successful :)");
+      //   } catch (error) {
+      //     console.error("Error fetching data:", error);
+      //     // Handle the error as needed
+      //     setIsLoading(false);
+      //     // Alert.alert("Error fetching data by query :(");
+      //   }
+      // });
     };
 
     if (
@@ -144,14 +166,16 @@ export default function EditGames() {
       filter !== "Select Date from Calendar"
     ) {
       fetchDataByQuery();
-      setFetchDataByQueryOnMount(false);
+      // setFetchDataByQueryOnMount(false);
+      // setFilter("Select Date from Calendar");
     } else {
+      // console.log("Shite happened");
+      // console.log("Filter: " + filter);
       setFilter(null);
-      setFetchDataByQueryOnMount(false);
-      setFetchDataOnMount(true);
+      setDataUpdated(!dataUpdated);
     }
     // Triggers to the useEffect()
-  }, [filter, fetchDataByQueryOnMount]);
+  }, [filter]);
 
   const handleDeleteItem = async itemId => {
     try {
@@ -296,20 +320,25 @@ export default function EditGames() {
   function FilterPicker() {
     const getCategoryFromValue = value => {
       switch (value) {
-        case { selectDate }:
-          return { date: { selectDate } };
+        case "Select Your Filter ...":
+          return "All";
+        case "Select Date from Calendar":
+          return "All";
+        case selectDate:
+          // console.log("Triggered");
+          return { type: "date", value: selectDate };
         case "Daily 3+":
-          return { category: "Daily 3+" };
+          return { type: "category", value: "Daily 3+" };
         case "Daily 5+":
-          return { category: "Daily 5+" };
+          return { type: "category", value: "Daily 5+" };
         case "Daily 10+":
-          return { category: "Daily 10+" };
+          return { type: "category", value: "Daily 10+" };
         case "Daily 25+":
-          return { category: "Daily 25+" };
+          return { type: "category", value: "Daily 25+" };
         case "Weekly 70+":
-          return { category: "Weekly 70+" };
+          return { type: "category", value: "Weekly 70+" };
         case "Alternative VIP":
-          return { category: "Alternative VIP" };
+          return { type: "category", value: "Alternative VIP" };
         default:
           return "All";
       }
@@ -327,10 +356,12 @@ export default function EditGames() {
           selectedValue={filter}
           onValueChange={value => {
             const newFilterValue = getCategoryFromValue(value);
+            // console.log("Me filter value: " + newFilterValue);
             setFilter(newFilterValue);
             setFilterModal(false);
           }}
         >
+          <Picker.Item label="Select Your Filter ..." value="Select Your Filter ..." />
           <Picker.Item label={selectDate} value={selectDate} />
           <Picker.Item label="Daily 3+" value="Daily 3+" />
           <Picker.Item label="Daily 5+" value="Daily 5+" />
