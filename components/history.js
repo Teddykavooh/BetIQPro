@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
@@ -27,7 +27,7 @@ function FreeTips() {
           }
         }
         dataArr.push({ id: doc.id, data: doc.data(), trueKey: trueKey });
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
       });
       setData(dataArr);
       setIsLoading(false);
@@ -91,13 +91,18 @@ function FreeTips() {
         <Text style={styles.headerTextRounded}>Today</Text>
         <Text style={styles.headerTextRounded}>{formattedDate}</Text>
       </View>
-
-      <View style={styles.content}>
-        {/* <Text style={styles.contentText}>Content Section</Text> */}
-        <ScrollView>
-          <TableView />
-        </ScrollView>
-      </View>
+      {isLoading ? ( // Check isLoading state
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E" />
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {/* <Text style={styles.contentText}>Content Section</Text> */}
+          <ScrollView>
+            <TableView />
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }
@@ -209,13 +214,18 @@ function VipSuccess() {
         <Text style={styles.headerTextRounded}>Today</Text>
         <Text style={styles.headerTextRounded}>{formattedDate}</Text>
       </View>
-
+      {isLoading ? ( // Check isLoading state
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E" />
+        </View>
+      ) : (
       <View style={styles.content}>
         {/* <Text style={styles.contentText}>Content Section</Text> */}
         <ScrollView>
           <TableView />
         </ScrollView>
       </View>
+      )}
     </View>
   );
 }
