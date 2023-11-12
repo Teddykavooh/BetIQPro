@@ -335,8 +335,8 @@ export default function AddGames() {
                 selectedValue={category}
                 onValueChange={value => setCategory(value)}
               >
-                <Picker.Item label="Daily 3" value="Daily 3" />
-                <Picker.Item label="Daily 5" value="Daily 5" />
+                <Picker.Item label="Daily 3+" value="Daily 3+" />
+                <Picker.Item label="Daily 5+" value="Daily 5+" />
                 <Picker.Item label="Daily 10+" value="Daily 10+" />
                 <Picker.Item label="Daily 25+" value="Daily 25+" />
                 <Picker.Item label="Weekly 70+" value="Weekly 70+" />
