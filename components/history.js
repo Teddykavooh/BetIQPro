@@ -1,40 +1,66 @@
 import * as React from "react";
-import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator, Alert, Pressable } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
-import { collection, getDocs, doc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import PropTypes from "prop-types"; // Import prop-types;
+
+const RefreshIcon = ({ onPress }) => {
+  return (
+    <Pressable onPress={onPress}>
+      <FontAwesome name="refresh" size={25} color="black" />
+    </Pressable>
+  );
+};
+RefreshIcon.propTypes = {
+  onPress: PropTypes.func, // Define the onPress prop
+};
 
 function FreeTips() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
       const dataArr = [];
-      querySnapshot.forEach(doc => {
-        // doc.data() is never undefined for query doc snapshots
-        const data = doc.data();
-        const status = data.status;
-        let trueKey = null;
-        // Find the key where the value is true
-        for (const key in status) {
-          if (status[key] === true) {
-            trueKey = key;
-            break;
-          }
+      try {
+        if (querySnapshot.size !== 0) {
+          querySnapshot.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            const data = doc.data();
+            const status = data.status;
+            //Find key=N/A
+            for(const key in status) {
+              if ((key === "N/A") && (data.category === "Daily 3+" || data.category === "Daily 5+") && data.isShow === true) {
+                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                // console.log(doc.id, " => ", doc.data());
+                break;
+              }
+            }
+          });
+          setData(dataArr);
+        } else {
+          console.log("Nothing to query or Check your internet");
+          Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
         }
-        dataArr.push({ id: doc.id, data: doc.data(), trueKey: trueKey });
-        // console.log(doc.id, " => ", doc.data());
-      });
-      setData(dataArr);
+      } catch (error) {
+        console.log("Fetch failed");
+        Alert.alert("Fetching data failed :(");
+      }
       setIsLoading(false);
     };
     fetchData();
+    if(refresh === true) {
+      setRefresh(false);
+    }
     // Triggers to the useEffect()
-  }, []);
+  }, [refresh]);
 
   function TableView() {
     return (
@@ -42,6 +68,7 @@ function FreeTips() {
         {data.map(item => (
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={20} color="#FFF" />
               <Text
                 style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
               >
@@ -88,8 +115,11 @@ function FreeTips() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTextRounded}>Today</Text>
-        <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateView}>
+          <Text style={styles.headerTextRounded}>Today</Text>
+          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        </View>
+        <RefreshIcon onPress={() => setRefresh(true)}/>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -108,56 +138,48 @@ function FreeTips() {
 }
 
 function VipTips() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Header Section</Text>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.contentText}>Content Section</Text>
-      </View>
-    </View>
-  );
-}
-
-function VipSuccess() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
       const dataArr = [];
-      querySnapshot.forEach(doc => {
-        // doc.data() is never undefined for query doc snapshots
-        const data = doc.data();
-        const status = data.status;
-        let trueKey = null;
-        // Find the key where the value is true
-        for (const key in status) {
-          if (status[key] === true) {
-            trueKey = key;
-            break;
-          }
+      // console.log("Query Snapshot Size:", querySnapshot.size);
+      try {
+        if (querySnapshot.size !== 0) {
+          querySnapshot.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            const data = doc.data();
+            const status = data.status;
+            //Find key=N/A
+            for(const key in status) {
+              if ((key === "N/A") && (data.category !== "Daily 3+" && data.category !== "Daily 5+") && data.isShow === true) {
+                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                // console.log(doc.id, " => ", doc.data());
+                break;
+              }
+            }
+          });
+          setData(dataArr);
+        } else {
+          console.log("Nothing to query or Check your internet");
+          Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
         }
-        // Filter VIP games
-        if (
-          data.category === "Daily 3+"
-          // &&
-          // !(data.category === "Daily 5+")
-        ) {
-          dataArr.push({ id: doc.id, data: doc.data(), trueKey: trueKey });
-          // console.log(doc.id, " => ", doc.data());
-        }
-      });
-      setData(dataArr);
+      } catch (error) {
+        console.log("Fetch failed");
+        Alert.alert("Fetching data failed :(");
+      }
       setIsLoading(false);
     };
     fetchData();
+    if(refresh === true) {
+      setRefresh(false);
+    }
     // Triggers to the useEffect()
-  }, []);
+  }, [refresh]);
 
   function TableView() {
     return (
@@ -165,6 +187,7 @@ function VipSuccess() {
         {data.map(item => (
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
               <Text
                 style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
               >
@@ -211,8 +234,131 @@ function VipSuccess() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTextRounded}>Today</Text>
-        <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateView}>
+          <Text style={styles.headerTextRounded}>Today</Text>
+          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        </View>
+        <RefreshIcon onPress={() => setRefresh(true)}/>
+      </View>
+      {isLoading ? ( // Check isLoading state
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E" />
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {/* <Text style={styles.contentText}>Content Section</Text> */}
+          <ScrollView>
+            <TableView />
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function VipSuccess() {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const dataArr = [];
+      try {
+        if (querySnapshot.size !== 0) {
+          querySnapshot.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            const data = doc.data();
+            const status = data.status;
+            // Find the won key where the value is true
+            for (const key in status) {
+              if (key === "won") {
+                if (status[key] === true && data.isShow === true) {
+                  // console.log(doc.id, " => ", doc.data());
+                  dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                  break;
+                }
+              }
+            }
+          });
+          setData(dataArr);
+        } else {
+          console.log("Nothing to query or Check your internet");
+          Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
+        }
+      } catch (error) {
+        console.log("Fetch failed");
+        Alert.alert("Fetching data failed :(");
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+    if(refresh === true) {
+      setRefresh(false);
+    }
+    // Triggers to the useEffect()
+  }, [refresh]);
+
+  function TableView() {
+    return (
+      <View>
+        {data.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
+  // Get today's date
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString();
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.dateView}>
+          <Text style={styles.headerTextRounded}>Today</Text>
+          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        </View>
+        <RefreshIcon onPress={() => setRefresh(true)}/>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -270,6 +416,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -344,22 +491,39 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     fontWeight: "bold",
     fontSize: 15,
+    minWidth: 50,
+    textAlign: "center",
   },
   cl2_odd: {
     color: "#4C0400",
     backgroundColor: "#F88E10",
     borderWidth: 1,
     borderColor: "white",
-    borderRadius: 6,
+    borderRadius: 4,
     fontWeight: "bold",
     fontSize: 15,
+    minWidth: 25,
+    textAlign: "center",
   },
   cl3_odd: {
     color: "#55C147",
     backgroundColor: "#2B2D27",
     borderWidth: 1,
     borderColor: "white",
-    borderRadius: 6,
+    borderRadius: 5,
     fontSize: 16,
   },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  dateView: {
+    flexDirection: "row"
+  }
 });
