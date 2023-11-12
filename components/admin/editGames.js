@@ -389,7 +389,17 @@ export default function EditGames() {
           transparent={true}
           onRequestClose={() => setFilterModal(false)}
         >
-          <FilterPicker />
+          <View style={
+            {
+              flex: 0.05,
+              top: 160,
+              // justifyContent: "center",
+              // alignItems: "center",
+              backgroundColor: "#DDD"
+            }
+          }>
+            <FilterPicker />
+          </View>
         </Modal>
         <Modal
           visible={showModal}
