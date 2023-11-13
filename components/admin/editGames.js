@@ -16,7 +16,7 @@ import { Calendar } from "react-native-calendars";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import PropTypes from "prop-types"; // Import prop-types;
+import PropTypes from "prop-types";
 import { FIRESTORE_DB } from "../../database/firebase";
 import {
   collection,
@@ -29,6 +29,17 @@ import {
 } from "firebase/firestore";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
+
+const RefreshIcon = ({ onPress }) => {
+  return (
+    <Pressable onPress={onPress}>
+      <FontAwesome name="refresh" size={25} color="black" />
+    </Pressable>
+  );
+};
+RefreshIcon.propTypes = {
+  onPress: PropTypes.func, // Define the onPress prop
+};
 
 const CalendarIcon = ({ onPress }) => {
   return (
@@ -77,17 +88,7 @@ export default function EditGames() {
   const [filter, setFilter] = React.useState(null);
   // const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
   //   React.useState(true);
-  const [showEditModal, setShowEditModal] = React.useState(false);
-  const [score, setScore] = React.useState(data.score);
-  const [predictions, setPredictions] = React.useState(data.predictions);
-  const [home, setHome] = React.useState(data.home);
-  const [away, setAway] = React.useState(data.away);
-  const [odds, setOdds] = React.useState(data.odds);
-  const [time, setTime] = React.useState(data.time);
-  const [league, setLeague] = React.useState(data.league);
-  const [isLost, setIsLost] = React.useState(data.lost);
-  const [isShow, setIsShow] = React.useState(data.isShow);
-  const [category, setCategory] = React.useState(data.category);
+  const [refresh, setRefresh] = React.useState(false);
   let dataArr = [];
 
 
@@ -127,8 +128,12 @@ export default function EditGames() {
       fetchData();
       setDataUpdated(false);
     }
+    if(refresh === true) {
+      fetchData();
+      setRefresh(false);
+    }
     // Triggers to the useEffect()
-  }, [dataUpdated]);
+  }, [dataUpdated, refresh]);
 
   React.useEffect(() => {
     const fetchDataByQuery = async () => {
@@ -226,181 +231,45 @@ export default function EditGames() {
   };
 
   const handleUpdateItem = async itemId => {
-    await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), {
-      away: away,
-      category: category,
-      home: home,
-      isShow: isShow,
-      league: league,
-      odds:  odds,
-      predictions: predictions,
-      score: score,
-      selectDate: selectDate,
-      status: {
-        "N/A": isLost === null,
-        lost: isLost === true,
-        won: isLost === false,
-      },
-      time: time
-    });
+    try {
+      setIsLoading(true);
+      await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), {
+        away: away,
+        category: category,
+        home: home,
+        isShow: isShow,
+        league: league,
+        odds:  odds,
+        predictions: predictions,
+        score: score,
+        selectDate: selectDate,
+        status: {
+          "N/A": isLost === null,
+          lost: isLost === true,
+          won: isLost === false,
+        },
+        time: time
+      });
+      setIsLoading(false);
+      Alert.alert("Item update successful :)");
+    } catch (error) {
+      setIsLoading(false);
+      console.log("Item update failed: " + error);
+      Alert.alert("Item update failed :(");
+    }
   };
 
-  function EditView() {
-    return (
-      <View style={styles.editView}>
-        {data.map(item => (
-          <View key={item.id}>
-            <View>
-              <Text>{item.id}</Text>
-              <Text
-              style={{
-                fontWeight: "bold",
-                color: "white",
-                fontSize: 15,
-              }}
-            >
-              {selectDate}
-            </Text>
-            </View>
-            <View style={styles.row_layout}>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Time</Text>
-              <TextInput
-                placeholder="Enter Time"
-                value={time}
-                onChangeText={text => setTime(text)}
-              />
-            </View>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>League</Text>
-              <TextInput
-                placeholder="Enter League"
-                value={league}
-                onChangeText={text => setLeague(text)}
-              />
-            </View>
-          </View>
-          <View style={styles.row_layout}>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Home</Text>
-              <TextInput
-                placeholder="Enter Home Team"
-                value={home}
-                onChangeText={text => setHome(text)}
-              />
-            </View>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Away</Text>
-              <TextInput
-                placeholder="Enter Away Team"
-                value={away}
-                onChangeText={text => setAway(text)}
-              />
-            </View>
-          </View>
-          <View style={styles.row_layout}>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Predictions</Text>
-              <TextInput
-                placeholder="Enter Predictions"
-                value={predictions}
-                onChangeText={text => setPredictions(text)}
-              />
-            </View>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Odds</Text>
-              <TextInput
-                inputMode="decimal"
-                placeholder="Enter Odds"
-                value={odds ? odds.toString() : ""}
-                onChangeText={text => {
-                  const parsedValue = text.replace(/[^0-9.]/g, "");
-                  if (!isNaN(parsedValue)) {
-                    setOdds(parsedValue);
-                  }
-                }}
-              />
-            </View>
-          </View>
-          <View style={styles.row_layout}>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Status</Text>
-              <Picker
-                selectedValue={
-                  isLost === true ? "Lost" : isLost === false ? "Won" : "N/A"
-                }
-                onValueChange={value => {
-                  if (value === "Lost") {
-                    setIsLost(true);
-                  } else if (value === "Won") {
-                    setIsLost(false);
-                  } else {
-                    setIsLost(null);
-                  }
-                }}
-              >
-                <Picker.Item label="Won" value="Won" />
-                <Picker.Item label="Lost" value="Lost" />
-                <Picker.Item label="N/A" value="N/A" />
-              </Picker>
-            </View>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Score</Text>
-              <TextInput
-                placeholder="Enter Score"
-                value={score}
-                onChangeText={text => setScore(text)}
-              />
-            </View>
-          </View>
-          <View style={styles.row_layout}>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Category</Text>
-              <Picker
-                selectedValue={category}
-                onValueChange={value => setCategory(value)}
-              >
-                <Picker.Item label="Daily 3+" value="Daily 3+" />
-                <Picker.Item label="Daily 5+" value="Daily 5+" />
-                <Picker.Item label="Daily 10+" value="Daily 10+" />
-                <Picker.Item label="Daily 25+" value="Daily 25+" />
-                <Picker.Item label="Weekly 70+" value="Weekly 70+" />
-                <Picker.Item label="Alternative VIP" value="Alternative VIP" />
-              </Picker>
-            </View>
-            <View style={styles.fieldSet}>
-              <Text style={styles.legend}>Display</Text>
-              <View style={styles.toggleContainer}>
-                <Text>Hide</Text>
-                <Switch
-                  value={isShow}
-                  onValueChange={value => setIsShow(value)}
-                />
-                <Text>Show</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
-              <Button
-                color="#AF640D"
-                title="Publish"
-                onPress={() => {
-                  console.log("Publish Updates initiated");
-                  handleUpdateItem();
-                }}
-              ></Button>
-            </View>
-          </View>
-          </View>
-        ))}
-      </View>
-    );
-  }
-
+  const [showEditModal, setShowEditModal] = React.useState(false);
+  const [score, setScore] = React.useState(data.score);
+  const [predictions, setPredictions] = React.useState(data.predictions);
+  const [home, setHome] = React.useState(data.home);
+  const [away, setAway] = React.useState(data.away);
+  const [odds, setOdds] = React.useState(data.odds);
+  const [time, setTime] = React.useState(data.time);
+  const [league, setLeague] = React.useState(data.league);
+  const [isLost, setIsLost] = React.useState(data.lost);
+  const [isShow, setIsShow] = React.useState(data.isShow);
+  const [category, setCategory] = React.useState(data.category);
   function DetailsView() {
     return (
       <View>
@@ -486,7 +355,10 @@ export default function EditGames() {
                     borderColor: pressed ? null : "#D63E8B",
                   },
                 ]}
-                onPress={() => handleDeleteItem(item.id)}
+                onPress={() => {
+                  handleDeleteItem(item.id);
+                  setDataUpdated(!dataUpdated);
+                }}
               >
                 {({ pressed }) => (
                   <View style={styles.buttonText}>
@@ -506,20 +378,163 @@ export default function EditGames() {
                   </View>
                 )}
               </Pressable>
-              <Modal
-                visible={showEditModal}
-                animationType="fade"
-                transparent={true}
-                onRequestClose={() => setShowEditModal(false)}>
-                <View>
-                  <EditView
-                    data={data}
-                    dataUpdated={dataUpdated}
-                    setDataUpdated={setDataUpdated}
-                  />
-                </View>
-              </Modal>
             </View>
+            {/* EditView modal */}
+            <Modal
+              visible={showEditModal}
+              animationType="fade"
+              transparent={true}
+              onRequestClose={() => setShowEditModal(false)}>
+              <View style={styles.editView}>
+                <View>
+                  <View>
+                    <Text>{item.id}</Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "white",
+                        fontSize: 15,
+                      }}
+                    >
+                      {selectDate}
+                    </Text>
+                  </View>
+                  <View style={styles.row_layout}>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Time</Text>
+                      <TextInput
+                        placeholder="Enter Time"
+                        value={time}
+                        onChangeText={text => setTime(text)}
+                      />
+                    </View>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>League</Text>
+                      <TextInput
+                        placeholder="Enter League"
+                        value={league}
+                        onChangeText={text => setLeague(text)}
+                      />
+                    </View>
+                  </View>
+                  <View style={styles.row_layout}>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Home</Text>
+                      <TextInput
+                        placeholder="Enter Home Team"
+                        value={home}
+                        onChangeText={text => setHome(text)}
+                      />
+                    </View>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Away</Text>
+                      <TextInput
+                        placeholder="Enter Away Team"
+                        value={away}
+                        onChangeText={text => setAway(text)}
+                      />
+                    </View>
+                  </View>
+                  <View style={styles.row_layout}>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Predictions</Text>
+                      <TextInput
+                        placeholder="Enter Predictions"
+                        value={predictions}
+                        onChangeText={text => setPredictions(text)}
+                      />
+                    </View>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Odds</Text>
+                      <TextInput
+                        inputMode="decimal"
+                        placeholder="Enter Odds"
+                        value={odds ? odds.toString() : ""}
+                        onChangeText={text => {
+                          const parsedValue = text.replace(/[^0-9.]/g, "");
+                          if (!isNaN(parsedValue)) {
+                            setOdds(parsedValue);
+                          }
+                        }}
+                      />
+                    </View>
+                  </View>
+                  <View style={styles.row_layout}>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Status</Text>
+                      <Picker
+                        selectedValue={
+                          isLost === true ? "Lost" : isLost === false ? "Won" : "N/A"
+                        }
+                        onValueChange={value => {
+                          if (value === "Lost") {
+                            setIsLost(true);
+                          } else if (value === "Won") {
+                            setIsLost(false);
+                          } else {
+                            setIsLost(null);
+                          }
+                        }}
+                      >
+                        <Picker.Item label="Won" value="Won" />
+                        <Picker.Item label="Lost" value="Lost" />
+                        <Picker.Item label="N/A" value="N/A" />
+                      </Picker>
+                    </View>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Score</Text>
+                      <TextInput
+                        placeholder="Enter Score"
+                        value={score}
+                        onChangeText={text => setScore(text)}
+                      />
+                    </View>
+                  </View>
+                  <View style={styles.row_layout}>
+                  <View style={styles.fieldSet}>
+                    <Text style={styles.legend}>Category</Text>
+                    <Picker
+                      selectedValue={category}
+                      onValueChange={value => setCategory(value)}
+                    >
+                      <Picker.Item label="Daily 3+" value="Daily 3+" />
+                      <Picker.Item label="Daily 5+" value="Daily 5+" />
+                      <Picker.Item label="Daily 10+" value="Daily 10+" />
+                      <Picker.Item label="Daily 25+" value="Daily 25+" />
+                      <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+                      <Picker.Item label="Alternative VIP" value="Alternative VIP" />
+                    </Picker>
+                  </View>
+                  <View style={styles.fieldSet}>
+                    <Text style={styles.legend}>Display</Text>
+                    <View style={styles.toggleContainer}>
+                      <Text>Hide</Text>
+                      <Switch
+                        value={isShow}
+                        onValueChange={value => setIsShow(value)}
+                      />
+                      <Text>Show</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}>
+                    <Button
+                      color="#AF640D"
+                      title="Publish"
+                      onPress={() => {
+                        console.log("Publish Updates initiated");
+                        handleUpdateItem();
+                      }}
+                    ></Button>
+                  </View>
+                </View>
+                </View>
+              </View>
+            </Modal>
           </View>
         ))}
       </View>
@@ -692,6 +707,7 @@ export default function EditGames() {
             // console.log("Me status_fetch: " + fetchDataOnMount);
           }}
         />
+        <RefreshIcon onPress={() => setRefresh(true)}/>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>

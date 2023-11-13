@@ -42,7 +42,7 @@ export default function AddGames() {
         isShow,
         home,
         league,
-        predictions, // Replace with your actual odd label
+        predictions,
         odds,
         score,
         time,
