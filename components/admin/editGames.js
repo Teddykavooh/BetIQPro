@@ -81,70 +81,46 @@ export default function EditGames() {
     "Select Date from Calendar",
   );
   const [isLoading, setIsLoading] = React.useState(false);
-  const [dataUpdated, setDataUpdated] = React.useState(true);
-  // const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
+  const [dataUpdated, setDataUpdated] = React.useState(false);
+  const [fetchDataOnMount, setFetchDataOnMount] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [showFilterModal, setFilterModal] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
-  // const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
-  //   React.useState(true);
   const [refresh, setRefresh] = React.useState(false);
   const [isLost, setIsLost] = React.useState(null);
-  let dataArr = [];
 
   React.useEffect(() => {
+    // console.log("Fetchdata effect triggered!!!");
     const fetchData = async () => {
       setIsLoading(true);
       const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
-      // const dataArr = [];
-      console.log("Query Snapshot Size:", querySnapshot.size);
+      const dataArr = [];
+      //     console.log("Query Snapshot Size:", querySnapshot.size);
       querySnapshot.forEach(doc => {
-        // doc.data() is never undefined for query doc snapshots
+        //       // doc.data() is never undefined for query doc snapshots
         const data = doc.data();
-        const status = data.status;
-        // Find the won key where the value is true
-        for (const me_key in status) {
-          // console.log(doc.id, " => ", doc.data());
-          dataArr.push({
-            id: doc.id,
-            data: doc.data(),
-            statusKey: me_key,
-            keyValue: status[me_key],
-          });
-          if (me_key === "N/A") {
-            setIsLost(null);
-          }
-          if (me_key === "lost" || me_key === "won") {
-            setIsLost(status[me_key]);
-          }
-          // break;
-        }
-        // dataArr.push({ id: doc.id, data: doc.data() });
+        dataArr.push({ id: doc.id, data: doc.data() });
         // console.log(doc.id, " => ", doc.data());
       });
       setData(dataArr);
       setIsLoading(false);
     };
-    // if (fetchDataOnMount) {
-    //   fetchData();
-    //   setFetchDataOnMount(false);
-    // }
-    if (dataUpdated) {
+    if (fetchDataOnMount) {
       fetchData();
-      setDataUpdated(false);
+      setFetchDataOnMount(false);
     }
-    if (refresh === true) {
+    if (refresh) {
       fetchData();
       setRefresh(false);
     }
     // Triggers to the useEffect()
-  }, [dataUpdated, refresh]);
+  }, [fetchDataOnMount, refresh]);
 
   React.useEffect(() => {
     const fetchDataByQuery = async () => {
       setIsLoading(true);
       //Empty array
-      dataArr = [];
+      const dataArr = [];
       const filterType = filter.type;
       // console.log("My filter: " + filterType + " Typeof: " + typeof filterType + " Value: " + filter.value + ", " + typeof filter.value);
       let q;
@@ -163,7 +139,7 @@ export default function EditGames() {
       }
       try {
         const querySnapshot2 = await getDocs(q);
-        console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
         querySnapshot2.forEach(doc => {
           // doc.data() is never undefined for query doc snapshots
           // console.log("Do i get here?");
@@ -181,23 +157,6 @@ export default function EditGames() {
         Alert.alert("Error fetching data by query :(");
         setFilter(null);
       }
-      //   try {
-      //     const querySnapshot2 = await getDocs(q);
-      //     querySnapshot2.forEach(doc => {
-      //       // doc.data() is never undefined for query doc snapshots
-      //       dataArr.push({ id: doc.id, data: doc.data() });
-      //       // console.log(doc.id, " => ", doc.data());
-      //     });
-      //     setData(dataArr);
-      //     setIsLoading(false);
-      //     // Alert.alert("Query successful :)");
-      //   } catch (error) {
-      //     console.error("Error fetching data:", error);
-      //     // Handle the error as needed
-      //     setIsLoading(false);
-      //     // Alert.alert("Error fetching data by query :(");
-      //   }
-      // });
     };
 
     if (
@@ -221,12 +180,12 @@ export default function EditGames() {
     try {
       setIsLoading(true);
       console.log("Delete initiated for ID:", itemId);
-      console.log("setDataUpdated1: " + dataUpdated);
+      // console.log("setDataUpdated1: " + dataUpdated);
       await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
       console.log("Delete successful for ID:", itemId);
-      setDataUpdated(!dataUpdated);
-      console.log("setDataUpdated2: " + dataUpdated);
+      // console.log("setDataUpdated2: " + dataUpdated);
       setIsLoading(false);
+      setRefresh(true);
       Alert.alert("Item deletion successful :)");
     } catch (error) {
       setIsLoading(false);
@@ -258,6 +217,7 @@ export default function EditGames() {
       };
       await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), dataToUpdate);
       setIsLoading(false);
+      setRefresh(true);
       Alert.alert("Item update successful :)");
     } catch (error) {
       setIsLoading(false);
@@ -273,6 +233,7 @@ export default function EditGames() {
     const [editedData, setEditedData] = React.useState([]);
 
     const openEditModal = index => {
+      console.log("openEditModal");
       setIsLoading(true);
       setEditModalIndex(index);
       const selectedItem = data[index];
@@ -765,7 +726,12 @@ export default function EditGames() {
             // console.log("Me status_fetch: " + fetchDataOnMount);
           }}
         />
-        <RefreshIcon onPress={() => setRefresh(true)} />
+        <RefreshIcon
+          onPress={() => {
+            console.log("Refresh Icon clicked");
+            setRefresh(true);
+          }}
+        />
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
