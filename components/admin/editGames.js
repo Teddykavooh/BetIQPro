@@ -89,8 +89,8 @@ export default function EditGames() {
   // const [fetchDataByQueryOnMount, setFetchDataByQueryOnMount] =
   //   React.useState(true);
   const [refresh, setRefresh] = React.useState(false);
+  const [isLost, setIsLost] = React.useState(null);
   let dataArr = [];
-
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -103,14 +103,19 @@ export default function EditGames() {
         const data = doc.data();
         const status = data.status;
         // Find the won key where the value is true
-        for (const key in status) {
+        for (const me_key in status) {
           // console.log(doc.id, " => ", doc.data());
-          dataArr.push({ id: doc.id, data: doc.data(), statusKey: key, keyValue: status[key] });
-          if (key === "N/A") {
+          dataArr.push({
+            id: doc.id,
+            data: doc.data(),
+            statusKey: me_key,
+            keyValue: status[me_key],
+          });
+          if (me_key === "N/A") {
             setIsLost(null);
           }
-          if (key === "lost" || key === "won") {
-            setIsLost(status[key]);
+          if (me_key === "lost" || me_key === "won") {
+            setIsLost(status[me_key]);
           }
           // break;
         }
@@ -128,7 +133,7 @@ export default function EditGames() {
       fetchData();
       setDataUpdated(false);
     }
-    if(refresh === true) {
+    if (refresh === true) {
       fetchData();
       setRefresh(false);
     }
@@ -233,23 +238,25 @@ export default function EditGames() {
   const handleUpdateItem = async itemId => {
     try {
       setIsLoading(true);
-      await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), {
-        away: away,
-        category: category,
-        home: home,
-        isShow: isShow,
-        league: league,
-        odds:  odds,
-        predictions: predictions,
-        score: score,
-        selectDate: selectDate,
+      // Prepare the data to update in Firestore
+      const dataToUpdate = {
+        away: editedData.away,
+        category: editedData.category,
+        home: editedData.home,
+        isShow: editedData.isShow,
+        league: editedData.league,
+        odds: editedData.odds,
+        predictions: editedData.predictions,
+        score: editedData.score,
+        selectDate: editedData.selectDate,
         status: {
-          "N/A": isLost === null,
-          lost: isLost === true,
-          won: isLost === false,
+          "N/A": editedData.status === null,
+          lost: editedData.status === true,
+          won: editedData.status === false,
         },
-        time: time
-      });
+        time: editedData.time,
+      };
+      await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), dataToUpdate);
       setIsLoading(false);
       Alert.alert("Item update successful :)");
     } catch (error) {
@@ -260,20 +267,25 @@ export default function EditGames() {
   };
 
   const [showEditModal, setShowEditModal] = React.useState(false);
-  const [score, setScore] = React.useState(data.score);
-  const [predictions, setPredictions] = React.useState(data.predictions);
-  const [home, setHome] = React.useState(data.home);
-  const [away, setAway] = React.useState(data.away);
-  const [odds, setOdds] = React.useState(data.odds);
-  const [time, setTime] = React.useState(data.time);
-  const [league, setLeague] = React.useState(data.league);
-  const [isLost, setIsLost] = React.useState(data.lost);
-  const [isShow, setIsShow] = React.useState(data.isShow);
-  const [category, setCategory] = React.useState(data.category);
+
   function DetailsView() {
+    const [editModalIndex, setEditModalIndex] = React.useState(null);
+    const [editedData, setEditedData] = React.useState([]);
+
+    const openEditModal = index => {
+      setIsLoading(true);
+      setEditModalIndex(index);
+      const selectedItem = data[index];
+      setEditedData(selectedItem.data);
+      setIsLoading(false);
+    };
+    const closeEditModal = () => {
+      setEditModalIndex(null);
+      setEditedData([]);
+    };
     return (
       <View>
-        {data.map(item => (
+        {data.map((item, index) => (
           <View key={item.id} style={styles.detail_view}>
             <View style={styles.d_v_cl1}>
               <Text style={styles.d_text}>{item.data.league}</Text>
@@ -326,6 +338,7 @@ export default function EditGames() {
                 onPress={() => {
                   console.log("Edit initiated");
                   setShowEditModal(true);
+                  openEditModal();
                 }}
               >
                 {({ pressed }) => (
@@ -380,20 +393,36 @@ export default function EditGames() {
               </Pressable>
             </View>
             {/* EditView modal */}
-            <Modal
-              visible={showEditModal}
-              animationType="fade"
-              transparent={true}
-              onRequestClose={() => setShowEditModal(false)}>
-              <View style={styles.editView}>
-                <View>
-                  <View>
-                    <Text>{item.id}</Text>
+            {editModalIndex === index && (
+              <Modal
+                visible={showEditModal}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => {
+                  setShowEditModal(false);
+                  closeEditModal();
+                }}
+              >
+                <View style={styles.editView}>
+                  <View
+                    style={{
+                      borderWidth: 3,
+                      borderColor: "#FEF202",
+                      width: 200,
+                      height: 60,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 5,
+                      marginBottom: 5,
+                    }}
+                  >
+                    {/* <Text>{item.data.id}</Text> */}
                     <Text
                       style={{
                         fontWeight: "bold",
                         color: "white",
                         fontSize: 15,
+                        textAlign: "center",
                       }}
                     >
                       {selectDate}
@@ -403,17 +432,21 @@ export default function EditGames() {
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Time</Text>
                       <TextInput
-                        placeholder="Enter Time"
-                        value={time}
-                        onChangeText={text => setTime(text)}
+                        // placeholder="Enter Time"
+                        value={editedData.time}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, time: text })
+                        }
                       />
                     </View>
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>League</Text>
                       <TextInput
-                        placeholder="Enter League"
-                        value={league}
-                        onChangeText={text => setLeague(text)}
+                        // placeholder="Enter League"
+                        value={editedData.league}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, league: text })
+                        }
                       />
                     </View>
                   </View>
@@ -421,17 +454,21 @@ export default function EditGames() {
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Home</Text>
                       <TextInput
-                        placeholder="Enter Home Team"
-                        value={home}
-                        onChangeText={text => setHome(text)}
+                        // placeholder="Enter Home Team"
+                        value={editedData.home}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, home: text })
+                        }
                       />
                     </View>
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Away</Text>
                       <TextInput
-                        placeholder="Enter Away Team"
-                        value={away}
-                        onChangeText={text => setAway(text)}
+                        // placeholder="Enter Away Team"
+                        value={editedData.away}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, away: text })
+                        }
                       />
                     </View>
                   </View>
@@ -439,21 +476,25 @@ export default function EditGames() {
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Predictions</Text>
                       <TextInput
-                        placeholder="Enter Predictions"
-                        value={predictions}
-                        onChangeText={text => setPredictions(text)}
+                        // placeholder="Enter Predictions"
+                        value={editedData.predictions}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, predictions: text })
+                        }
                       />
                     </View>
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Odds</Text>
                       <TextInput
                         inputMode="decimal"
-                        placeholder="Enter Odds"
-                        value={odds ? odds.toString() : ""}
+                        // placeholder="Enter Odds"
+                        // value={odds ? odds.toString() : ""}
+                        value={editedData.odds}
                         onChangeText={text => {
                           const parsedValue = text.replace(/[^0-9.]/g, "");
                           if (!isNaN(parsedValue)) {
-                            setOdds(parsedValue);
+                            // setOdds(parsedValue);
+                            setEditedData({ ...editedData, odds: parsedValue });
                           }
                         }}
                       />
@@ -464,15 +505,19 @@ export default function EditGames() {
                       <Text style={styles.legend}>Status</Text>
                       <Picker
                         selectedValue={
-                          isLost === true ? "Lost" : isLost === false ? "Won" : "N/A"
+                          editedData.isLost === true
+                            ? "Lost"
+                            : isLost === false
+                            ? "Won"
+                            : "N/A"
                         }
                         onValueChange={value => {
                           if (value === "Lost") {
-                            setIsLost(true);
+                            setEditedData({ ...editedData, isLost: true });
                           } else if (value === "Won") {
-                            setIsLost(false);
+                            setEditedData({ ...editedData, isLost: false });
                           } else {
-                            setIsLost(null);
+                            setEditedData({ ...editedData, isLost: null });
                           }
                         }}
                       >
@@ -484,36 +529,46 @@ export default function EditGames() {
                     <View style={styles.fieldSet}>
                       <Text style={styles.legend}>Score</Text>
                       <TextInput
-                        placeholder="Enter Score"
-                        value={score}
-                        onChangeText={text => setScore(text)}
+                        // placeholder="Enter Score"
+                        value={editedData.score}
+                        onChangeText={text =>
+                          setEditedData({ ...editedData, score: text })
+                        }
                       />
                     </View>
                   </View>
                   <View style={styles.row_layout}>
-                  <View style={styles.fieldSet}>
-                    <Text style={styles.legend}>Category</Text>
-                    <Picker
-                      selectedValue={category}
-                      onValueChange={value => setCategory(value)}
-                    >
-                      <Picker.Item label="Daily 3+" value="Daily 3+" />
-                      <Picker.Item label="Daily 5+" value="Daily 5+" />
-                      <Picker.Item label="Daily 10+" value="Daily 10+" />
-                      <Picker.Item label="Daily 25+" value="Daily 25+" />
-                      <Picker.Item label="Weekly 70+" value="Weekly 70+" />
-                      <Picker.Item label="Alternative VIP" value="Alternative VIP" />
-                    </Picker>
-                  </View>
-                  <View style={styles.fieldSet}>
-                    <Text style={styles.legend}>Display</Text>
-                    <View style={styles.toggleContainer}>
-                      <Text>Hide</Text>
-                      <Switch
-                        value={isShow}
-                        onValueChange={value => setIsShow(value)}
-                      />
-                      <Text>Show</Text>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Category</Text>
+                      <Picker
+                        selectedValue={editedData.category}
+                        onValueChange={value =>
+                          setEditedData({ ...editedData, category: value })
+                        }
+                      >
+                        <Picker.Item label="Daily 3+" value="Daily 3+" />
+                        <Picker.Item label="Daily 5+" value="Daily 5+" />
+                        <Picker.Item label="Daily 10+" value="Daily 10+" />
+                        <Picker.Item label="Daily 25+" value="Daily 25+" />
+                        <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+                        <Picker.Item
+                          label="Alternative VIP"
+                          value="Alternative VIP"
+                        />
+                      </Picker>
+                    </View>
+                    <View style={styles.fieldSet}>
+                      <Text style={styles.legend}>Display</Text>
+                      <View style={styles.toggleContainer}>
+                        <Text>Hide</Text>
+                        <Switch
+                          value={editedData.isShow}
+                          onValueChange={value =>
+                            setEditedData({ ...editedData, isShow: value })
+                          }
+                        />
+                        <Text>Show</Text>
+                      </View>
                     </View>
                   </View>
                   <View
@@ -521,7 +576,8 @@ export default function EditGames() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                    }}>
+                    }}
+                  >
                     <Button
                       color="#AF640D"
                       title="Publish"
@@ -532,9 +588,8 @@ export default function EditGames() {
                     ></Button>
                   </View>
                 </View>
-                </View>
-              </View>
-            </Modal>
+              </Modal>
+            )}
           </View>
         ))}
       </View>
@@ -594,7 +649,10 @@ export default function EditGames() {
             setFilterModal(false);
           }}
         >
-          <Picker.Item label="Select Your Filter ..." value="Select Your Filter ..." />
+          <Picker.Item
+            label="Select Your Filter ..."
+            value="Select Your Filter ..."
+          />
           <Picker.Item label={selectDate} value={selectDate} />
           <Picker.Item label="Daily 3+" value="Daily 3+" />
           <Picker.Item label="Daily 5+" value="Daily 5+" />
@@ -624,15 +682,15 @@ export default function EditGames() {
           transparent={true}
           onRequestClose={() => setFilterModal(false)}
         >
-          <View style={
-            {
+          <View
+            style={{
               flex: 0.05,
               top: 160,
               // justifyContent: "center",
               // alignItems: "center",
-              backgroundColor: "#DDD"
-            }
-          }>
+              backgroundColor: "#DDD",
+            }}
+          >
             <FilterPicker />
           </View>
         </Modal>
@@ -707,7 +765,7 @@ export default function EditGames() {
             // console.log("Me status_fetch: " + fetchDataOnMount);
           }}
         />
-        <RefreshIcon onPress={() => setRefresh(true)}/>
+        <RefreshIcon onPress={() => setRefresh(true)} />
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -871,8 +929,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   editView: {
-    width: 500,
-    height:500,
-    backgroundColor: "#DDD"
+    // width: 500,
+    top: 160,
+    height: 500,
+    backgroundColor: "#DDD",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
   },
 });

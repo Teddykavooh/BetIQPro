@@ -17,9 +17,14 @@
     > Some dependencies are incompatible with the installed expo package version:
     > * The fix is: `npx expo install --fix`
   
-    > The above error could result from differing versions to that of expo.
+    * The above error could result from differing versions to that of expo.
 
 * For dev purposes:
     > `npm install -g firebase-tools`
+
+    * To use you physical device:
+        > `adb devices` - Check if it is read
+        
+        > `adb reverse tcp:8081 tcp:8081`
 
 * Goodluck!!!
