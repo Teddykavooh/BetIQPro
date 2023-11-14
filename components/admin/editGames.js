@@ -226,23 +226,41 @@ export default function EditGames() {
     }
   };
 
-  const [showEditModal, setShowEditModal] = React.useState(false);
-
   function DetailsView() {
     const [editModalIndex, setEditModalIndex] = React.useState(null);
     const [editedData, setEditedData] = React.useState([]);
+    const [showEditModal, setShowEditModal] = React.useState(false);
 
-    const openEditModal = index => {
-      console.log("openEditModal");
-      setIsLoading(true);
+    const openEditModal = (index, data) => {
+      // console.log("EditedData: => " + editedData);
+      // console.log("openEditModal, Index: " + index);
+      // setIsLoading(true);
       setEditModalIndex(index);
       const selectedItem = data[index];
       setEditedData(selectedItem.data);
-      setIsLoading(false);
+      // setIsLoading(false);
+      // console.log("1" + showEditModal);
+      setShowEditModal(true);
+      setTimeout(() => {
+        if (!showEditModal) {
+          setShowEditModal(true);
+        }
+      }, 1000);
+      // console.log(showEditModal);
     };
     const closeEditModal = () => {
+      // setIsLoading(true);
       setEditModalIndex(null);
       setEditedData([]);
+      // setIsLoading(false);
+      // console.log("0" + showEditModal);
+      setShowEditModal(false);
+      setTimeout(() => {
+        if (showEditModal) {
+          setShowEditModal(false);
+        }
+      }, 1000);
+      // console.log(showEditModal);
     };
     return (
       <View>
@@ -298,8 +316,7 @@ export default function EditGames() {
                 ]}
                 onPress={() => {
                   console.log("Edit initiated");
-                  setShowEditModal(true);
-                  openEditModal();
+                  openEditModal(index, data);
                 }}
               >
                 {({ pressed }) => (
@@ -360,7 +377,7 @@ export default function EditGames() {
                 animationType="fade"
                 transparent={true}
                 onRequestClose={() => {
-                  setShowEditModal(false);
+                  // setShowEditModal(false);
                   closeEditModal();
                 }}
               >
@@ -377,11 +394,10 @@ export default function EditGames() {
                       marginBottom: 5,
                     }}
                   >
-                    {/* <Text>{item.data.id}</Text> */}
                     <Text
                       style={{
                         fontWeight: "bold",
-                        color: "white",
+                        color: "black",
                         fontSize: 15,
                         textAlign: "center",
                       }}
@@ -646,7 +662,7 @@ export default function EditGames() {
           <View
             style={{
               flex: 0.05,
-              top: 160,
+              top: 163,
               // justifyContent: "center",
               // alignItems: "center",
               backgroundColor: "#DDD",
@@ -896,7 +912,7 @@ const styles = StyleSheet.create({
   },
   editView: {
     // width: 500,
-    top: 160,
+    top: 165,
     height: 500,
     backgroundColor: "#DDD",
     alignItems: "center",
