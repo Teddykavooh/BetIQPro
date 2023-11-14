@@ -40,13 +40,11 @@ export default class Login extends Component {
         this.setState({
           isLoading: true,
         });
-
         const res = await signInWithEmailAndPassword(
           FIREBASE_AUTH,
           this.state.email,
           this.state.password,
         );
-
         console.log(res);
         console.log("User logged-in successfully!");
         Alert.alert("User logged-in successfully! :)");
@@ -55,12 +53,12 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
-
         this.props.navigation.navigate("Dashboard");
       }
     } catch (error) {
       this.setState({ errorMessage: error.message });
       Alert.alert("User logged-in Failed! :(");
+      console.log("User logged-in Failed! :(" + error);
       this.setState({
         isLoading: false,
       });
@@ -120,15 +118,16 @@ export default class Login extends Component {
             title="Signin"
             onPress={() => this.userLogin()}
           />
-          <Text style={styles.loginText} onPress={() => this.emailLinkAuth()}>
+          {/* <Text style={styles.loginText} onPress={() => this.emailLinkAuth()}>
             Can&apos;t remember your password? Get a login link
-          </Text>
+          </Text> */}
           <Text
             style={styles.loginText}
             onPress={() => this.props.navigation.navigate("Signup")}
           >
             Don&apos;t have account? Click here to signup
           </Text>
+          <Text>{this.setState.errorMessage}</Text>
         </KeyboardAvoidingView>
       </View>
     );
