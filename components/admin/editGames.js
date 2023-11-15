@@ -179,17 +179,17 @@ export default function EditGames() {
   const handleDeleteItem = async itemId => {
     try {
       setIsLoading(true);
-      console.log("Delete initiated for ID:", itemId);
+      // console.log("Delete initiated for ID:", itemId);
       // console.log("setDataUpdated1: " + dataUpdated);
       await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
-      console.log("Delete successful for ID:", itemId);
+      // console.log("Delete successful for ID:", itemId);
       // console.log("setDataUpdated2: " + dataUpdated);
       setIsLoading(false);
       setRefresh(true);
       Alert.alert("Item deletion successful :)");
     } catch (error) {
       setIsLoading(false);
-      console.log("Item deletion failed: " + error);
+      // console.log("Item deletion failed: " + error);
       Alert.alert("Item deletion failed :(" + error);
     }
   };
@@ -221,7 +221,7 @@ export default function EditGames() {
       Alert.alert("Item update successful :)");
     } catch (error) {
       setIsLoading(false);
-      console.log("Item update failed: " + error);
+      // console.log("Item update failed: " + error);
       Alert.alert("Item update failed :(");
     }
   };
@@ -315,7 +315,7 @@ export default function EditGames() {
                   },
                 ]}
                 onPress={() => {
-                  console.log("Edit initiated");
+                  // console.log("Edit initiated");
                   openEditModal(index, data);
                 }}
               >
@@ -559,7 +559,7 @@ export default function EditGames() {
                       color="#AF640D"
                       title="Publish"
                       onPress={() => {
-                        console.log("Publish Updates initiated");
+                        // console.log("Publish Updates initiated");
                         handleUpdateItem();
                       }}
                     ></Button>
@@ -649,7 +649,7 @@ export default function EditGames() {
         <Text style={styles.headerText}>Edit Games</Text>
         <FilterIcon
           onPress={() => {
-            console.log("Filter Menu initiated");
+            // console.log("Filter Menu initiated");
             setFilterModal(true);
           }}
         />
@@ -693,7 +693,7 @@ export default function EditGames() {
               {/* Content of the small view modal */}
               <Calendar
                 onDayPress={day => {
-                  console.log("selected day", day);
+                  // console.log("selected day", day);
                   setSelectDate(day.dateString);
                   setShowModal(false);
                 }}
@@ -731,7 +731,7 @@ export default function EditGames() {
             // Prevent reload on calender click
             // setDataUpdated(false);
             setShowModal(true);
-            console.log("Calendar pressed");
+            // console.log("Calendar pressed");
             // Debugger
             // console.log("Me status_update: " + dataUpdated);
             // console.log("Me status_fetch: " + fetchDataOnMount);
@@ -744,7 +744,7 @@ export default function EditGames() {
         />
         <RefreshIcon
           onPress={() => {
-            console.log("Refresh Icon clicked");
+            // console.log("Refresh Icon clicked");
             setRefresh(true);
           }}
         />

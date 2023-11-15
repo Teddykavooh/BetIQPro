@@ -46,11 +46,11 @@ function FreeTips() {
           });
           setData(dataArr);
         } else {
-          console.log("Nothing to query or Check your internet");
+          // console.log("Nothing to query or Check your internet");
           Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
         }
       } catch (error) {
-        console.log("Fetch failed");
+        // console.log("Fetch failed");
         Alert.alert("Fetching data failed :(");
       }
       setIsLoading(false);
@@ -165,11 +165,11 @@ function VipTips() {
           });
           setData(dataArr);
         } else {
-          console.log("Nothing to query or Check your internet");
+          // console.log("Nothing to query or Check your internet");
           Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
         }
       } catch (error) {
-        console.log("Fetch failed");
+        // console.log("Fetch failed");
         Alert.alert("Fetching data failed :(");
       }
       setIsLoading(false);
@@ -285,11 +285,11 @@ function VipSuccess() {
           });
           setData(dataArr);
         } else {
-          console.log("Nothing to query or Check your internet");
+          // console.log("Nothing to query or Check your internet");
           Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
         }
       } catch (error) {
-        console.log("Fetch failed");
+        // console.log("Fetch failed");
         Alert.alert("Fetching data failed :(");
       }
       setIsLoading(false);

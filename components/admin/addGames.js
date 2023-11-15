@@ -57,11 +57,11 @@ export default function AddGames() {
         collection(FIRESTORE_DB, "betiqpro"),
         dataToAdd,
       );
-      console.log("Data saved with ID: ", docRef.id);
+      // console.log("Data saved with ID: ", docRef.id);
       setIsLoading(false);
       Alert.alert("Game published successfully :)");
     } catch (error) {
-      console.error("Error saving data: ", error);
+      // console.error("Error saving data: ", error);
       Alert.alert("Game publishing failed :(");
       setIsLoading(false);
     }
@@ -114,7 +114,7 @@ export default function AddGames() {
             color="#AF640D"
             title="Publish"
             onPress={() => {
-              console.log("Publish initiated");
+              // console.log("Publish initiated");
               saveDataToFirestore();
             }}
           ></Button>
@@ -168,7 +168,7 @@ export default function AddGames() {
               {/* Content of the small view modal */}
               <Calendar
                 onDayPress={day => {
-                  console.log("selected day", day);
+                  // console.log("selected day", day);
                   setSelectDate(day.dateString);
                   setShowModal(false);
                 }}
@@ -203,7 +203,8 @@ export default function AddGames() {
         </Modal>
         <CalendarIcon
           onPress={() => {
-            setShowModal(true), console.log("Calendar pressed");
+            setShowModal(true);
+            // console.log("Calendar pressed");
           }}
         />
       </View>

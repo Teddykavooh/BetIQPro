@@ -38,7 +38,7 @@ export default class Signup extends Component {
   };
   registerUser = async () => {
     if (this.state.email === "" && this.state.password === "") {
-      console.log("Enter details to signup!");
+      // console.log("Enter details to signup!");
       Alert.alert("Enter details to signup!");
     } else {
       this.setState({
@@ -57,9 +57,9 @@ export default class Signup extends Component {
         );
         await updateProfile(FIREBASE_AUTH.currentUser, {
           displayName: this.state.displayName,
-        }).catch(error => console.log(error));
-        console.log("Me response: " + JSON.stringify(response));
-        console.log("User registered successfully!");
+        }).catch(error/* => console.log(error)*/);
+        // console.log("Me response: " + JSON.stringify(response));
+        // console.log("User registered successfully!");
         Alert.alert("Successful user registration :)");
         this.setState({
           isLoading: false,
@@ -69,7 +69,7 @@ export default class Signup extends Component {
         });
         this.props.navigation.navigate("Login");
       } catch (error) {
-        console.log("Me signup error: " + error);
+        // console.log("Me signup error: " + error);
         Alert.alert(
           this.state.displayName +
             ", Registration failed!!" +

@@ -45,8 +45,8 @@ export default class Login extends Component {
           this.state.email,
           this.state.password,
         );
-        console.log(res);
-        console.log("User logged-in successfully!");
+        // console.log(res);
+        // console.log("User logged-in successfully!");
         Alert.alert("User logged-in successfully! :)");
         this.setState({
           isLoading: false,
@@ -58,7 +58,7 @@ export default class Login extends Component {
     } catch (error) {
       this.setState({ errorMessage: error.message });
       Alert.alert("User logged-in Failed! :(");
-      console.log("User logged-in Failed! :(" + error);
+      // console.log("User logged-in Failed! :(" + error);
       this.setState({
         isLoading: false,
       });
@@ -85,7 +85,7 @@ export default class Login extends Component {
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("Magic SignIn Error: " + errorCode + ": " + errorMessage);
+        // console.log("Magic SignIn Error: " + errorCode + ": " + errorMessage);
       });
   };
   render() {
