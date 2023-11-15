@@ -15,3 +15,15 @@
     measurementId: "G-M8VTV5CWCT"
   };
 `
+
+* Dev:
+
+`const firebaseConfig = {
+  apiKey: "AIzaSyDKGLgYGDXgUlkv-BnZFrU_Jspj8wYwCMI",
+  authDomain: "betiqpro.firebaseapp.com",
+  projectId: "betiqpro",
+  storageBucket: "betiqpro.appspot.com",
+  messagingSenderId: "583792942825",
+  appId: "1:583792942825:web:e589c41c4191e11c9a5a78",
+  measurementId: "G-EN562LYCDQ",
+};`
