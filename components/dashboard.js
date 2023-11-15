@@ -1,109 +1,138 @@
-// components/dashboard.js
-import React, { Component } from "react";
-import { StyleSheet, View, Text, Button, Alert, Image } from "react-native";
+import React, { Component, useContext, createContext, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Alert,
+  Image,
+  Pressable,
+} from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
-import PropTypes from "prop-types"; // Import prop-types
-import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import PropTypes from "prop-types";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Entypo from "react-native-vector-icons/Entypo";
 
 export default class Dashboard extends Component {
+  // const [userRole, setUserRole] = Dashboard.useState("");
   constructor() {
     super();
     this.state = {
-      displayName: "",
+      displayName: "", // Initialize displayName state
       uid: "",
       errorMessage: "",
+      userRole: "user",
     };
   }
 
   componentDidMount() {
-    const locationHref = window.location.href; // Replace with the actual URL or deep link received
+    this.getUser(); // Fetch user details when component mounts
+  }
 
-    if (isSignInWithEmailLink(FIREBASE_AUTH, locationHref)) {
-      let email = window.localStorage.getItem("emailForSignIn");
-
-      if (!email) {
-        email = window.prompt("Please provide your email for confirmation");
-      }
-
-      if (email) {
-        // Handle the sign-in with email link
-        signInWithEmailLink(FIREBASE_AUTH, email, locationHref)
-          .then(result => {
-            // Clear email from storage.
-            window.localStorage.removeItem("emailForSignIn");
-            // You can access the new user via result.user
-            // Additional user info profile may not be available via:
-            // result.additionalUserInfo.profile == null
-            // You can check if the user is new or existing:
-            // result.additionalUserInfo.isNewUser
-            console.log("Me user: " + result.user);
-            this.setState({ isSignInCompleted: true, email: email });
-          })
-          .catch(error => {
-            // Handle the error
-            this.setState({
-              isSignInCompleted: true,
-              isSignInWithEmailLink: false,
-            });
-            console.log("Sign-in error: " + error.code);
-          });
-      }
-    }
-    // Get the currently authenticated user
+  getUser = () => {
     const user = FIREBASE_AUTH.currentUser;
+    // console.log("My user: " + user.displayName);
     if (user) {
       this.setState({
         displayName: user.displayName || "Display Name Not Set",
         uid: user.uid,
       });
-      // console.log(
-      //   "Me data: " + "\nUsername: " + user.displayName + "\nuid: " + user.uid,
-      // );
+      if (user.displayName === "Admin" && user.email === "betiqhub@gmail.com") {
+        this.setState({ userRole: "admin" });
+      } else {
+        this.setState({ userRole: "user" });
+      }
     }
-  }
+  };
+
+  // Function to get the userRole value
+  getUserRole = () => {
+    return this.state.userRole;
+  };
 
   signOut = () => {
-    FIREBASE_AUTH.signOut()
+    FIREBASE_AUTH.auth()
+      .signOut()
       .then(() => {
-        console.log("Signed Out");
-        Alert.alert("Logout successfull, See you soon!! :)");
         this.props.navigation.navigate("Login");
       })
-      .catch(error => {
-        this.setState({ errorMessage: error.message });
-        // Display the error message to the user, if needed.
-        console.log("Sign-out error: " + error.message);
-      });
+      .catch(error => this.setState({ errorMessage: error.message }));
   };
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.textStyle}>
-          Hello, <b>{this.state.displayName}</b>
-        </Text>
-        <Image
-          source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
-          style={styles.myImage} // Adjust the width and height as needed
-          resizeMode="contain"
-        />
-        <View style={styles.buttonContainer}>
-          <Button
-            color="#3740FE"
-            title="Proceed"
-            onPress={() => this.props.navigation.navigate("History")}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Welcome !</Text>
+        </View>
+        <View style={styles.content}>
+          <View style={styles.textView}>
+            <Text style={styles.textStyle}>Hello, </Text>
+            <Text style={styles.textStyle2}>
+              {this.state.displayName}
+              <Entypo name="emoji-happy" size={30} color="black" />
+            </Text>
+          </View>
+          <Image
+            source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
+            style={styles.myImage} // Adjust the width and height as needed
+            resizeMode="contain"
           />
-          <Button
-            color="#3740FE"
-            title="Logout"
-            onPress={() => this.signOut()}
-          />
+          <View style={styles.buttonContainer}>
+            {/* Proceed Button */}
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "#FFF" : "#FEF202",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
+                  borderRadius: 5,
+                  marginVertical: 10,
+                  borderWidth: 2,
+                  borderColor: pressed ? "#000" : "#AF640D",
+                  width: 130,
+                  justifyContent: "center",
+                },
+              ]}
+              onPress={() => this.props.navigation.navigate("Home")}
+            >
+              <FontAwesome name="home" size={25} color="black" />
+              <Text style={styles.buttonLabel}>Proceed</Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "#FFF" : "#FEF202",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
+                  borderRadius: 5,
+                  marginVertical: 10,
+                  borderWidth: 2,
+                  borderColor: pressed ? "#000" : "#AF640D",
+                  width: 130,
+                  justifyContent: "center",
+                },
+              ]}
+              onPress={() => this.signOut()}
+            >
+              <Entypo name="log-out" size={25} color="black" />
+              <Text style={styles.buttonLabel}>Logout</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     );
   }
 }
 
-// Add prop type validation for the navigation prop
+// Exporting the function getUserRole
+export const getUserRole = () => {
+  const dashboardInstance = new Dashboard(); // Create an instance of Dashboard
+  return dashboardInstance.getUserRole(); // Call the getUserRole function of the instance
+};
+
 Dashboard.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
@@ -111,15 +140,39 @@ Dashboard.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: "flex",
-    justifyContent: "center",
+  },
+  header: {
+    backgroundColor: "white",
+    padding: 5,
+    flexDirection: "row",
     alignItems: "center",
-    padding: 35,
-    backgroundColor: "#fff",
+    justifyContent: "center",
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+  headerTextRounded: {
+    backgroundColor: "#E7DFEC", // Background color
+    borderRadius: 15, // Border radius
+    fontSize: 17,
+    color: "#554D5A",
+    padding: 5,
+    marginRight: 10,
+  },
+  content: {
+    flex: 1,
+    backgroundColor: "#DDD",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  contentText: {
+    fontSize: 16,
+    color: "white",
   },
   textStyle: {
     fontSize: 25,
-    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -130,5 +183,27 @@ const styles = StyleSheet.create({
   myImage: {
     width: 150,
     height: 300,
+  },
+  textView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textStyle2: {
+    fontSize: 25,
+    fontWeight: "bold",
+    backgroundColor: "#FEF202",
+    textAlign: "center",
+    padding: 5,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: "black",
+  },
+  buttonLabel: {
+    color: "#000",
+    marginLeft: 10,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
