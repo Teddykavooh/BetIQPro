@@ -20,11 +20,17 @@ export default {
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#FEF202",
       },
+      package: "com.betiqprohub.betiqpro",
     },
     web: {
       favicon: "./assets/favicon.png",
+    },
+    extra: {
+      eas: {
+        projectId: "f9389e27-319f-4a3c-b943-0dace3b79c11",
+      },
     },
   },
 };
