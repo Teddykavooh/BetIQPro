@@ -27,4 +27,16 @@
         
         > `adb reverse tcp:8081 tcp:8081`
 
+    * Others:
+    * * > `npx expo run:android` - create android native build
+      * > `npx expo run:android --variant release` - Production builds locally
+      * > `npx expo prebuild --clean` - rebuild after changes
+      * > `sudo npm install -g eas-cli `
+      * > `eas login`
+      * > `eas build:configure`
+      * > `eas build -p android`
+      * > `eas build -p android --profile preview`
+      * > Check out your most recent commit before executing `npx expo run:[android|ios]` - revert to expo
+      * > `npm install` - restore node modules
+
 * Goodluck!!!
