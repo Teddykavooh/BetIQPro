@@ -19,7 +19,6 @@
     "@react-navigation/stack": "^6.3.18",
     "expo": "^49.0.3",
     "expo-asset": "~8.10.1",
-    "expo-cli": "^6.3.10",
     "expo-constants": "~14.4.2",
     "expo-splash-screen": "~0.20.4",
     "expo-updates": "~0.18.17",
