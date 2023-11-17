@@ -53,7 +53,7 @@ export default function AddGames() {
         },
       };
 
-      await addDoc(collection(FIRESTORE_DB, "betiqpro"), dataToAdd);
+      await addDoc(collection(FIRESTORE_DB, "betiqprohub"), dataToAdd);
       // console.log("Data saved with ID: ", docRef.id);
       setIsLoading(false);
       Alert.alert("Game published successfully :)");

@@ -93,7 +93,9 @@ export default function EditGames() {
     // console.log("Fetchdata effect triggered!!!");
     const fetchData = async () => {
       setIsLoading(true);
-      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const querySnapshot = await getDocs(
+        collection(FIRESTORE_DB, "betiqprohub"),
+      );
       const dataArr = [];
       //     console.log("Query Snapshot Size:", querySnapshot.size);
       querySnapshot.forEach(doc => {
@@ -126,14 +128,14 @@ export default function EditGames() {
       let q;
       if (filterType === "date") {
         q = query(
-          collection(FIRESTORE_DB, "betiqpro"),
+          collection(FIRESTORE_DB, "betiqprohub"),
           where("selectDate", "==", filter.value),
         );
         // console.log("Confirmation: " + (filter.value === "2023-11-09"));
       }
       if (filterType === "category") {
         q = query(
-          collection(FIRESTORE_DB, "betiqpro"),
+          collection(FIRESTORE_DB, "betiqprohub"),
           where("category", "==", filter.value),
         );
       }
@@ -181,7 +183,7 @@ export default function EditGames() {
       setIsLoading(true);
       // console.log("Delete initiated for ID:", itemId);
       // console.log("setDataUpdated1: " + dataUpdated);
-      await deleteDoc(doc(FIRESTORE_DB, "betiqpro", itemId));
+      await deleteDoc(doc(FIRESTORE_DB, "betiqprohub", itemId));
       // console.log("Delete successful for ID:", itemId);
       // console.log("setDataUpdated2: " + dataUpdated);
       setIsLoading(false);
@@ -215,7 +217,7 @@ export default function EditGames() {
         },
         time: editedData.time,
       };
-      await updateDoc(doc(FIRESTORE_DB, "betiqpro", itemId), dataToUpdate);
+      await updateDoc(doc(FIRESTORE_DB, "betiqprohub", itemId), dataToUpdate);
       setIsLoading(false);
       setRefresh(true);
       Alert.alert("Item update successful :)");

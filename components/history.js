@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Text, View, StyleSheet, ActivityIndicator, Alert, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  Pressable,
+} from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
@@ -10,8 +17,8 @@ import PropTypes from "prop-types"; // Import prop-types;
 
 const RefreshIcon = ({ onPress }) => {
   return (
-    <Pressable onPress={onPress}>
-      <FontAwesome name="refresh" size={25} color="black" />
+    <Pressable onPress={onPress} style={{ alignSelf: "center" }}>
+      <FontAwesome name="refresh" size={30} color="black" />
     </Pressable>
   );
 };
@@ -27,7 +34,9 @@ function FreeTips() {
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const querySnapshot = await getDocs(
+        collection(FIRESTORE_DB, "betiqprohub"),
+      );
       const dataArr = [];
       try {
         if (querySnapshot.size !== 0) {
@@ -36,8 +45,13 @@ function FreeTips() {
             const data = doc.data();
             const status = data.status;
             //Find key=N/A
-            for(const key in status) {
-              if ((key === "N/A") && (data.category === "Daily 3+" || data.category === "Daily 5+") && data.isShow === true) {
+            for (const key in status) {
+              if (
+                key === "N/A" &&
+                (data.category === "Daily 3+" ||
+                  data.category === "Daily 5+") &&
+                data.isShow === true
+              ) {
                 dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
                 // console.log(doc.id, " => ", doc.data());
                 break;
@@ -56,7 +70,7 @@ function FreeTips() {
       setIsLoading(false);
     };
     fetchData();
-    if(refresh === true) {
+    if (refresh === true) {
       setRefresh(false);
     }
     // Triggers to the useEffect()
@@ -119,7 +133,7 @@ function FreeTips() {
           <Text style={styles.headerTextRounded}>Today</Text>
           <Text style={styles.headerTextRounded}>{formattedDate}</Text>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)}/>
+        <RefreshIcon onPress={() => setRefresh(true)} />
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -145,7 +159,9 @@ function VipTips() {
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const querySnapshot = await getDocs(
+        collection(FIRESTORE_DB, "betiqprohub"),
+      );
       const dataArr = [];
       // console.log("Query Snapshot Size:", querySnapshot.size);
       try {
@@ -155,8 +171,13 @@ function VipTips() {
             const data = doc.data();
             const status = data.status;
             //Find key=N/A
-            for(const key in status) {
-              if ((key === "N/A") && (data.category !== "Daily 3+" && data.category !== "Daily 5+") && data.isShow === true) {
+            for (const key in status) {
+              if (
+                key === "N/A" &&
+                data.category !== "Daily 3+" &&
+                data.category !== "Daily 5+" &&
+                data.isShow === true
+              ) {
                 dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
                 // console.log(doc.id, " => ", doc.data());
                 break;
@@ -175,7 +196,7 @@ function VipTips() {
       setIsLoading(false);
     };
     fetchData();
-    if(refresh === true) {
+    if (refresh === true) {
       setRefresh(false);
     }
     // Triggers to the useEffect()
@@ -238,7 +259,7 @@ function VipTips() {
           <Text style={styles.headerTextRounded}>Today</Text>
           <Text style={styles.headerTextRounded}>{formattedDate}</Text>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)}/>
+        <RefreshIcon onPress={() => setRefresh(true)} />
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -264,7 +285,9 @@ function VipSuccess() {
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const querySnapshot = await getDocs(collection(FIRESTORE_DB, "betiqpro"));
+      const querySnapshot = await getDocs(
+        collection(FIRESTORE_DB, "betiqprohub"),
+      );
       const dataArr = [];
       try {
         if (querySnapshot.size !== 0) {
@@ -295,7 +318,7 @@ function VipSuccess() {
       setIsLoading(false);
     };
     fetchData();
-    if(refresh === true) {
+    if (refresh === true) {
       setRefresh(false);
     }
     // Triggers to the useEffect()
@@ -358,19 +381,19 @@ function VipSuccess() {
           <Text style={styles.headerTextRounded}>Today</Text>
           <Text style={styles.headerTextRounded}>{formattedDate}</Text>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)}/>
+        <RefreshIcon onPress={() => setRefresh(true)} />
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
           <ActivityIndicator size="large" color="#9E9E9E" />
         </View>
       ) : (
-      <View style={styles.content}>
-        {/* <Text style={styles.contentText}>Content Section</Text> */}
-        <ScrollView>
-          <TableView />
-        </ScrollView>
-      </View>
+        <View style={styles.content}>
+          {/* <Text style={styles.contentText}>Content Section</Text> */}
+          <ScrollView>
+            <TableView />
+          </ScrollView>
+        </View>
       )}
     </View>
   );
@@ -524,6 +547,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   dateView: {
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 });

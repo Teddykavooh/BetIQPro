@@ -5,6 +5,7 @@ export default {
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
+    statusbar: { backgroundColor: "#FEF202" },
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",

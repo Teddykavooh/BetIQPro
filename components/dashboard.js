@@ -1,20 +1,13 @@
-import React, { Component, useContext, createContext, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  Alert,
-  Image,
-  Pressable,
-} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
+// import { useUserRole } from "./UserRoleContext";
 
+// const { setUserRole } = useUserRole();
 export default class Dashboard extends Component {
-  // const [userRole, setUserRole] = Dashboard.useState("");
   constructor() {
     super();
     this.state = {
@@ -22,6 +15,7 @@ export default class Dashboard extends Component {
       uid: "",
       errorMessage: "",
       userRole: "user",
+      currentUser: null,
     };
   }
 
@@ -36,11 +30,15 @@ export default class Dashboard extends Component {
       this.setState({
         displayName: user.displayName || "Display Name Not Set",
         uid: user.uid,
+        currentUser: user,
       });
       if (user.displayName === "Admin" && user.email === "betiqhub@gmail.com") {
         this.setState({ userRole: "admin" });
+        this.forceUpdate();
+        // setUserRole("admin");
       } else {
         this.setState({ userRole: "user" });
+        // setUserRole("admin");
       }
     }
   };
@@ -60,6 +58,7 @@ export default class Dashboard extends Component {
   };
 
   render() {
+    const { currentUser } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -75,7 +74,7 @@ export default class Dashboard extends Component {
           </View>
           <Image
             source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
-            style={styles.myImage} // Adjust the width and height as needed
+            style={styles.myImage}
             resizeMode="contain"
           />
           <View style={styles.buttonContainer}>
@@ -100,26 +99,28 @@ export default class Dashboard extends Component {
               <FontAwesome name="home" size={25} color="black" />
               <Text style={styles.buttonLabel}>Proceed</Text>
             </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#FFF" : "#FEF202",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  padding: 10,
-                  borderRadius: 5,
-                  marginVertical: 10,
-                  borderWidth: 2,
-                  borderColor: pressed ? "#000" : "#AF640D",
-                  width: 130,
-                  justifyContent: "center",
-                },
-              ]}
-              onPress={() => this.signOut()}
-            >
-              <Entypo name="log-out" size={25} color="black" />
-              <Text style={styles.buttonLabel}>Logout</Text>
-            </Pressable>
+            {currentUser && (
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "#FFF" : "#FEF202",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    padding: 10,
+                    borderRadius: 5,
+                    marginVertical: 10,
+                    borderWidth: 2,
+                    borderColor: pressed ? "#000" : "#AF640D",
+                    width: 130,
+                    justifyContent: "center",
+                  },
+                ]}
+                onPress={() => this.signOut()}
+              >
+                <Entypo name="log-out" size={25} color="black" />
+                <Text style={styles.buttonLabel}>Logout</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </View>

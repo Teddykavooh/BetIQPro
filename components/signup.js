@@ -49,7 +49,7 @@ export default class Signup extends Component {
        * Debug code
        * */
       try {
-        const response = await createUserWithEmailAndPassword(
+        await createUserWithEmailAndPassword(
           FIREBASE_AUTH,
           this.state.email,
           this.state.password,
@@ -57,10 +57,10 @@ export default class Signup extends Component {
         );
         await updateProfile(FIREBASE_AUTH.currentUser, {
           displayName: this.state.displayName,
-        }).catch(error/* => console.log(error)*/);
+        }).catch(error => Alert.alert("User profile update failed :("));
         // console.log("Me response: " + JSON.stringify(response));
         // console.log("User registered successfully!");
-        Alert.alert("Successful user registration :)");
+        Alert.alert(this.state.displayName + ", Welcome to BetIQPro)");
         this.setState({
           isLoading: false,
           displayName: "",
@@ -70,12 +70,7 @@ export default class Signup extends Component {
         this.props.navigation.navigate("Login");
       } catch (error) {
         // console.log("Me signup error: " + error);
-        Alert.alert(
-          this.state.displayName +
-            ", Registration failed!!" +
-            "\nError: " +
-            error.message,
-        );
+        Alert.alert(this.state.displayName + ", Registration failed!!");
       } finally {
         this.setState({ isLoading: false });
       }

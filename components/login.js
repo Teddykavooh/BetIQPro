@@ -40,7 +40,7 @@ export default class Login extends Component {
         this.setState({
           isLoading: true,
         });
-        const res = await signInWithEmailAndPassword(
+        await signInWithEmailAndPassword(
           FIREBASE_AUTH,
           this.state.email,
           this.state.password,
