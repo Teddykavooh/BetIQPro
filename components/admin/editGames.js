@@ -87,7 +87,8 @@ export default function EditGames() {
   const [showFilterModal, setFilterModal] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
   const [refresh, setRefresh] = React.useState(false);
-  const [isLost, setIsLost] = React.useState(null);
+  // const [isLost, setIsLost] = React.useState(null);
+  const [editedData, setEditedData] = React.useState([]);
 
   React.useEffect(() => {
     // console.log("Fetchdata effect triggered!!!");
@@ -211,9 +212,9 @@ export default function EditGames() {
         score: editedData.score,
         selectDate: editedData.selectDate,
         status: {
-          "N/A": editedData.status === null,
-          lost: editedData.status === true,
-          won: editedData.status === false,
+          "N/A": editedData.isLost === null,
+          lost: editedData.isLost === true,
+          won: editedData.isLost === false,
         },
         time: editedData.time,
       };
@@ -230,7 +231,6 @@ export default function EditGames() {
 
   function DetailsView() {
     const [editModalIndex, setEditModalIndex] = React.useState(null);
-    const [editedData, setEditedData] = React.useState([]);
     const [showEditModal, setShowEditModal] = React.useState(false);
 
     const openEditModal = (index, data) => {
@@ -486,7 +486,7 @@ export default function EditGames() {
                         selectedValue={
                           editedData.isLost === true
                             ? "Lost"
-                            : isLost === false
+                            : editedData.isLost === false
                             ? "Won"
                             : "N/A"
                         }
