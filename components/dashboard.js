@@ -1,10 +1,20 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, Pressable, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Pressable,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 import PropTypes from "prop-types";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
-// import { useUserRole } from "./UserRoleContext";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { TextInput } from "react-native-gesture-handler";
 
 // const { setUserRole } = useUserRole();
 export default class Dashboard extends Component {
@@ -16,6 +26,9 @@ export default class Dashboard extends Component {
       errorMessage: "",
       userRole: "user",
       currentUser: null,
+      email: "",
+      update: false,
+      isResettingPassword: false,
     };
   }
 
@@ -43,6 +56,44 @@ export default class Dashboard extends Component {
     }
   };
 
+  // Change password
+  changePassword = () => {
+    const { currentUser, isResettingPassword } = this.state;
+    // Toggle the isResettingPassword state to display/hide the TextInput
+    this.setState({ isResettingPassword: !isResettingPassword });
+    // If currentUser exists, initiate password reset with the user's email
+    if (currentUser && !isResettingPassword) {
+      sendPasswordResetEmail(currentUser.email)
+        .then(() => Alert.alert("Password reset email sent"))
+        .catch(error => Alert.alert(error));
+    }
+
+    // render() {
+    //   const { currentUser, isResettingPassword } = this.state;
+
+    //   // Conditionally render TextInput based on isResettingPassword state
+    //   if (isResettingPassword) {
+    //     return (
+    //       <View>
+    //         <TextInput
+    //           placeholder="Enter your email"
+    //           value={this.state.email}
+    //           onChangeText={(text) => this.setState({ email: text })}
+    //           onSubmitEditing={() => {
+    //             sendPasswordResetEmail(this.state.email)
+    //               .then(() => {
+    //                 Alert.alert("Password reset email sent");
+    //                 this.setState({ isResettingPassword: false, email: '' });
+    //               })
+    //               .catch((error) => Alert.alert(error));
+    //           }}
+    //         />
+    //       </View>
+    //     );
+    //   }
+    // }
+  };
+
   // Function to get the userRole value
   getUserRole = () => {
     return this.state.userRole;
@@ -51,11 +102,32 @@ export default class Dashboard extends Component {
   signOut = () => {
     FIREBASE_AUTH.signOut()
       .then(() => {
+        this.setState = {
+          displayName: "", // Initialize displayName state
+          uid: "",
+          errorMessage: "",
+          userRole: "user",
+          currentUser: null,
+          email: "",
+        };
+        this.componentDidMount();
         Alert.alert(this.state.displayName + ", signed out");
         this.props.navigation.navigate("Login");
       })
       .catch(error => this.setState({ errorMessage: error.message }));
   };
+
+  // CalendarIcon = ({ onPress }) => {
+  //   return (
+  //     <TouchableOpacity onPress={onPress}>
+  //       <FontAwesome name="calendar" size={30} color="#000" />
+  //     </TouchableOpacity>
+  //   );
+  // };
+
+  // CalendarIcon.propTypes = {
+  //   onPress: PropTypes.func, // Define the onPress prop
+  // };
 
   render() {
     const { currentUser } = this.state;
@@ -63,6 +135,14 @@ export default class Dashboard extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Welcome !</Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({ update: true });
+              // console.log("Calendar pressed");
+            }}
+          >
+            <FontAwesome name="refresh" size={30} color="#000" />
+          </TouchableOpacity>
         </View>
         <View style={styles.content}>
           <View style={styles.textView}>
@@ -96,7 +176,7 @@ export default class Dashboard extends Component {
               ]}
               onPress={() => this.props.navigation.navigate("Home")}
             >
-              <FontAwesome name="home" size={25} color="black" />
+              <FontAwesome name="home" size={30} color="black" />
               <Text style={styles.buttonLabel}>Proceed</Text>
             </Pressable>
             {currentUser && (
@@ -117,10 +197,36 @@ export default class Dashboard extends Component {
                 ]}
                 onPress={() => this.signOut()}
               >
-                <Entypo name="log-out" size={25} color="black" />
+                <Entypo name="log-out" size={30} color="black" />
                 <Text style={styles.buttonLabel}>Logout</Text>
               </Pressable>
             )}
+          </View>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "#FFF" : "#FEF202",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
+                  borderRadius: 5,
+                  marginVertical: 10,
+                  borderWidth: 2,
+                  borderColor: pressed ? "#000" : "#AF640D",
+                  // width: 130,
+                  justifyContent: "center",
+                },
+              ]}
+              onPress={() => this.changePassword()}
+            >
+              <MaterialCommunityIcons
+                name="lock-reset"
+                size={30}
+                color="black"
+              />
+              <Text style={styles.buttonLabel}>Reset Password</Text>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -147,7 +253,7 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   headerText: {
     fontSize: 30,
