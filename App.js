@@ -181,7 +181,7 @@ function DrawerNavigator() {
           headerTitleAlign: "center",
         }}
       />
-      {userRole === "admin" && (
+      {userRole === "user" && (
         <>
           <Drawer.Screen
             name="Add Games"
