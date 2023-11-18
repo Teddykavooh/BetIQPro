@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable, Alert } from "react-native";
 import { FIREBASE_AUTH } from "../database/firebase";
 import PropTypes from "prop-types";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -49,9 +49,9 @@ export default class Dashboard extends Component {
   };
 
   signOut = () => {
-    FIREBASE_AUTH.auth()
-      .signOut()
+    FIREBASE_AUTH.signOut()
       .then(() => {
+        Alert.alert(this.state.displayName + ", signed out");
         this.props.navigation.navigate("Login");
       })
       .catch(error => this.setState({ errorMessage: error.message }));
