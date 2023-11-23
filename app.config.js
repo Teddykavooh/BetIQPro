@@ -5,7 +5,6 @@ export default {
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
-    statusbar: { backgroundColor: "#FEF202" },
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
@@ -25,6 +24,11 @@ export default {
       },
       package: "com.betiqprohub.betiqpro",
     },
+    // native to android
+    // androidStatusBar: {
+    //   backgroundColor: "#FEF202",
+    //   translucent: false,
+    // },
     web: {
       favicon: "./assets/favicon.png",
     },

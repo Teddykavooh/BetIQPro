@@ -57,7 +57,7 @@ export default class Signup extends Component {
         );
         await updateProfile(FIREBASE_AUTH.currentUser, {
           displayName: this.state.displayName,
-        }).catch(error => Alert.alert("User profile update failed :("));
+        }).catch(error => Alert.alert("User profile update failed :(" + error));
         // console.log("Me response: " + JSON.stringify(response));
         // console.log("User registered successfully!");
         Alert.alert(this.state.displayName + ", Welcome to BetIQPro)");

@@ -12,6 +12,7 @@ import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
 import { getUserRole } from "./components/dashboard";
+import { StatusBar as CustomStatusBar } from "react-native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -133,69 +134,79 @@ function EditGamesD() {
 
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator
-      screenOptions={{ drawerActiveTintColor: "#000", fontWeight: "bold" }}
-      initialRouteName="Home"
-    >
-      <Drawer.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: {
-            backgroundColor: "#FEF202",
-          },
-          headerTitleAlign: "center",
-        }}
+    <>
+      <CustomStatusBar
+        animated={true}
+        backgroundColor="#C71585"
+        barStyle={"default"}
+        showHideTransition={"slide"}
+        hidden={false}
       />
-      <Drawer.Screen
-        name="Home"
-        component={UserStack}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: {
-            backgroundColor: "#FEF202",
-          },
-          headerTitleAlign: "center",
-        }}
-      />
-      <Drawer.Screen
-        name="Signup"
-        component={SignupD}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: {
-            backgroundColor: "#FEF202",
-          },
-          headerTitleAlign: "center",
-        }}
-      />
-      <Drawer.Screen
-        name="Login"
-        component={LoginD}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: {
-            backgroundColor: "#FEF202",
-          },
-          headerTitleAlign: "center",
-        }}
-      />
-      {userRole === "user" && (
-        <>
-          <Drawer.Screen
-            name="Add Games"
-            component={AddGamesD}
-            options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
-          />
-          <Drawer.Screen
-            name="Edit Games"
-            component={EditGamesD}
-            options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
-          />
-        </>
-      )}
-    </Drawer.Navigator>
+      <Drawer.Navigator
+        screenOptions={{ drawerActiveTintColor: "#000", fontWeight: "bold" }}
+        initialRouteName="Home"
+        // StatusBar={{ backgroundColor: "green" }}
+      >
+        <Drawer.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: {
+              backgroundColor: "#FEF202",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Drawer.Screen
+          name="Home"
+          component={UserStack}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: {
+              backgroundColor: "#FEF202",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Drawer.Screen
+          name="Signup"
+          component={SignupD}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: {
+              backgroundColor: "#FEF202",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Drawer.Screen
+          name="Login"
+          component={LoginD}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: {
+              backgroundColor: "#FEF202",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        {userRole === "user" && (
+          <>
+            <Drawer.Screen
+              name="Add Games"
+              component={AddGamesD}
+              options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
+            />
+            <Drawer.Screen
+              name="Edit Games"
+              component={EditGamesD}
+              options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
+            />
+          </>
+        )}
+      </Drawer.Navigator>
+    </>
   );
 }
 
