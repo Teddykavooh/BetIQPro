@@ -173,8 +173,7 @@ function VipTips() {
             for (const key in status) {
               if (
                 key === "N/A" &&
-                data.category !== "Daily 3+" &&
-                data.category !== "Daily 5+" &&
+                data.category !== "Free" &&
                 data.isShow === true
               ) {
                 dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
