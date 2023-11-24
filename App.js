@@ -137,7 +137,7 @@ function DrawerNavigator() {
     <>
       <CustomStatusBar
         animated={true}
-        backgroundColor="#C71585"
+        backgroundColor="#B72E81"
         barStyle={"default"}
         showHideTransition={"slide"}
         hidden={false}
@@ -145,6 +145,9 @@ function DrawerNavigator() {
       <Drawer.Navigator
         screenOptions={{ drawerActiveTintColor: "#000", fontWeight: "bold" }}
         initialRouteName="Home"
+        options={{
+          headerTitle: () => <HeaderLogo />,
+        }}
         // StatusBar={{ backgroundColor: "green" }}
       >
         <Drawer.Screen
