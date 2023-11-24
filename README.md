@@ -43,5 +43,6 @@
   - > `eas build -p android --profile preview`
   - > Check out your most recent commit before executing `npx expo run:[android|ios]` - revert to expo
   - > `npm install` - restore node modules
+  - > `eas build --profile development --platform android` - local dev build
 
 - Goodluck!!!
