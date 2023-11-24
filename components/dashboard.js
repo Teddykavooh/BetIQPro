@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 // const { setUserRole } = useUserRole();
 export default class Dashboard extends Component {
@@ -27,7 +27,7 @@ export default class Dashboard extends Component {
       userRole: "user",
       currentUser: null,
       email: "",
-      update: false,
+      update: null,
       isResettingPassword: false,
     };
   }
@@ -35,6 +35,13 @@ export default class Dashboard extends Component {
   componentDidMount() {
     this.getUser(); // Fetch user details when component mounts
   }
+
+  // Example method that sets update to true
+  triggerUpdate = () => {
+    this.setState({ update: true }, () => {
+      console.log("State updated:", this.state.update);
+    });
+  };
 
   getUser = () => {
     const user = FIREBASE_AUTH.currentUser;
@@ -137,14 +144,19 @@ export default class Dashboard extends Component {
           <Text style={styles.headerText}>Welcome !</Text>
           <TouchableOpacity
             onPress={() => {
-              this.setState({ update: true });
-              // console.log("Calendar pressed");
+              // console.log(this.state.update);
+              this.triggerUpdate;
+              // console.log(this.state.update);
             }}
           >
             <FontAwesome name="refresh" size={30} color="#000" />
           </TouchableOpacity>
         </View>
-        <View style={styles.content}>
+        {/* <View style={styles.content}> */}
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.contentContainer}
+        >
           <View style={styles.textView}>
             <Text style={styles.textStyle}>Hello, </Text>
             <Text style={styles.textStyle2}>
@@ -228,8 +240,9 @@ export default class Dashboard extends Component {
               <Text style={styles.buttonLabel}>Reset Password</Text>
             </Pressable>
           </View>
-        </View>
+        </ScrollView>
       </View>
+      // </View>
     );
   }
 }
@@ -270,9 +283,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "#DDD",
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "space-evenly",
   },
   contentText: {
     fontSize: 16,
@@ -285,11 +295,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    width: "100%",
+    // width: "100%",
+    // backgroundColor: "purple",
   },
   myImage: {
-    width: 150,
+    width: 100,
     height: 300,
+    // alignSelf: "center",
   },
   textView: {
     flexDirection: "row",
@@ -312,5 +324,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingTop: 10,
   },
 });
