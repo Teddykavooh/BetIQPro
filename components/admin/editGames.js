@@ -75,6 +75,242 @@ FilterIcon.propTypes = {
   onPress: PropTypes.func, // Define the onPress prop
 };
 
+// EditModal
+const EditModal = ({
+  selectDate,
+  editedData,
+  setEditedData,
+  handleUpdateItem,
+  showEditModal,
+  closeEditModal,
+  // setShowEditModal,
+}) => {
+  return (
+    <Modal
+      visible={showEditModal}
+      animationType="fade"
+      transparent={true}
+      onRequestClose={() => {
+        // setShowEditModal(false);
+        closeEditModal();
+      }}
+    >
+      <View style={styles.editView}>
+        <View
+          style={{
+            borderWidth: 3,
+            borderColor: "#FEF202",
+            width: 200,
+            height: 60,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 5,
+            marginBottom: 5,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: 15,
+              textAlign: "center",
+            }}
+          >
+            {selectDate}
+          </Text>
+        </View>
+        <View style={styles.row_layout}>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Time</Text>
+            <TextInput
+              // placeholder="Enter Time"
+              value={editedData.time}
+              onChangeText={text =>
+                setEditedData({ ...editedData, time: text })
+              }
+            />
+          </View>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>League</Text>
+            <TextInput
+              // placeholder="Enter League"
+              value={editedData.league}
+              onChangeText={text =>
+                setEditedData({ ...editedData, league: text })
+              }
+            />
+          </View>
+        </View>
+        <View style={styles.row_layout}>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Home</Text>
+            <TextInput
+              // placeholder="Enter Home Team"
+              value={editedData.home}
+              onChangeText={text =>
+                setEditedData({ ...editedData, home: text })
+              }
+            />
+          </View>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Away</Text>
+            <TextInput
+              // placeholder="Enter Away Team"
+              value={editedData.away}
+              onChangeText={text =>
+                setEditedData({ ...editedData, away: text })
+              }
+            />
+          </View>
+        </View>
+        <View style={styles.row_layout}>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Predictions</Text>
+            <TextInput
+              // placeholder="Enter Predictions"
+              value={editedData.predictions}
+              onChangeText={text =>
+                setEditedData({ ...editedData, predictions: text })
+              }
+            />
+          </View>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Odds</Text>
+            <TextInput
+              inputMode="decimal"
+              // placeholder="Enter Odds"
+              // value={odds ? odds.toString() : ""}
+              value={editedData.odds}
+              onChangeText={text => {
+                const parsedValue = text.replace(/[^0-9.]/g, "");
+                if (!isNaN(parsedValue)) {
+                  // setOdds(parsedValue);
+                  setEditedData({ ...editedData, odds: parsedValue });
+                }
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.row_layout}>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Status</Text>
+            <Picker
+              selectedValue={
+                editedData.isLost === true
+                  ? "Lost"
+                  : editedData.isLost === false
+                  ? "Won"
+                  : "N/A"
+              }
+              onValueChange={value => {
+                if (value === "Lost") {
+                  setEditedData({ ...editedData, isLost: true });
+                } else if (value === "Won") {
+                  setEditedData({ ...editedData, isLost: false });
+                } else {
+                  setEditedData({ ...editedData, isLost: null });
+                }
+              }}
+            >
+              <Picker.Item label="Won" value="Won" />
+              <Picker.Item label="Lost" value="Lost" />
+              <Picker.Item label="N/A" value="N/A" />
+            </Picker>
+          </View>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Score</Text>
+            <TextInput
+              // placeholder="Enter Score"
+              value={editedData.score}
+              onChangeText={text =>
+                setEditedData({ ...editedData, score: text })
+              }
+            />
+          </View>
+        </View>
+        <View style={styles.row_layout}>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Category</Text>
+            <Picker
+              selectedValue={editedData.category}
+              onValueChange={value =>
+                setEditedData({ ...editedData, category: value })
+              }
+            >
+              <Picker.Item label="Daily 3+" value="Daily 3+" />
+              <Picker.Item label="Daily 5+" value="Daily 5+" />
+              <Picker.Item label="Daily 10+" value="Daily 10+" />
+              <Picker.Item label="Daily 25+" value="Daily 25+" />
+              <Picker.Item label="Weekly 70+" value="Weekly 70+" />
+              <Picker.Item label="Alternative VIP" value="Alternative VIP" />
+            </Picker>
+          </View>
+          <View style={styles.fieldSet}>
+            <Text style={styles.legend}>Display</Text>
+            <View style={styles.toggleContainer}>
+              <Text>Hide</Text>
+              <Switch
+                value={editedData.isShow}
+                onValueChange={value =>
+                  setEditedData({ ...editedData, isShow: value })
+                }
+              />
+              <Text>Show</Text>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            // alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            color="#AF640D"
+            title="Publish"
+            onPress={() => {
+              // console.log("Publish Updates initiated");
+              handleUpdateItem();
+            }}
+          />
+          <Pressable
+            onPress={() => closeEditModal()}
+            style={{
+              alignSelf: "center",
+              alignItems: "center",
+            }}
+          >
+            <MaterialIcons name="cancel" size={30} color="#000" />
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+EditModal.propTypes = {
+  selectDate: PropTypes.string.isRequired,
+  editedData: PropTypes.shape({
+    time: PropTypes.string,
+    league: PropTypes.string,
+    home: PropTypes.string,
+    away: PropTypes.string,
+    predictions: PropTypes.string,
+    odds: PropTypes.string,
+    score: PropTypes.string,
+    category: PropTypes.string,
+    isShow: PropTypes.bool,
+    isLost: PropTypes.bool,
+  }).isRequired,
+  setEditedData: PropTypes.func.isRequired,
+  textInputRef: PropTypes.object,
+  handleUpdateItem: PropTypes.func.isRequired,
+  showModal: PropTypes.bool.isRequired,
+  closeEditModal: PropTypes.func.isRequired,
+  showEditModal: PropTypes.func.isRequired,
+  setShowEditModal: PropTypes.func.isRequired,
+};
+
 export default function EditGames() {
   const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState(
@@ -101,7 +337,7 @@ export default function EditGames() {
       //     console.log("Query Snapshot Size:", querySnapshot.size);
       querySnapshot.forEach(doc => {
         //       // doc.data() is never undefined for query doc snapshots
-        const data = doc.data();
+        // const data = doc.data();
         dataArr.push({ id: doc.id, data: doc.data() });
         // console.log(doc.id, " => ", doc.data());
       });
@@ -229,41 +465,42 @@ export default function EditGames() {
     }
   };
 
-  function DetailsView() {
-    const [editModalIndex, setEditModalIndex] = React.useState(null);
-    const [showEditModal, setShowEditModal] = React.useState(false);
+  const [editModalIndex, setEditModalIndex] = React.useState(null);
+  const [showEditModal, setShowEditModal] = React.useState(false);
 
-    const openEditModal = (index, data) => {
-      // console.log("EditedData: => " + editedData);
-      // console.log("openEditModal, Index: " + index);
-      // setIsLoading(true);
-      setEditModalIndex(index);
-      const selectedItem = data[index];
-      setEditedData(selectedItem.data);
-      // setIsLoading(false);
-      // console.log("1" + showEditModal);
-      setShowEditModal(true);
-      setTimeout(() => {
-        if (!showEditModal) {
-          setShowEditModal(true);
-        }
-      }, 1000);
-      // console.log(showEditModal);
-    };
-    const closeEditModal = () => {
-      // setIsLoading(true);
-      setEditModalIndex(null);
-      setEditedData([]);
-      // setIsLoading(false);
-      // console.log("0" + showEditModal);
-      setShowEditModal(false);
-      setTimeout(() => {
-        if (showEditModal) {
-          setShowEditModal(false);
-        }
-      }, 1000);
-      // console.log(showEditModal);
-    };
+  const openEditModal = (index, data) => {
+    // console.log("EditedData: => " + editedData);
+    // console.log("openEditModal, Index: " + index);
+    // setIsLoading(true);
+    setEditModalIndex(index);
+    const selectedItem = data[index];
+    setEditedData(selectedItem.data);
+    // setIsLoading(false);
+    // console.log("1" + showEditModal);
+    setShowEditModal(true);
+    setTimeout(() => {
+      if (!showEditModal) {
+        setShowEditModal(true);
+      }
+    }, 1000);
+    // console.log(showEditModal);
+  };
+  const closeEditModal = () => {
+    // setIsLoading(true);
+    setEditModalIndex(null);
+    setEditedData([]);
+    // setIsLoading(false);
+    // console.log("0" + showEditModal);
+    setShowEditModal(false);
+    setTimeout(() => {
+      if (showEditModal) {
+        setShowEditModal(false);
+      }
+    }, 1000);
+    // console.log(showEditModal);
+  };
+
+  function DetailsView() {
     return (
       <View>
         {data.map((item, index) => (
@@ -374,200 +611,15 @@ export default function EditGames() {
             </View>
             {/* EditView modal */}
             {editModalIndex === index && (
-              <Modal
-                visible={showEditModal}
-                animationType="fade"
-                transparent={true}
-                onRequestClose={() => {
-                  // setShowEditModal(false);
-                  closeEditModal();
-                }}
-              >
-                <View style={styles.editView}>
-                  <View
-                    style={{
-                      borderWidth: 3,
-                      borderColor: "#FEF202",
-                      width: 200,
-                      height: 60,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 5,
-                      marginBottom: 5,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "black",
-                        fontSize: 15,
-                        textAlign: "center",
-                      }}
-                    >
-                      {selectDate}
-                    </Text>
-                  </View>
-                  <View style={styles.row_layout}>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Time</Text>
-                      <TextInput
-                        // placeholder="Enter Time"
-                        value={editedData.time}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, time: text })
-                        }
-                      />
-                    </View>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>League</Text>
-                      <TextInput
-                        // placeholder="Enter League"
-                        value={editedData.league}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, league: text })
-                        }
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.row_layout}>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Home</Text>
-                      <TextInput
-                        // placeholder="Enter Home Team"
-                        value={editedData.home}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, home: text })
-                        }
-                      />
-                    </View>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Away</Text>
-                      <TextInput
-                        // placeholder="Enter Away Team"
-                        value={editedData.away}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, away: text })
-                        }
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.row_layout}>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Predictions</Text>
-                      <TextInput
-                        // placeholder="Enter Predictions"
-                        value={editedData.predictions}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, predictions: text })
-                        }
-                      />
-                    </View>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Odds</Text>
-                      <TextInput
-                        inputMode="decimal"
-                        // placeholder="Enter Odds"
-                        // value={odds ? odds.toString() : ""}
-                        value={editedData.odds}
-                        onChangeText={text => {
-                          const parsedValue = text.replace(/[^0-9.]/g, "");
-                          if (!isNaN(parsedValue)) {
-                            // setOdds(parsedValue);
-                            setEditedData({ ...editedData, odds: parsedValue });
-                          }
-                        }}
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.row_layout}>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Status</Text>
-                      <Picker
-                        selectedValue={
-                          editedData.isLost === true
-                            ? "Lost"
-                            : editedData.isLost === false
-                            ? "Won"
-                            : "N/A"
-                        }
-                        onValueChange={value => {
-                          if (value === "Lost") {
-                            setEditedData({ ...editedData, isLost: true });
-                          } else if (value === "Won") {
-                            setEditedData({ ...editedData, isLost: false });
-                          } else {
-                            setEditedData({ ...editedData, isLost: null });
-                          }
-                        }}
-                      >
-                        <Picker.Item label="Won" value="Won" />
-                        <Picker.Item label="Lost" value="Lost" />
-                        <Picker.Item label="N/A" value="N/A" />
-                      </Picker>
-                    </View>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Score</Text>
-                      <TextInput
-                        // placeholder="Enter Score"
-                        value={editedData.score}
-                        onChangeText={text =>
-                          setEditedData({ ...editedData, score: text })
-                        }
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.row_layout}>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Category</Text>
-                      <Picker
-                        selectedValue={editedData.category}
-                        onValueChange={value =>
-                          setEditedData({ ...editedData, category: value })
-                        }
-                      >
-                        <Picker.Item label="Daily 3+" value="Daily 3+" />
-                        <Picker.Item label="Daily 5+" value="Daily 5+" />
-                        <Picker.Item label="Daily 10+" value="Daily 10+" />
-                        <Picker.Item label="Daily 25+" value="Daily 25+" />
-                        <Picker.Item label="Weekly 70+" value="Weekly 70+" />
-                        <Picker.Item
-                          label="Alternative VIP"
-                          value="Alternative VIP"
-                        />
-                      </Picker>
-                    </View>
-                    <View style={styles.fieldSet}>
-                      <Text style={styles.legend}>Display</Text>
-                      <View style={styles.toggleContainer}>
-                        <Text>Hide</Text>
-                        <Switch
-                          value={editedData.isShow}
-                          onValueChange={value =>
-                            setEditedData({ ...editedData, isShow: value })
-                          }
-                        />
-                        <Text>Show</Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Button
-                      color="#AF640D"
-                      title="Publish"
-                      onPress={() => {
-                        // console.log("Publish Updates initiated");
-                        handleUpdateItem();
-                      }}
-                    ></Button>
-                  </View>
-                </View>
-              </Modal>
+              <EditModal
+                selectDate={selectDate}
+                editedData={editedData}
+                setEditedData={setEditedData}
+                handleUpdateItem={handleUpdateItem}
+                showModal={showModal}
+                closeEditModal={closeEditModal}
+                // setShowEditModal={setShowEditModal}
+              />
             )}
           </View>
         ))}
@@ -854,7 +906,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // alignItems: "center",
     borderColor: "#FFF",
-    height: 50,
+    height: "7vh",
     width: 180,
     backgroundColor: "#FFF",
     display: "flex",
@@ -914,11 +966,13 @@ const styles = StyleSheet.create({
   },
   editView: {
     // width: 500,
-    top: 165,
-    height: 500,
+    top: 180,
+    height: "auto",
     backgroundColor: "#DDD",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
   },
 });
