@@ -17,6 +17,7 @@ import {
   sendSignInLinkToEmail,
 } from "firebase/auth";
 import actionCodeSettings from "../database/emailLinkAuthConfigs";
+import { getUserRole } from "./dashboard";
 
 export default class Login extends Component {
   constructor() {
@@ -53,6 +54,7 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
+        getUserRole();
         this.props.navigation.navigate("Dashboard");
       }
     } catch (error) {

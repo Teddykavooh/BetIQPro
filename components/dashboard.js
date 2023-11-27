@@ -65,40 +65,16 @@ export default class Dashboard extends Component {
 
   // Change password
   changePassword = () => {
-    const { currentUser, isResettingPassword } = this.state;
+    // console.log("chgpass pressed");
+    const { currentUser, isResettingPassword, email } = this.state;
     // Toggle the isResettingPassword state to display/hide the TextInput
     this.setState({ isResettingPassword: !isResettingPassword });
     // If currentUser exists, initiate password reset with the user's email
-    if (currentUser && !isResettingPassword) {
+    if (isResettingPassword && email !== "") {
       sendPasswordResetEmail(currentUser.email)
         .then(() => Alert.alert("Password reset email sent"))
         .catch(error => Alert.alert(error));
     }
-
-    // render() {
-    //   const { currentUser, isResettingPassword } = this.state;
-
-    //   // Conditionally render TextInput based on isResettingPassword state
-    //   if (isResettingPassword) {
-    //     return (
-    //       <View>
-    //         <TextInput
-    //           placeholder="Enter your email"
-    //           value={this.state.email}
-    //           onChangeText={(text) => this.setState({ email: text })}
-    //           onSubmitEditing={() => {
-    //             sendPasswordResetEmail(this.state.email)
-    //               .then(() => {
-    //                 Alert.alert("Password reset email sent");
-    //                 this.setState({ isResettingPassword: false, email: '' });
-    //               })
-    //               .catch((error) => Alert.alert(error));
-    //           }}
-    //         />
-    //       </View>
-    //     );
-    //   }
-    // }
   };
 
   // Function to get the userRole value
@@ -116,28 +92,49 @@ export default class Dashboard extends Component {
           userRole: "user",
           currentUser: null,
           email: "",
+          update: null,
+          isResettingPassword: false,
         };
-        this.componentDidMount();
         Alert.alert(this.state.displayName + ", signed out");
         this.props.navigation.navigate("Login");
       })
       .catch(error => this.setState({ errorMessage: error.message }));
   };
 
-  // CalendarIcon = ({ onPress }) => {
-  //   return (
-  //     <TouchableOpacity onPress={onPress}>
-  //       <FontAwesome name="calendar" size={30} color="#000" />
-  //     </TouchableOpacity>
-  //   );
-  // };
-
-  // CalendarIcon.propTypes = {
-  //   onPress: PropTypes.func, // Define the onPress prop
-  // };
-
   render() {
-    const { currentUser } = this.state;
+    const { currentUser, isResettingPassword } = this.state;
+    // Conditionally render TextInput based on isResettingPassword state
+    let resetPasswordInput = null;
+    if (isResettingPassword) {
+      resetPasswordInput = (
+        <View style={styles.chgPass}>
+          <TextInput
+            placeholder="Enter your email"
+            value={this.state.email}
+            onChangeText={text => this.setState({ email: text })}
+            onSubmitEditing={this.changePassword}
+            style={styles.inputStyle}
+          />
+          <TouchableOpacity
+            onPress={this.changePassword}
+            style={styles.chgPassPress}
+          >
+            <Entypo name="forward" size={20} color="black" />
+            <Text style={{ textAlign: "center" }}>Reset Password</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              resetPasswordInput = null;
+              this.setState({ isResettingPassword: false });
+            }}
+            style={{ textAlign: "center", justifyContent: "center" }}
+          >
+            <Entypo name="circle-with-cross" size={40} color="black" />
+            <Text style={{ textAlign: "center" }}>Exit</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -145,7 +142,7 @@ export default class Dashboard extends Component {
           <TouchableOpacity
             onPress={() => {
               // console.log(this.state.update);
-              this.triggerUpdate;
+              this.triggerUpdate();
               // console.log(this.state.update);
             }}
           >
@@ -164,6 +161,7 @@ export default class Dashboard extends Component {
               <Entypo name="emoji-happy" size={30} color="black" />
             </Text>
           </View>
+          {resetPasswordInput}
           <Image
             source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
             style={styles.myImage}
@@ -250,7 +248,7 @@ export default class Dashboard extends Component {
 // Exporting the function getUserRole
 export const getUserRole = () => {
   const dashboardInstance = new Dashboard(); // Create an instance of Dashboard
-  return dashboardInstance.getUserRole(); // Call the getUserRole function of the instance
+  return dashboardInstance.triggerUpdate(); // Call the getUserRole function of the instance
 };
 
 Dashboard.propTypes = {
@@ -283,6 +281,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "#DDD",
+    // backgroundColor: "#000",
   },
   contentText: {
     fontSize: 16,
@@ -330,5 +329,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     paddingTop: 10,
+  },
+  chgPass: {
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chgPassPress: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    backgroundColor: "#FEF202",
+    borderColor: "#000",
+    borderRadius: 6,
+    padding: 5,
+  },
+  inputStyle: {
+    width: "100%",
+    marginBottom: 15,
+    paddingBottom: 15,
+    alignSelf: "center",
+    borderColor: "#000",
+    borderBottomWidth: 1,
   },
 });
