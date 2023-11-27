@@ -83,7 +83,7 @@ const EditModal = ({
   handleUpdateItem,
   showEditModal,
   closeEditModal,
-  // setShowEditModal,
+  itemID,
 }) => {
   return (
     <Modal
@@ -237,6 +237,7 @@ const EditModal = ({
                 setEditedData({ ...editedData, category: value })
               }
             >
+              <Picker.Item label="Free" value="Free" />
               <Picker.Item label="Daily 3+" value="Daily 3+" />
               <Picker.Item label="Daily 5+" value="Daily 5+" />
               <Picker.Item label="Daily 10+" value="Daily 10+" />
@@ -271,7 +272,7 @@ const EditModal = ({
             title="Publish"
             onPress={() => {
               // console.log("Publish Updates initiated");
-              handleUpdateItem();
+              handleUpdateItem(itemID);
             }}
           />
           <Pressable
@@ -309,6 +310,7 @@ EditModal.propTypes = {
   closeEditModal: PropTypes.func.isRequired,
   showEditModal: PropTypes.func.isRequired,
   setShowEditModal: PropTypes.func.isRequired,
+  itemID: PropTypes.string.isRequired,
 };
 
 export default function EditGames() {
@@ -436,6 +438,7 @@ export default function EditGames() {
   const handleUpdateItem = async itemId => {
     try {
       setIsLoading(true);
+      console.log("Data: " + itemId);
       // Prepare the data to update in Firestore
       const dataToUpdate = {
         away: editedData.away,
@@ -454,13 +457,18 @@ export default function EditGames() {
         },
         time: editedData.time,
       };
-      await updateDoc(doc(FIRESTORE_DB, "betiqprohub", itemId), dataToUpdate);
+      await updateDoc(
+        doc(FIRESTORE_DB, "betiqprohub", itemId),
+        dataToUpdate,
+      ).catch(error => {
+        console.log("Sth shit: " + error);
+      });
       setIsLoading(false);
       setRefresh(true);
       Alert.alert("Item update successful :)");
     } catch (error) {
       setIsLoading(false);
-      // console.log("Item update failed: " + error);
+      console.log("Item update failed: " + error);
       Alert.alert("Item update failed :(");
     }
   };
@@ -618,6 +626,7 @@ export default function EditGames() {
                 handleUpdateItem={handleUpdateItem}
                 showModal={showModal}
                 closeEditModal={closeEditModal}
+                itemID={item.id}
                 // setShowEditModal={setShowEditModal}
               />
             )}
