@@ -248,7 +248,8 @@ export default class Dashboard extends Component {
 // Exporting the function getUserRole
 export const getUserRole = () => {
   const dashboardInstance = new Dashboard(); // Create an instance of Dashboard
-  return dashboardInstance.triggerUpdate(); // Call the getUserRole function of the instance
+  dashboardInstance.getUser();
+  return dashboardInstance.getUserRole(); // Call the getUserRole function of the instance
 };
 
 Dashboard.propTypes = {
