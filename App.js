@@ -12,10 +12,12 @@ import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
 import { getUserRole } from "./components/dashboard";
-import { StatusBar as CustomStatusBar } from "react-native";
+import { StatusBar as CustomStatusBar, View, Text } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { DrawerHeader } from "./components/drawerHeader";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -147,11 +149,13 @@ function DrawerNavigator() {
         hidden={false}
       />
       <Drawer.Navigator
-        screenOptions={{ drawerActiveTintColor: "#000", fontWeight: "bold" }}
+        screenOptions={{
+          drawerActiveTintColor: "#000",
+          fontWeight: "bold",
+          // drawerLabelStyle: { color: "white" },
+        }}
         initialRouteName="Home"
-        // options={{
-        //   headerTitle: () => <HeaderLogo />,
-        // }}
+        drawerContent={props => <DrawerHeader {...props} />}
       >
         <Drawer.Screen
           name="Dashboard"
@@ -218,7 +222,14 @@ function DrawerNavigator() {
                 headerTitle: "Admin",
                 headerTitleAlign: "center",
                 drawerIcon: () => (
-                  <Entypo name="add-to-list" size={30} color="black" />
+                  <View style={{ flexDirection: "row", gap: "2vw" }}>
+                    <MaterialIcons
+                      name="admin-panel-settings"
+                      size={30}
+                      color="black"
+                    />
+                    <Entypo name="add-to-list" size={30} color="black" />
+                  </View>
                 ),
               }}
             />
@@ -228,8 +239,29 @@ function DrawerNavigator() {
               options={{
                 headerTitle: "Admin",
                 headerTitleAlign: "center",
+                // drawerLabel: () => (
+                //   <View
+                //     style={{
+                //       // backgroundColor: "pink",
+                //       flexDirection: "row",
+                //       alignItems: "center",
+                //       justifyContent: "space-between",
+                //       width: "115%",
+                //     }}
+                //   >
+                //     <Text>MotoMoto</Text>
+                //     <Entypo name="chevron-right" size={25} color="black" />
+                //   </View>
+                // ),
                 drawerIcon: () => (
-                  <Entypo name="edit" size={30} color="black" />
+                  <View style={{ flexDirection: "row", gap: "2vw" }}>
+                    <MaterialIcons
+                      name="admin-panel-settings"
+                      size={30}
+                      color="black"
+                    />
+                    <Entypo name="edit" size={30} color="black" />
+                  </View>
                 ),
               }}
             />
