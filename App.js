@@ -13,6 +13,9 @@ import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
 import { getUserRole } from "./components/dashboard";
 import { StatusBar as CustomStatusBar } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Entypo from "react-native-vector-icons/Entypo";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -137,6 +140,7 @@ function DrawerNavigator() {
     <>
       <CustomStatusBar
         animated={true}
+        // Native to android
         backgroundColor="#B72E81"
         barStyle={"default"}
         showHideTransition={"slide"}
@@ -145,10 +149,9 @@ function DrawerNavigator() {
       <Drawer.Navigator
         screenOptions={{ drawerActiveTintColor: "#000", fontWeight: "bold" }}
         initialRouteName="Home"
-        options={{
-          headerTitle: () => <HeaderLogo />,
-        }}
-        // StatusBar={{ backgroundColor: "green" }}
+        // options={{
+        //   headerTitle: () => <HeaderLogo />,
+        // }}
       >
         <Drawer.Screen
           name="Dashboard"
@@ -159,6 +162,9 @@ function DrawerNavigator() {
               backgroundColor: "#FEF202",
             },
             headerTitleAlign: "center",
+            drawerIcon: () => (
+              <AntDesign name="dashboard" size={30} color="black" />
+            ),
           }}
         />
         <Drawer.Screen
@@ -170,6 +176,9 @@ function DrawerNavigator() {
               backgroundColor: "#FEF202",
             },
             headerTitleAlign: "center",
+            drawerIcon: () => (
+              <FontAwesome name="home" size={30} color="black" />
+            ),
           }}
         />
         <Drawer.Screen
@@ -181,6 +190,9 @@ function DrawerNavigator() {
               backgroundColor: "#FEF202",
             },
             headerTitleAlign: "center",
+            drawerIcon: () => (
+              <AntDesign name="adduser" size={30} color="black" />
+            ),
           }}
         />
         <Drawer.Screen
@@ -192,6 +204,9 @@ function DrawerNavigator() {
               backgroundColor: "#FEF202",
             },
             headerTitleAlign: "center",
+            drawerIcon: () => (
+              <FontAwesome name="sign-in" size={30} color="black" />
+            ),
           }}
         />
         {userRole === "user" && (
@@ -199,12 +214,24 @@ function DrawerNavigator() {
             <Drawer.Screen
               name="Add Games"
               component={AddGamesD}
-              options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
+              options={{
+                headerTitle: "Admin",
+                headerTitleAlign: "center",
+                drawerIcon: () => (
+                  <Entypo name="add-to-list" size={30} color="black" />
+                ),
+              }}
             />
             <Drawer.Screen
               name="Edit Games"
               component={EditGamesD}
-              options={{ headerTitle: "Admin", headerTitleAlign: "center" }}
+              options={{
+                headerTitle: "Admin",
+                headerTitleAlign: "center",
+                drawerIcon: () => (
+                  <Entypo name="edit" size={30} color="black" />
+                ),
+              }}
             />
           </>
         )}
