@@ -153,7 +153,12 @@ function FreeTips() {
 
 function VipTips() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [data, setData] = React.useState([]);
+  const [data_3, setData_3] = React.useState([]);
+  const [data_5, setData_5] = React.useState([]);
+  const [data_10, setData_10] = React.useState([]);
+  const [data_25, setData_25] = React.useState([]);
+  const [data_70, setData_70] = React.useState([]);
+  const [data_Alt, setData_Alt] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(() => {
@@ -162,7 +167,13 @@ function VipTips() {
       const querySnapshot = await getDocs(
         collection(FIRESTORE_DB, "betiqprohub"),
       );
-      const dataArr = [];
+      const dataArr_3 = [];
+      const dataArr_5 = [];
+      const dataArr_10 = [];
+      const dataArr_25 = [];
+      const dataArr_70 = [];
+      const dataArr_Alt = [];
+
       // console.log("Query Snapshot Size:", querySnapshot.size);
       try {
         if (querySnapshot.size !== 0) {
@@ -177,13 +188,73 @@ function VipTips() {
                 data.category !== "Free" &&
                 data.isShow === true
               ) {
-                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
-                // console.log(doc.id, " => ", doc.data());
+                switch (data.category) {
+                  case "Daily 3+":
+                    dataArr_3.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+                  case "Daily 5+":
+                    dataArr_5.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+                  case "Daily 10+":
+                    dataArr_10.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+
+                  case "Daily 25+":
+                    dataArr_25.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+
+                  case "Weekly 70+":
+                    dataArr_70.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+
+                  case "Alternative VIP":
+                    dataArr_Alt.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    // console.log(doc.id, " => ", doc.data());
+                    break;
+                  default:
+                    // Handle other cases if necessary
+                    Alert.alert("Sth's a miss :(");
+                    break;
+                }
                 break;
               }
             }
           });
-          setData(dataArr);
+          setData_3(dataArr_3);
+          setData_5(dataArr_5);
+          setData_10(dataArr_10);
+          setData_25(dataArr_25);
+          setData_70(dataArr_70);
+          setData_Alt(dataArr_Alt);
         } else {
           // console.log("Nothing to query or Check your internet");
           Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
@@ -201,10 +272,235 @@ function VipTips() {
     // Triggers to the useEffect()
   }, [refresh]);
 
-  function TableView() {
+  function TableView_3() {
     return (
       <View>
-        {data.map(item => (
+        {data_3.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  function TableView_5() {
+    return (
+      <View>
+        {data_5.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  function TableView_10() {
+    return (
+      <View>
+        {data_10.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  function TableView_25() {
+    return (
+      <View>
+        {data_25.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  function TableView_70() {
+    return (
+      <View>
+        {data_70.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  function TableView_Alt() {
+    return (
+      <View>
+        {data_Alt.map(item => (
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
@@ -312,27 +608,27 @@ function VipTips() {
           <ScrollView contentContainerStyle={{ gap: "1vh" }}>
             <View style={styles.categoryView}>
               <HeaderVIP meLabel="Daily 3+" />
-              <TableView />
+              <TableView_3 />
             </View>
             <View style={styles.categoryView}>
               <HeaderVIPDark meLabel="Daily 5+" />
-              <TableView />
+              <TableView_5 />
             </View>
             <View style={styles.categoryView}>
               <HeaderVIP meLabel="Daily 10+" />
-              <TableView />
+              <TableView_10 />
             </View>
             <View style={styles.categoryView}>
               <HeaderVIPDark meLabel="Daily 25+" />
-              <TableView />
+              <TableView_25 />
             </View>
             <View style={styles.categoryView}>
               <HeaderVIP meLabel="Weekly 70+" />
-              <TableView />
+              <TableView_70 />
             </View>
             <View style={styles.categoryView}>
               <HeaderVIPDark meLabel="Alternative VIP" />
-              <TableView />
+              <TableView_Alt />
             </View>
           </ScrollView>
         </View>
