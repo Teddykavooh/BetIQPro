@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  Image,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
@@ -246,6 +247,197 @@ function VipTips() {
     );
   }
 
+  const HeaderVIP = ({ meLabel }) => {
+    return (
+      <View style={styles.categoryHeader}>
+        <View style={styles.hLogo}>
+          <Image
+            style={styles.headerIcon}
+            source={require("../assets/VIPLight.png")}
+          />
+        </View>
+        <View style={styles.hLabel}>
+          <Text style={{ fontWeight: "bold", fontSize: "large" }}>
+            {meLabel}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+  HeaderVIP.propTypes = {
+    meLabel: PropTypes.string.isRequired,
+  };
+
+  const HeaderVIPDark = ({ meLabel }) => {
+    return (
+      <View style={styles.categoryHeader}>
+        <View style={styles.hLogo}>
+          <Image
+            style={styles.headerIcon}
+            source={require("../assets/VIPDark.png")}
+          />
+        </View>
+        <View style={styles.hLabel}>
+          <Text style={{ fontWeight: "bold", fontSize: "large" }}>
+            {meLabel}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+  HeaderVIPDark.propTypes = {
+    meLabel: PropTypes.string.isRequired,
+  };
+
+  // Get today's date
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString();
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.dateView}>
+          <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
+          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        </View>
+        <RefreshIcon onPress={() => setRefresh(true)} />
+      </View>
+      {isLoading ? ( // Check isLoading state
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E" />
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {/* <Text style={styles.contentText}>Content Section</Text> */}
+          <ScrollView contentContainerStyle={{ gap: "1vh" }}>
+            <View style={styles.categoryView}>
+              <HeaderVIP meLabel="Daily 3+" />
+              <TableView />
+            </View>
+            <View style={styles.categoryView}>
+              <HeaderVIPDark meLabel="Daily 5+" />
+              <TableView />
+            </View>
+            <View style={styles.categoryView}>
+              <HeaderVIP meLabel="Daily 10+" />
+              <TableView />
+            </View>
+            <View style={styles.categoryView}>
+              <HeaderVIPDark meLabel="Daily 25+" />
+              <TableView />
+            </View>
+            <View style={styles.categoryView}>
+              <HeaderVIP meLabel="Weekly 70+" />
+              <TableView />
+            </View>
+            <View style={styles.categoryView}>
+              <HeaderVIPDark meLabel="Alternative VIP" />
+              <TableView />
+            </View>
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function VipSuccess() {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(
+        collection(FIRESTORE_DB, "betiqprohub"),
+      );
+      const dataArr = [];
+      try {
+        if (querySnapshot.size !== 0) {
+          querySnapshot.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            const data = doc.data();
+            const status = data.status;
+            // Find the won key where the value is true
+            for (const key in status) {
+              if (key === "won") {
+                if (
+                  status[key] === true &&
+                  data.isShow === true &&
+                  data.category !== "free"
+                ) {
+                  // console.log(doc.id, " => ", doc.data());
+                  dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                  break;
+                }
+              }
+            }
+          });
+          setData(dataArr);
+        } else {
+          // console.log("Nothing to query or Check your internet");
+          Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
+        }
+      } catch (error) {
+        // console.log("Fetch failed");
+        Alert.alert("Fetching data failed :(");
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+    if (refresh === true) {
+      setRefresh(false);
+    }
+    // Triggers to the useEffect()
+  }, [refresh]);
+
+  function TableView() {
+    return (
+      <View>
+        {data.map(item => (
+          <View key={item.id} style={styles.tableContainer}>
+            <View style={styles.tableColumn1}>
+              <Ionicons name="time-outline" size={17} color="#FFF" />
+              <Text
+                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+              >
+                {item.data.time}
+              </Text>
+            </View>
+            <View style={styles.tableColumn2}>
+              <Text
+                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
+              >
+                {item.data.league}
+              </Text>
+              <View style={styles.textLayout1}>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.home}
+                </Text>
+                <Text
+                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
+                >
+                  {item.data.away}
+                </Text>
+              </View>
+              <View style={styles.textLayout1}>
+                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
+                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+              </View>
+            </View>
+            <View style={styles.tableColumn3}>
+              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+              <Text style={styles.cl3_odd}>{item.data.score}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
   // Get today's date
   const today = new Date();
   const formattedDate = today.toLocaleDateString();
@@ -275,7 +467,7 @@ function VipTips() {
   );
 }
 
-function VipSuccess() {
+function FreeHistory() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
@@ -293,10 +485,14 @@ function VipSuccess() {
             // doc.data() is never undefined for query doc snapshots
             const data = doc.data();
             const status = data.status;
-            // Find the won key where the value is true
+            // Find the key where the N/A value is false and later is true
             for (const key in status) {
-              if (key === "won") {
-                if (status[key] === true && data.isShow === true) {
+              if (key !== "N/A") {
+                if (
+                  status[key] === true &&
+                  data.category === "Free" &&
+                  data.isShow === true
+                ) {
                   // console.log(doc.id, " => ", doc.data());
                   dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
                   break;
@@ -413,6 +609,11 @@ export default function MyTabs() {
         name="FreeBets"
         component={FreeTips}
         options={{ tabBarLabel: "FREE BETS" }}
+      />
+      <Tab.Screen
+        name="FreeSuccess"
+        component={FreeHistory}
+        options={{ tabBarLabel: "FREE BETS HISTORY" }}
       />
       <Tab.Screen
         name="VIPTips"
@@ -546,5 +747,27 @@ const styles = StyleSheet.create({
   },
   dateView: {
     flexDirection: "row",
+  },
+  headerIcon: {
+    width: 40, // Adjust the width as needed
+    height: 40, // Adjust the height as needed
+  },
+  categoryHeader: {
+    flexDirection: "row",
+    // alignItems: "center",
+    // justifyContent: "space-evenly",
+    backgroundColor: "#DDD",
+    borderRadius: 10,
+  },
+  hLogo: {
+    flex: 0.2,
+    alignItems: "center",
+    justifyContent: "center",
+    // backgroundColor: "#FFF",
+  },
+  hLabel: {
+    flex: 0.8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

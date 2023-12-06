@@ -45,8 +45,8 @@ export default class Dashboard extends Component {
 
   getUser = () => {
     const user = FIREBASE_AUTH.currentUser;
-    // console.log("My user: " + user.displayName);
-    if (user) {
+    console.log("My user: " + user);
+    if (user !== null) {
       this.setState({
         displayName: user.displayName || "Display Name Not Set",
         uid: user.uid,
