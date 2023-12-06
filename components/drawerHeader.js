@@ -31,10 +31,11 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     backgroundColor: "#FEF202",
-    width: "95%",
-    height: "25%",
+    width: "90%",
+    height: "20%",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    border: "2px solid #000",
   },
 });
