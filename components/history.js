@@ -7,18 +7,33 @@ import {
   Alert,
   Pressable,
   Image,
+  Modal,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import PropTypes from "prop-types"; // Import prop-types;
+import { Calendar } from "react-native-calendars";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
+const CalendarIcon = ({ onPress }) => {
+  return (
+    <Pressable onPress={onPress} style={{ alignSelf: "center" }}>
+      <FontAwesome name="calendar" size={30} color="#000" />
+    </Pressable>
+  );
+};
+
+CalendarIcon.propTypes = {
+  onPress: PropTypes.func, // Define the onPress prop
+};
 
 const RefreshIcon = ({ onPress }) => {
   return (
-    <Pressable onPress={onPress} style={{ alignSelf: "center" }}>
+    <Pressable onPress={onPress} style={{ alignSelf: "flex-end" }}>
       <FontAwesome name="refresh" size={30} color="black" />
     </Pressable>
   );
@@ -31,6 +46,11 @@ function FreeTips() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectDate, setSelectDate] = React.useState(
+    "Select Date from Calendar",
+  );
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -75,6 +95,60 @@ function FreeTips() {
     }
     // Triggers to the useEffect()
   }, [refresh]);
+
+  React.useEffect(() => {
+    const fetchDataByQuery = async () => {
+      setIsLoading(true);
+      //Empty array
+      const dataArr = [];
+      let q;
+      q = query(
+        collection(FIRESTORE_DB, "betiqprohub"),
+        where("selectDate", "==", selectDate),
+      );
+      try {
+        const querySnapshot2 = await getDocs(q);
+        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        querySnapshot2.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log("Do i get here?");
+          const data = doc.data();
+          const status = data.status;
+          for (const key in status) {
+            if (
+              key === "N/A" &&
+              data.category !== "Free" &&
+              data.isShow === true
+            ) {
+              dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+              // console.log(doc.id, " => ", doc.data());
+              break;
+            }
+          }
+        });
+        setData(dataArr);
+        // console.log("My dataArr: " + dataArr);
+        setIsLoading(false);
+        Alert.alert("Query successful :)");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error as needed
+        setIsLoading(false);
+        Alert.alert("Error fetching data by query :(");
+        // setFilter(null);
+      }
+    };
+
+    if (selectDate !== "Select Date from Calendar") {
+      fetchDataByQuery();
+    } else {
+      // console.log("Shite happened");
+      // console.log("Filter: " + filter);
+      setSelectDate("Select Date from Calendar");
+      // setDataUpdated(!dataUpdated);
+    }
+    // Triggers to the useEffect()
+  }, [selectDate]);
 
   function TableView() {
     return (
@@ -124,16 +198,103 @@ function FreeTips() {
 
   // Get today's date
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const formattedDate = today.toISOString().split("T")[0];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.dateView}>
-          <Text style={styles.headerTextRounded}>Today</Text>
-          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateV}>
+          <Pressable
+            onPress={() => {
+              // console.log("Text date: " + formattedDate);
+              // console.log("Text raw date: " + today);
+              setSelectDate(formattedDate);
+            }}
+            style={{ alignSelf: "flex-start" }}
+          >
+            <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
+          </Pressable>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)} />
+        <View style={styles.calV}>
+          <Modal
+            visible={showModal}
+            animationType="fade"
+            transparent={true}
+            onRequestClose={() => setShowModal(false)}
+          >
+            <View
+              style={{
+                flex: 0.5,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 350,
+                  height: 200,
+                }}
+              >
+                {/* Content of the small view modal */}
+                <Calendar
+                  onDayPress={day => {
+                    // console.log("selected day", day);
+                    setSelectDate(day.dateString);
+                    setShowModal(false);
+                  }}
+                  renderArrow={direction => {
+                    if (direction == "left")
+                      return (
+                        <FontAwesome
+                          name="chevron-left"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                    if (direction == "right")
+                      return (
+                        <FontAwesome
+                          name="chevron-right"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                  }}
+                />
+                <Pressable
+                  onPress={() => setShowModal(false)}
+                  style={{
+                    alignSelf: "center",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    width: 100,
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={30} color="#000" />
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <CalendarIcon
+            onPress={() => {
+              // Prevent reload on calender click
+              // setDataUpdated(false);
+              setShowModal(true);
+              // console.log("Calendar pressed");
+              // Debugger
+              // console.log("Me status_update: " + dataUpdated);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+              // console.log("......Updating.......");
+              // setDataUpdated(true);
+              // console.log("Me status_update: " + dataUpdated);
+              // setFetchDataOnMount(true);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+            }}
+          />
+        </View>
+        <View style={styles.refV}>
+          <RefreshIcon onPress={() => setRefresh(true)} />
+        </View>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -160,6 +321,12 @@ function VipTips() {
   const [data_70, setData_70] = React.useState([]);
   const [data_Alt, setData_Alt] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectDate, setSelectDate] = React.useState(
+    "Select Date from Calendar",
+  );
+  // const [dataUpdated, setDataUpdated] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -271,6 +438,127 @@ function VipTips() {
     }
     // Triggers to the useEffect()
   }, [refresh]);
+
+  React.useEffect(() => {
+    const fetchDataByQuery = async () => {
+      setIsLoading(true);
+      //Empty array
+      // const dataArr = [];
+      const dataArr_3 = [];
+      const dataArr_5 = [];
+      const dataArr_10 = [];
+      const dataArr_25 = [];
+      const dataArr_70 = [];
+      const dataArr_Alt = [];
+      let q;
+      q = query(
+        collection(FIRESTORE_DB, "betiqprohub"),
+        where("selectDate", "==", selectDate),
+      );
+      try {
+        const querySnapshot2 = await getDocs(q);
+        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        querySnapshot2.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log("Do i get here?");
+          const data = doc.data();
+          const status = data.status;
+          for (const key in status) {
+            if (
+              key === "N/A" &&
+              data.category !== "Free" &&
+              data.isShow === true
+            ) {
+              switch (data.category) {
+                case "Daily 3+":
+                  dataArr_3.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+                case "Daily 5+":
+                  dataArr_5.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+                case "Daily 10+":
+                  dataArr_10.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+
+                case "Daily 25+":
+                  dataArr_25.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+
+                case "Weekly 70+":
+                  dataArr_70.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+
+                case "Alternative VIP":
+                  dataArr_Alt.push({
+                    id: doc.id,
+                    data: doc.data(),
+                    trueKey: key,
+                  });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+                default:
+                  // Handle other cases if necessary
+                  Alert.alert("Sth's a miss :(");
+                  break;
+              }
+              break;
+            }
+          }
+        });
+        // setData(dataArr);
+        setData_3(dataArr_3);
+        setData_5(dataArr_5);
+        setData_10(dataArr_10);
+        setData_25(dataArr_25);
+        setData_70(dataArr_70);
+        setData_Alt(dataArr_Alt);
+        // console.log("My dataArr: " + dataArr);
+        setIsLoading(false);
+        Alert.alert("Query successful :)");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error as needed
+        setIsLoading(false);
+        Alert.alert("Error fetching data by query :(");
+        // setFilter(null);
+      }
+    };
+
+    if (selectDate !== "Select Date from Calendar") {
+      fetchDataByQuery();
+    } else {
+      // console.log("Shite happened");
+      // console.log("Filter: " + filter);
+      setSelectDate("Select Date from Calendar");
+      // setDataUpdated(!dataUpdated);
+    }
+    // Triggers to the useEffect()
+  }, [selectDate]);
 
   function TableView_3() {
     return (
@@ -587,16 +875,103 @@ function VipTips() {
 
   // Get today's date
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const formattedDate = today.toISOString().split("T")[0];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.dateView}>
-          <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
-          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateV}>
+          <Pressable
+            onPress={() => {
+              // console.log("Text date: " + formattedDate);
+              // console.log("Text raw date: " + today);
+              setSelectDate(formattedDate);
+            }}
+            style={{ alignSelf: "flex-start" }}
+          >
+            <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
+          </Pressable>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)} />
+        <View style={styles.calV}>
+          <Modal
+            visible={showModal}
+            animationType="fade"
+            transparent={true}
+            onRequestClose={() => setShowModal(false)}
+          >
+            <View
+              style={{
+                flex: 0.5,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 350,
+                  height: 200,
+                }}
+              >
+                {/* Content of the small view modal */}
+                <Calendar
+                  onDayPress={day => {
+                    // console.log("selected day", day);
+                    setSelectDate(day.dateString);
+                    setShowModal(false);
+                  }}
+                  renderArrow={direction => {
+                    if (direction == "left")
+                      return (
+                        <FontAwesome
+                          name="chevron-left"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                    if (direction == "right")
+                      return (
+                        <FontAwesome
+                          name="chevron-right"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                  }}
+                />
+                <Pressable
+                  onPress={() => setShowModal(false)}
+                  style={{
+                    alignSelf: "center",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    width: 100,
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={30} color="#000" />
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <CalendarIcon
+            onPress={() => {
+              // Prevent reload on calender click
+              // setDataUpdated(false);
+              setShowModal(true);
+              // console.log("Calendar pressed");
+              // Debugger
+              // console.log("Me status_update: " + dataUpdated);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+              // console.log("......Updating.......");
+              // setDataUpdated(true);
+              // console.log("Me status_update: " + dataUpdated);
+              // setFetchDataOnMount(true);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+            }}
+          />
+        </View>
+        <View style={styles.refV}>
+          <RefreshIcon onPress={() => setRefresh(true)} />
+        </View>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -641,6 +1016,11 @@ function VipSuccess() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectDate, setSelectDate] = React.useState(
+    "Select Date from Calendar",
+  );
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -688,6 +1068,62 @@ function VipSuccess() {
     // Triggers to the useEffect()
   }, [refresh]);
 
+  React.useEffect(() => {
+    const fetchDataByQuery = async () => {
+      setIsLoading(true);
+      //Empty array
+      const dataArr = [];
+      let q;
+      q = query(
+        collection(FIRESTORE_DB, "betiqprohub"),
+        where("selectDate", "==", selectDate),
+      );
+      try {
+        const querySnapshot2 = await getDocs(q);
+        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        querySnapshot2.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log("Do i get here?");
+          const data = doc.data();
+          const status = data.status;
+          for (const key in status) {
+            if (key === "won") {
+              if (
+                status[key] === true &&
+                data.isShow === true &&
+                data.category !== "free"
+              ) {
+                // console.log(doc.id, " => ", doc.data());
+                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                break;
+              }
+            }
+          }
+        });
+        setData(dataArr);
+        // console.log("My dataArr: " + dataArr);
+        setIsLoading(false);
+        Alert.alert("Query successful :)");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error as needed
+        setIsLoading(false);
+        Alert.alert("Error fetching data by query :(");
+        // setFilter(null);
+      }
+    };
+
+    if (selectDate !== "Select Date from Calendar") {
+      fetchDataByQuery();
+    } else {
+      // console.log("Shite happened");
+      // console.log("Filter: " + filter);
+      setSelectDate("Select Date from Calendar");
+      // setDataUpdated(!dataUpdated);
+    }
+    // Triggers to the useEffect()
+  }, [selectDate]);
+
   function TableView() {
     return (
       <View>
@@ -736,16 +1172,103 @@ function VipSuccess() {
 
   // Get today's date
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const formattedDate = today.toISOString().split("T")[0];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.dateView}>
-          <Text style={styles.headerTextRounded}>Today</Text>
-          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateV}>
+          <Pressable
+            onPress={() => {
+              // console.log("Text date: " + formattedDate);
+              // console.log("Text raw date: " + today);
+              setSelectDate(formattedDate);
+            }}
+            style={{ alignSelf: "flex-start" }}
+          >
+            <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
+          </Pressable>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)} />
+        <View style={styles.calV}>
+          <Modal
+            visible={showModal}
+            animationType="fade"
+            transparent={true}
+            onRequestClose={() => setShowModal(false)}
+          >
+            <View
+              style={{
+                flex: 0.5,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 350,
+                  height: 200,
+                }}
+              >
+                {/* Content of the small view modal */}
+                <Calendar
+                  onDayPress={day => {
+                    // console.log("selected day", day);
+                    setSelectDate(day.dateString);
+                    setShowModal(false);
+                  }}
+                  renderArrow={direction => {
+                    if (direction == "left")
+                      return (
+                        <FontAwesome
+                          name="chevron-left"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                    if (direction == "right")
+                      return (
+                        <FontAwesome
+                          name="chevron-right"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                  }}
+                />
+                <Pressable
+                  onPress={() => setShowModal(false)}
+                  style={{
+                    alignSelf: "center",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    width: 100,
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={30} color="#000" />
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <CalendarIcon
+            onPress={() => {
+              // Prevent reload on calender click
+              // setDataUpdated(false);
+              setShowModal(true);
+              // console.log("Calendar pressed");
+              // Debugger
+              // console.log("Me status_update: " + dataUpdated);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+              // console.log("......Updating.......");
+              // setDataUpdated(true);
+              // console.log("Me status_update: " + dataUpdated);
+              // setFetchDataOnMount(true);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+            }}
+          />
+        </View>
+        <View style={styles.refV}>
+          <RefreshIcon onPress={() => setRefresh(true)} />
+        </View>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -767,6 +1290,11 @@ function FreeHistory() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectDate, setSelectDate] = React.useState(
+    "Select Date from Calendar",
+  );
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -814,6 +1342,60 @@ function FreeHistory() {
     // Triggers to the useEffect()
   }, [refresh]);
 
+  React.useEffect(() => {
+    const fetchDataByQuery = async () => {
+      setIsLoading(true);
+      const dataArr = [];
+      let q;
+      q = query(
+        collection(FIRESTORE_DB, "betiqprohub"),
+        where("selectDate", "==", selectDate),
+      );
+      try {
+        const querySnapshot2 = await getDocs(q);
+        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+        querySnapshot2.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          const data = doc.data();
+          const status = data.status;
+          // Find the key where the N/A value is false and later is true
+          for (const key in status) {
+            if (key !== "N/A") {
+              if (
+                status[key] === true &&
+                data.category === "Free" &&
+                data.isShow === true
+              ) {
+                // console.log(doc.id, " => ", doc.data());
+                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                break;
+              }
+            }
+          }
+        });
+        setData(dataArr);
+        setIsLoading(false);
+        Alert.alert("Query successful :)");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error as needed
+        setIsLoading(false);
+        Alert.alert("Error fetching data by query :(");
+        // setFilter(null);
+      }
+    };
+
+    if (selectDate !== "Select Date from Calendar") {
+      fetchDataByQuery();
+    } else {
+      // console.log("Shite happened");
+      // console.log("Filter: " + filter);
+      setSelectDate("Select Date from Calendar");
+      // setDataUpdated(!dataUpdated);
+    }
+    // Triggers to the useEffect()
+  }, [selectDate]);
+
   function TableView() {
     return (
       <View>
@@ -862,16 +1444,103 @@ function FreeHistory() {
 
   // Get today's date
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const formattedDate = today.toISOString().split("T")[0];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.dateView}>
-          <Text style={styles.headerTextRounded}>Today</Text>
-          <Text style={styles.headerTextRounded}>{formattedDate}</Text>
+        <View style={styles.dateV}>
+          <Pressable
+            onPress={() => {
+              // console.log("Text date: " + formattedDate);
+              // console.log("Text raw date: " + today);
+              setSelectDate(formattedDate);
+            }}
+            style={{ alignSelf: "flex-start" }}
+          >
+            <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
+          </Pressable>
         </View>
-        <RefreshIcon onPress={() => setRefresh(true)} />
+        <View style={styles.calV}>
+          <Modal
+            visible={showModal}
+            animationType="fade"
+            transparent={true}
+            onRequestClose={() => setShowModal(false)}
+          >
+            <View
+              style={{
+                flex: 0.5,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 350,
+                  height: 200,
+                }}
+              >
+                {/* Content of the small view modal */}
+                <Calendar
+                  onDayPress={day => {
+                    // console.log("selected day", day);
+                    setSelectDate(day.dateString);
+                    setShowModal(false);
+                  }}
+                  renderArrow={direction => {
+                    if (direction == "left")
+                      return (
+                        <FontAwesome
+                          name="chevron-left"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                    if (direction == "right")
+                      return (
+                        <FontAwesome
+                          name="chevron-right"
+                          size={20}
+                          color="#000"
+                        />
+                      );
+                  }}
+                />
+                <Pressable
+                  onPress={() => setShowModal(false)}
+                  style={{
+                    alignSelf: "center",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    width: 100,
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={30} color="#000" />
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <CalendarIcon
+            onPress={() => {
+              // Prevent reload on calender click
+              // setDataUpdated(false);
+              setShowModal(true);
+              // console.log("Calendar pressed");
+              // Debugger
+              // console.log("Me status_update: " + dataUpdated);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+              // console.log("......Updating.......");
+              // setDataUpdated(true);
+              // console.log("Me status_update: " + dataUpdated);
+              // setFetchDataOnMount(true);
+              // console.log("Me status_fetch: " + fetchDataOnMount);
+            }}
+          />
+        </View>
+        <View style={styles.refV}>
+          <RefreshIcon onPress={() => setRefresh(true)} />
+        </View>
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -932,9 +1601,9 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "white",
-    padding: 10,
+    padding: 5,
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -1062,8 +1731,21 @@ const styles = StyleSheet.create({
     // backgroundColor: "#FFF",
   },
   hLabel: {
-    flex: 0.8,
+    flex: 0.6,
     alignItems: "center",
     justifyContent: "center",
+  },
+  dateV: {
+    flex: 0.45,
+    // backgroundColor: "pink",
+  },
+  calV: {
+    flex: 0.1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  refV: {
+    flex: 0.45,
+    // backgroundColor: "pink",
   },
 });

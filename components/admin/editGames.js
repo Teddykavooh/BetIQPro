@@ -237,6 +237,7 @@ const EditModal = ({
                 setEditedData({ ...editedData, category: value })
               }
             >
+              <Picker.Item label="Categories" value={null} />
               <Picker.Item label="Free" value="Free" />
               <Picker.Item label="Daily 3+" value="Daily 3+" />
               <Picker.Item label="Daily 5+" value="Daily 5+" />

@@ -123,7 +123,7 @@ export default function AddGames() {
 
   const [isLost, setIsLost] = React.useState(null); // Initial value: false (Won)
   const [isShow, setIsShow] = React.useState(true); // Initial value: true (Show)
-  const [category, setCategory] = React.useState("Daily 3"); // Initial value: "Daily 3"
+  const [category, setCategory] = React.useState(null); // Initial value: Null
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [score, setScore] = React.useState("");
@@ -335,6 +335,7 @@ export default function AddGames() {
                   selectedValue={category}
                   onValueChange={value => setCategory(value)}
                 >
+                  <Picker.Item label="Categories" value={null} />
                   <Picker.Item label="Free" value="Free" />
                   <Picker.Item label="Daily 3+" value="Daily 3+" />
                   <Picker.Item label="Daily 5+" value="Daily 5+" />
