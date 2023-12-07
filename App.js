@@ -12,7 +12,7 @@ import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
 import { getUserRole } from "./components/dashboard";
-import { StatusBar as CustomStatusBar, View, Text } from "react-native";
+import { StatusBar as CustomStatusBar, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
