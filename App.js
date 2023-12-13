@@ -212,7 +212,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-        {userRole === "user" && (
+        {userRole === "admin" && (
           <>
             <Drawer.Screen
               name="Add Games"
