@@ -34,7 +34,7 @@ function SignupD() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold",
+          // fontWeight: 700,
         },
       }}
     >
@@ -58,7 +58,7 @@ function LoginD() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold",
+          // fontWeight: 700,
         },
       }}
     >
@@ -151,7 +151,7 @@ function DrawerNavigator() {
       <Drawer.Navigator
         screenOptions={{
           drawerActiveTintColor: "#000",
-          fontWeight: "bold",
+          // fontWeight: 700,
           // drawerLabelStyle: { color: "white" },
         }}
         initialRouteName="Home"
@@ -222,7 +222,12 @@ function DrawerNavigator() {
                 headerTitle: "Admin",
                 headerTitleAlign: "center",
                 drawerIcon: () => (
-                  <View style={{ flexDirection: "row", gap: "2vw" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 2,
+                    }}
+                  >
                     <MaterialIcons
                       name="admin-panel-settings"
                       size={30}
@@ -254,7 +259,12 @@ function DrawerNavigator() {
                 //   </View>
                 // ),
                 drawerIcon: () => (
-                  <View style={{ flexDirection: "row", gap: "2vw" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 2,
+                    }}
+                  >
                     <MaterialIcons
                       name="admin-panel-settings"
                       size={30}

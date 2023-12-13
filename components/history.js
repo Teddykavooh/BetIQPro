@@ -33,7 +33,14 @@ CalendarIcon.propTypes = {
 
 const RefreshIcon = ({ onPress }) => {
   return (
-    <Pressable onPress={onPress} style={{ alignSelf: "flex-end" }}>
+    <Pressable
+      onPress={onPress}
+      style={
+        {
+          // alignSelf: "flex-end"
+        }
+      }
+    >
       <FontAwesome name="refresh" size={30} color="black" />
     </Pressable>
   );
@@ -157,29 +164,13 @@ function FreeTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={20} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -409,7 +400,7 @@ function VipTips() {
                     break;
                   default:
                     // Handle other cases if necessary
-                    Alert.alert("Sth's a miss :(");
+                    Alert.alert("Non-Existing Category :(");
                     break;
                 }
                 break;
@@ -523,7 +514,7 @@ function VipTips() {
                   break;
                 default:
                   // Handle other cases if necessary
-                  Alert.alert("Sth's a miss :(");
+                  Alert.alert("Non-Existing Category :(");
                   break;
               }
               break;
@@ -567,29 +558,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -612,29 +587,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -657,29 +616,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -702,29 +645,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -747,29 +674,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -792,29 +703,13 @@ function VipTips() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -841,9 +736,7 @@ function VipTips() {
           />
         </View>
         <View style={styles.hLabel}>
-          <Text style={{ fontWeight: "bold", fontSize: "large" }}>
-            {meLabel}
-          </Text>
+          <Text style={styles.labelFormat}>{meLabel}</Text>
         </View>
       </View>
     );
@@ -862,9 +755,7 @@ function VipTips() {
           />
         </View>
         <View style={styles.hLabel}>
-          <Text style={{ fontWeight: "bold", fontSize: "large" }}>
-            {meLabel}
-          </Text>
+          <Text style={styles.labelFormat}>{meLabel}</Text>
         </View>
       </View>
     );
@@ -980,7 +871,11 @@ function VipTips() {
       ) : (
         <View style={styles.content}>
           {/* <Text style={styles.contentText}>Content Section</Text> */}
-          <ScrollView contentContainerStyle={{ gap: "1vh" }}>
+          <ScrollView
+            contentContainerStyle={{
+              gap: 2,
+            }}
+          >
             <View style={styles.categoryView}>
               <HeaderVIP meLabel="Daily 3+" />
               <TableView_3 />
@@ -1131,29 +1026,13 @@ function VipSuccess() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -1403,29 +1282,13 @@ function FreeHistory() {
           <View key={item.id} style={styles.tableContainer}>
             <View style={styles.tableColumn1}>
               <Ionicons name="time-outline" size={17} color="#FFF" />
-              <Text
-                style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-              >
-                {item.data.time}
-              </Text>
+              <Text style={styles.textFormat1}>{item.data.time}</Text>
             </View>
             <View style={styles.tableColumn2}>
-              <Text
-                style={{ fontWeight: "bold", color: "#8A91A4", fontSize: 16 }}
-              >
-                {item.data.league}
-              </Text>
+              <Text style={styles.textFormat2}>{item.data.league}</Text>
               <View style={styles.textLayout1}>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.home}
-                </Text>
-                <Text
-                  style={{ fontWeight: "bold", color: "#B9BBC0", fontSize: 16 }}
-                >
-                  {item.data.away}
-                </Text>
+                <Text style={styles.textFormat1}>{item.data.home}</Text>
+                <Text style={styles.textFormat1}>{item.data.away}</Text>
               </View>
               <View style={styles.textLayout1}>
                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
@@ -1607,7 +1470,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "bold",
+    // fontWeight: 700,
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -1620,7 +1483,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: "black",
-    padding: 10,
+    padding: 5,
   },
   contentText: {
     fontSize: 16,
@@ -1676,7 +1539,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
-    fontWeight: "bold",
+    // fontWeight: 700,
     fontSize: 15,
     minWidth: 50,
     textAlign: "center",
@@ -1687,7 +1550,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 4,
-    fontWeight: "bold",
+    // fontWeight: 700,
     fontSize: 15,
     minWidth: 25,
     textAlign: "center",
@@ -1746,6 +1609,23 @@ const styles = StyleSheet.create({
   },
   refV: {
     flex: 0.45,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     // backgroundColor: "pink",
+  },
+  textFormat1: {
+    // fontWeight: 700,
+    color: "#B9BBC0",
+    fontSize: 16,
+  },
+  textFormat2: {
+    // fontWeight: 700,
+    color: "#8A91A4",
+    fontSize: 16,
+  },
+  labelFormat: {
+    // fontWeight: 700,
+    fontSize: 20,
   },
 });

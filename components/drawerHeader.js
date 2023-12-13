@@ -12,7 +12,7 @@ export const DrawerHeader = props => {
         {...props}
         contentContainerStyle={{
           //   backgroundColor: "#B72E81",
-          alignItems: "center",
+          // alignItems: "center",
           flex: 1,
         }}
       >
@@ -31,11 +31,15 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     backgroundColor: "#FEF202",
-    width: "90%",
+    width: "95%",
     height: "20%",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    border: "2px solid #000",
+    alignSelf: "center",
+    // border: "2px solid #000",
+    borderStyle: "solid",
+    borderWidth: 2,
+    borderColor: "black",
   },
 });

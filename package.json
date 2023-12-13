@@ -44,7 +44,6 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
-    "expo-dev-client": "~2.4.12",
     "prettier": "^3.0.3"
   }
 }

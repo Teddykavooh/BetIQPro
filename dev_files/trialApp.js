@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: "bold",
+    // fontWeight: 700,
     color: "#000",
   },
 });
@@ -65,7 +65,7 @@ function AuthStack() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold",
+          // fontWeight: 700,
         },
       }}
     >
@@ -93,7 +93,7 @@ function UserStack() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold",
+          // fontWeight: 700,
         },
       }}
     >
@@ -121,7 +121,7 @@ function AdminStack() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold",
+          // fontWeight: 700,
         },
       }}
     >
