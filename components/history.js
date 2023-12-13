@@ -873,7 +873,7 @@ function VipTips() {
           {/* <Text style={styles.contentText}>Content Section</Text> */}
           <ScrollView
             contentContainerStyle={{
-              gap: 2,
+              gap: 10,
             }}
           >
             <View style={styles.categoryView}>
@@ -1493,7 +1493,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: 100,
     padding: 5,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   tableColumn1: {
     backgroundColor: "#141C31",
@@ -1586,6 +1586,10 @@ const styles = StyleSheet.create({
     // justifyContent: "space-evenly",
     backgroundColor: "#DDD",
     borderRadius: 10,
+  },
+  categoryView: {
+    // gap: 20,
+    // backgroundColor: "pink",
   },
   hLogo: {
     flex: 0.2,
