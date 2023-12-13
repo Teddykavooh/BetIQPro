@@ -26,7 +26,7 @@ function MyStack() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          // fontWeight: 700,
+          fontWeight: "700",
         },
       }}
     >

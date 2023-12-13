@@ -1470,7 +1470,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    // fontWeight: 700,
+    fontWeight: "700",
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -1539,7 +1539,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 6,
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 15,
     minWidth: 50,
     textAlign: "center",
@@ -1550,7 +1550,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 4,
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 15,
     minWidth: 25,
     textAlign: "center",
@@ -1619,17 +1619,17 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
   },
   textFormat1: {
-    // fontWeight: 700,
+    fontWeight: "700",
     color: "#B9BBC0",
     fontSize: 16,
   },
   textFormat2: {
-    // fontWeight: 700,
+    fontWeight: "700",
     color: "#8A91A4",
     fontSize: 16,
   },
   labelFormat: {
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 20,
   },
 });

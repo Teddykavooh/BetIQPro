@@ -129,7 +129,7 @@ function MainScreen() {
           color: "black",
           fontSize: 30,
           marginBottom: 15,
-          // fontWeight: 700,
+          fontWeight: "700",
         }}
       >
         Pretty Cool!

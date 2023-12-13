@@ -34,7 +34,7 @@ function SignupD() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          // fontWeight: 700,
+          fontWeight: 700,
         },
       }}
     >
@@ -58,7 +58,7 @@ function LoginD() {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          // fontWeight: 700,
+          fontWeight: 700,
         },
       }}
     >
@@ -151,8 +151,7 @@ function DrawerNavigator() {
       <Drawer.Navigator
         screenOptions={{
           drawerActiveTintColor: "#000",
-          // fontWeight: 700,
-          // drawerLabelStyle: { color: "white" },
+          drawerLabelStyle: { fontWeight: 700 },
         }}
         initialRouteName="Home"
         drawerContent={props => <DrawerHeader {...props} />}

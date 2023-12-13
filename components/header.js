@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   logoText: {
     // Define any common styles for the logo text here.
     fontStyle: "italic",
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 30,
   },
   whiteText: {

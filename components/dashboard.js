@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 30,
-    // fontWeight: 700,
+    fontWeight: "700",
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   textStyle2: {
     fontSize: 25,
-    // fontWeight: 700,
+    fontWeight: "700",
     backgroundColor: "#FEF202",
     textAlign: "center",
     padding: 5,
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     color: "#000",
     marginLeft: 10,
     textAlign: "center",
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 16,
   },
   contentContainer: {

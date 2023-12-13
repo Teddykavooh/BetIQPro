@@ -87,7 +87,7 @@ export default function AddGames() {
             <Text
               style={{
                 color: "white",
-                // fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               Vs
@@ -101,7 +101,7 @@ export default function AddGames() {
                 color: "black",
                 backgroundColor: "#FEF202",
                 padding: 3,
-                // fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               {odds}
@@ -236,7 +236,7 @@ export default function AddGames() {
             >
               <Text
                 style={{
-                  // fontWeight: 700,
+                  fontWeight: "700",
                   color: "white",
                   fontSize: 15,
                 }}
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    // fontWeight: 700,
+    fontWeight: "700",
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   },
   d_text: {
     color: "white",
-    // fontWeight: 700,
+    fontWeight: "700",
     fontSize: 15,
   },
   row_layout: {
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -10,
     left: 10,
-    // fontWeight: 700,
+    fontWeight: "700",
     backgroundColor: "#FFF",
     borderRadius: 5,
     width: 95,
