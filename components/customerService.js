@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     flexDirection: "row",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
