@@ -7,7 +7,7 @@ import {
   Alert,
   Pressable,
   Image,
-  Modal,
+  // Modal,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,20 +16,20 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import PropTypes from "prop-types"; // Import prop-types;
-import { Calendar } from "react-native-calendars";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+// import { Calendar } from "react-native-calendars";
+// import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const CalendarIcon = ({ onPress }) => {
-  return (
-    <Pressable onPress={onPress} style={{ alignSelf: "center" }}>
-      <FontAwesome name="calendar" size={30} color="#000" />
-    </Pressable>
-  );
-};
+// const CalendarIcon = ({ onPress }) => {
+//   return (
+//     <Pressable onPress={onPress} style={{ alignSelf: "center" }}>
+//       <FontAwesome name="calendar" size={30} color="#000" />
+//     </Pressable>
+//   );
+// };
 
-CalendarIcon.propTypes = {
-  onPress: PropTypes.func, // Define the onPress prop
-};
+// CalendarIcon.propTypes = {
+//   onPress: PropTypes.func, // Define the onPress prop
+// };
 
 const RefreshIcon = ({ onPress }) => {
   return (
@@ -54,7 +54,7 @@ function FreeTips() {
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
 
-  const [showModal, setShowModal] = React.useState(false);
+  // const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState(
     "Select Date from Calendar",
   );
@@ -206,7 +206,7 @@ function FreeTips() {
             <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
           </Pressable>
         </View>
-        <View style={styles.calV}>
+        {/* <View style={styles.calV}>
           <Modal
             visible={showModal}
             animationType="fade"
@@ -226,7 +226,7 @@ function FreeTips() {
                   height: 200,
                 }}
               >
-                {/* Content of the small view modal */}
+                <View>Content of the small view modal</View>
                 <Calendar
                   onDayPress={day => {
                     // console.log("selected day", day);
@@ -282,7 +282,7 @@ function FreeTips() {
               // console.log("Me status_fetch: " + fetchDataOnMount);
             }}
           />
-        </View>
+        </View> */}
         <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
         </View>
@@ -313,7 +313,7 @@ function VipTips() {
   const [data_Alt, setData_Alt] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
 
-  const [showModal, setShowModal] = React.useState(false);
+  // const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState(
     "Select Date from Calendar",
   );
@@ -783,7 +783,7 @@ function VipTips() {
             <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
           </Pressable>
         </View>
-        <View style={styles.calV}>
+        {/* <View style={styles.calV}>
           <Modal
             visible={showModal}
             animationType="fade"
@@ -803,7 +803,7 @@ function VipTips() {
                   height: 200,
                 }}
               >
-                {/* Content of the small view modal */}
+                <View>Content of the small view modal</View>
                 <Calendar
                   onDayPress={day => {
                     // console.log("selected day", day);
@@ -859,7 +859,7 @@ function VipTips() {
               // console.log("Me status_fetch: " + fetchDataOnMount);
             }}
           />
-        </View>
+        </View> */}
         <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
         </View>
@@ -912,7 +912,7 @@ function VipSuccess() {
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
 
-  const [showModal, setShowModal] = React.useState(false);
+  // const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState(
     "Select Date from Calendar",
   );
@@ -1068,7 +1068,7 @@ function VipSuccess() {
             <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
           </Pressable>
         </View>
-        <View style={styles.calV}>
+        {/* <View style={styles.calV}>
           <Modal
             visible={showModal}
             animationType="fade"
@@ -1088,7 +1088,7 @@ function VipSuccess() {
                   height: 200,
                 }}
               >
-                {/* Content of the small view modal */}
+                <View>Content of the small view modal</View>
                 <Calendar
                   onDayPress={day => {
                     // console.log("selected day", day);
@@ -1144,7 +1144,7 @@ function VipSuccess() {
               // console.log("Me status_fetch: " + fetchDataOnMount);
             }}
           />
-        </View>
+        </View> */}
         <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
         </View>
@@ -1170,7 +1170,7 @@ function FreeHistory() {
   const [data, setData] = React.useState([]);
   const [refresh, setRefresh] = React.useState(false);
 
-  const [showModal, setShowModal] = React.useState(false);
+  // const [showModal, setShowModal] = React.useState(false);
   const [selectDate, setSelectDate] = React.useState(
     "Select Date from Calendar",
   );
@@ -1324,7 +1324,7 @@ function FreeHistory() {
             <Text style={styles.headerTextRounded}>Today: {formattedDate}</Text>
           </Pressable>
         </View>
-        <View style={styles.calV}>
+        {/* <View style={styles.calV}>
           <Modal
             visible={showModal}
             animationType="fade"
@@ -1344,7 +1344,7 @@ function FreeHistory() {
                   height: 200,
                 }}
               >
-                {/* Content of the small view modal */}
+                <View>Content of the small view modal</View>
                 <Calendar
                   onDayPress={day => {
                     // console.log("selected day", day);
@@ -1400,7 +1400,7 @@ function FreeHistory() {
               // console.log("Me status_fetch: " + fetchDataOnMount);
             }}
           />
-        </View>
+        </View> */}
         <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
         </View>

@@ -7,7 +7,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HeaderLogo from "./components/header";
 import Login from "./components/login";
 import Signup from "./components/signup";
-import Dashboard from "./components/dashboard";
+// import Dashboard from "./components/dashboard";
+import CustomerService from "./components/customerService";
 import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
@@ -156,7 +157,7 @@ function DrawerNavigator() {
         initialRouteName="Home"
         drawerContent={props => <DrawerHeader {...props} />}
       >
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="Dashboard"
           component={Dashboard}
           options={{
@@ -169,7 +170,7 @@ function DrawerNavigator() {
               <AntDesign name="dashboard" size={30} color="black" />
             ),
           }}
-        />
+        /> */}
         <Drawer.Screen
           name="Home"
           component={UserStack}
@@ -212,7 +213,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-        {userRole === "admin" && (
+        {userRole === "user" && (
           <>
             <Drawer.Screen
               name="Add Games"
@@ -276,6 +277,20 @@ function DrawerNavigator() {
             />
           </>
         )}
+        <Drawer.Screen
+          name="Customer Service"
+          component={CustomerService}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: {
+              backgroundColor: "#FEF202",
+            },
+            headerTitleAlign: "center",
+            drawerIcon: () => (
+              <AntDesign name="customerservice" size={30} color="black" />
+            ),
+          }}
+        />
       </Drawer.Navigator>
     </>
   );
