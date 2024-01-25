@@ -19,7 +19,6 @@ import PropTypes from "prop-types"; // Import prop-types;
 // import { Calendar } from "react-native-calendars";
 // import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 // const CalendarIcon = ({ onPress }) => {
 //   return (
@@ -425,9 +424,38 @@ function FreeTips() {
   const Tab = createBottomTabNavigator();
 
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Bets" component={Bets} />
-      <Tab.Screen name="Bets History" component={BetsHistory} />
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: "#000",
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen
+        name="Bets"
+        component={Bets}
+        options={{
+          tabBarLabel: "BETS",
+          // tabBarOptions: {
+          //   showIcon: true,
+          // },
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="list-sharp" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Bets History"
+        component={BetsHistory}
+        options={{
+          tabBarLabel: "BET HISTORY",
+          // tabBarOptions: {
+          //   showIcon: true,
+          // },
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="history" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -1682,7 +1710,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Feed"
+      // initialRouteName="Feed"
       screenOptions={{
         tabBarActiveTintColor: "#FFF",
         tabBarLabelStyle: { fontSize: 15 },
