@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
+import { FIREBASE_AUTH } from "../database/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { ScrollView } from "react-native-gesture-handler";
 import { FIRESTORE_DB } from "../database/firebase";
@@ -23,6 +25,8 @@ import PropTypes from "prop-types"; // Import prop-types;
 import { Calendar } from "react-native-calendars";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import emailjs from "@emailjs/browser";
+import Entypo from "react-native-vector-icons/Entypo";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const RefreshIcon = ({ onPress }) => {
   return (
@@ -138,104 +142,101 @@ function ContactUs() {
   );
 }
 
-function ForgotPass() {
+function ForgotPass({ navigation }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [refresh, setRefresh] = React.useState(false);
+  const [displayName, setDisplayName] = React.useState("");
+  const [uid, setUid] = React.useState("");
+  const [userRole, setUserRole] = React.useState("user");
+  const [currentUser, setCurrentUser] = React.useState(null);
+  const [email, setEmail] = React.useState("");
+  const [isResettingPassword, setIsResettingPassword] = React.useState(false);
 
-  getUser = () => {
+  React.useEffect(() => {
     const user = FIREBASE_AUTH.currentUser;
-    console.log("My user: " + user);
+    // console.log("My user: " + user);
     if (user !== null) {
-      this.setState({
-        displayName: user.displayName || "Display Name Not Set",
-        uid: user.uid,
-        currentUser: user,
-      });
+      setDisplayName(user.displayName || "Display Name Not Set");
+      setUid(user.uid);
+      setCurrentUser(user);
       if (user.displayName === "Admin" && user.email === "betiqhub@gmail.com") {
-        this.setState({ userRole: "admin" });
-        this.forceUpdate();
-        // setUserRole("admin");
+        setUserRole("admin");
       } else {
-        this.setState({ userRole: "user" });
-        // setUserRole("admin");
+        setUserRole("user");
       }
     }
-  };
+  }, [refresh]);
 
   // Change password
-  changePassword = () => {
+  const changePassword = () => {
+    setIsLoading(true);
     // console.log("chgpass pressed");
-    const { currentUser, isResettingPassword, email } = this.state;
     // Toggle the isResettingPassword state to display/hide the TextInput
-    this.setState({ isResettingPassword: !isResettingPassword });
+    setIsResettingPassword(!isResettingPassword);
     // If currentUser exists, initiate password reset with the user's email
     if (isResettingPassword && email !== "") {
       sendPasswordResetEmail(currentUser.email)
         .then(() => Alert.alert("Password reset email sent"))
         .catch(error => Alert.alert(error));
+      setIsLoading(false);
     }
   };
 
   // Function to get the userRole value
-  getUserRole = () => {
-    return this.state.userRole;
-  };
+  // const getUserRole = () => {
+  //   return userRole;
+  // };
 
-  signOut = () => {
+  const signOut = () => {
+    setIsLoading(true);
     FIREBASE_AUTH.signOut()
       .then(() => {
-        this.setState = {
-          displayName: "", // Initialize displayName state
-          uid: "",
-          errorMessage: "",
-          userRole: "user",
-          currentUser: null,
-          email: "",
-          update: null,
-          isResettingPassword: false,
-        };
-        Alert.alert(this.state.displayName + ", signed out");
-        this.props.navigation.navigate("Login");
+        setDisplayName("");
+        setUid("");
+        setUserRole("user");
+        setCurrentUser(null);
+        setEmail("");
+        // setUpdate(null);
+        setIsResettingPassword(false);
+        setIsLoading(false);
+        Alert.alert(displayName + ", signed out");
+        // this.props.navigation.navigate("Login");
+        navigation.navigate("Login");
       })
-      .catch(error => this.setState({ errorMessage: error.message }));
+      .catch(error => Alert.alert(error.message));
+    setIsLoading(false);
   };
 
-  render() {
-    const { currentUser, isResettingPassword } = this.state;
-    // Conditionally render TextInput based on isResettingPassword state
-    let resetPasswordInput = null;
-    if (isResettingPassword) {
-      resetPasswordInput = (
-        <View style={styles.chgPass}>
-          <TextInput
-            placeholder="Enter your email"
-            value={this.state.email}
-            onChangeText={text => this.setState({ email: text })}
-            onSubmitEditing={this.changePassword}
-            style={styles.inputStyle}
-          />
-          <TouchableOpacity
-            onPress={this.changePassword}
-            style={styles.chgPassPress}
-          >
-            <Entypo name="forward" size={20} color="black" />
-            <Text style={{ textAlign: "center" }}>Reset Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              resetPasswordInput = null;
-              this.setState({ isResettingPassword: false });
-            }}
-            style={{ textAlign: "center", justifyContent: "center" }}
-          >
-            <Entypo name="circle-with-cross" size={40} color="black" />
-            <Text style={{ textAlign: "center" }}>Exit</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+  // Conditionally render TextInput based on isResettingPassword state
+  let resetPasswordInput = null;
+  if (isResettingPassword) {
+    resetPasswordInput = (
+      <View style={styles.chgPass}>
+        <TextInput
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          onSubmitEditing={changePassword}
+          style={styles.inputStyle}
+        />
+        <TouchableOpacity onPress={changePassword} style={styles.chgPassPress}>
+          <Entypo name="forward" size={20} color="black" />
+          <Text style={{ textAlign: "center" }}>Reset Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            resetPasswordInput = null;
+            setIsResettingPassword();
+          }}
+          style={{ textAlign: "center", justifyContent: "center" }}
+        >
+          <Entypo name="circle-with-cross" size={40} color="black" />
+          <Text style={{ textAlign: "center" }}>Exit</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -249,45 +250,27 @@ function ForgotPass() {
           <ActivityIndicator size="large" color="#9E9E9E" />
         </View>
       ) : (
-        <View style={styles.content}>
+        <View style={styles.content_1}>
           {/* <Text style={styles.contentText}>Content Section</Text> */}
-          <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.textView}>
-            <Text style={styles.textStyle}>Hello, </Text>
-            <Text style={styles.textStyle2}>
-              {this.state.displayName}
-              <Entypo name="emoji-happy" size={30} color="black" />
-            </Text>
-          </View>
-          {resetPasswordInput}
-          <Image
-            source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
-            style={styles.myImage}
-            resizeMode="contain"
-          />
-          <View style={styles.buttonContainer}>
-            {/* Proceed Button */}
-            <Pressable
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#FFF" : "#FEF202",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  padding: 10,
-                  borderRadius: 5,
-                  marginVertical: 10,
-                  borderWidth: 2,
-                  borderColor: pressed ? "#000" : "#AF640D",
-                  width: 130,
-                  justifyContent: "center",
-                },
-              ]}
-              onPress={() => this.props.navigation.navigate("Home")}
-            >
-              <FontAwesome name="home" size={30} color="black" />
-              <Text style={styles.buttonLabel}>Proceed</Text>
-            </Pressable>
-            {currentUser && (
+          <ScrollView
+            style={styles.content_1}
+            contentContainerStyle={styles.contentContainer}
+          >
+            <View style={styles.textView}>
+              <Text style={styles.textStyle}>Hello, </Text>
+              <Text style={styles.textStyle2}>
+                {displayName}
+                <Entypo name="emoji-happy" size={30} color="black" />
+              </Text>
+            </View>
+            {resetPasswordInput}
+            <Image
+              source={require("../assets/owl_ball_dark.png")} // Replace with the path to your image
+              style={styles.myImage}
+              resizeMode="contain"
+            />
+            <View style={styles.buttonContainer}>
+              {/* Proceed Button */}
               <Pressable
                 style={({ pressed }) => [
                   {
@@ -303,39 +286,60 @@ function ForgotPass() {
                     justifyContent: "center",
                   },
                 ]}
-                onPress={() => this.signOut()}
+                onPress={() => navigation.navigate("Home")}
               >
-                <Entypo name="log-out" size={30} color="black" />
-                <Text style={styles.buttonLabel}>Logout</Text>
+                <FontAwesome name="home" size={30} color="black" />
+                <Text style={styles.buttonLabel}>Proceed</Text>
               </Pressable>
-            )}
-          </View>
-          <View style={styles.buttonContainer}>
-            <Pressable
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#FFF" : "#FEF202",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  padding: 10,
-                  borderRadius: 5,
-                  marginVertical: 10,
-                  borderWidth: 2,
-                  borderColor: pressed ? "#000" : "#AF640D",
-                  // width: 130,
-                  justifyContent: "center",
-                },
-              ]}
-              onPress={() => this.changePassword()}
-            >
-              <MaterialCommunityIcons
-                name="lock-reset"
-                size={30}
-                color="black"
-              />
-              <Text style={styles.buttonLabel}>Reset Password</Text>
-            </Pressable>
-          </View>
+              {currentUser && (
+                <Pressable
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? "#FFF" : "#FEF202",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      padding: 10,
+                      borderRadius: 5,
+                      marginVertical: 10,
+                      borderWidth: 2,
+                      borderColor: pressed ? "#000" : "#AF640D",
+                      width: 130,
+                      justifyContent: "center",
+                    },
+                  ]}
+                  onPress={() => signOut()}
+                >
+                  <Entypo name="log-out" size={30} color="black" />
+                  <Text style={styles.buttonLabel}>Logout</Text>
+                </Pressable>
+              )}
+            </View>
+            <View style={styles.buttonContainer}>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "#FFF" : "#FEF202",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    padding: 10,
+                    borderRadius: 5,
+                    marginVertical: 10,
+                    borderWidth: 2,
+                    borderColor: pressed ? "#000" : "#AF640D",
+                    // width: 130,
+                    justifyContent: "center",
+                  },
+                ]}
+                onPress={() => changePassword()}
+              >
+                <MaterialCommunityIcons
+                  name="lock-reset"
+                  size={30}
+                  color="black"
+                />
+                <Text style={styles.buttonLabel}>Reset Password</Text>
+              </Pressable>
+            </View>
           </ScrollView>
         </View>
       )}
@@ -368,6 +372,11 @@ export default function MyTabs() {
     </Tab.Navigator>
   );
 }
+
+// Prop types validation
+ForgotPass.propTypes = {
+  navigation: PropTypes.object.isRequired, // Ensure that navigation is provided and is an object
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -577,14 +586,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   // Forgot password
-  content: {
+  content_1: {
     flex: 1,
     backgroundColor: "#DDD",
     // backgroundColor: "#000",
-  },
-  contentText: {
-    fontSize: 16,
-    color: "white",
   },
   textStyle: {
     fontSize: 25,

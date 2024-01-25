@@ -556,8 +556,8 @@ function VipTips() {
                     // console.log(doc.id, " => ", doc.data());
                     break;
                   default:
-                    // Handle other cases if necessary
-                    Alert.alert("Non-Existing Category :(");
+                    // Handle other cases if necessary Restrict to admin
+                    // Alert.alert("Non-Existing Category :(");
                     break;
                 }
                 break;
@@ -670,8 +670,8 @@ function VipTips() {
                   // console.log(doc.id, " => ", doc.data());
                   break;
                 default:
-                  // Handle other cases if necessary
-                  Alert.alert("Non-Existing Category :(");
+                  // Handle other cases if necessary Restrict to Admin
+                  // Alert.alert("Non-Existing Category :(");
                   break;
               }
               break;
@@ -1750,7 +1750,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     flexDirection: "row",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -1887,17 +1887,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   dateV: {
-    flex: 0.45,
+    flex: 0.5,
     // backgroundColor: "pink",
   },
-  calV: {
-    flex: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  // calV: {
+  //   flex: 0.1,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
   refV: {
-    flex: 0.45,
-    flexDirection: "row",
+    flex: 0.5,
+    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     // backgroundColor: "pink",
