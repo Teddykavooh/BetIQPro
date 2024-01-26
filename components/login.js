@@ -55,7 +55,7 @@ export default class Login extends Component {
           password: "",
         });
         getUserRole();
-        this.props.navigation.navigate("Dashboard");
+        this.props.navigation.navigate("History");
       }
     } catch (error) {
       this.setState({ errorMessage: error.message });

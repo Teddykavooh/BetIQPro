@@ -1710,7 +1710,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function MyTabs() {
   return (
     <Tab.Navigator
-      // initialRouteName="Feed"
+      initialRouteName="FreeTips"
       screenOptions={{
         tabBarActiveTintColor: "#FFF",
         tabBarLabelStyle: { fontSize: 15 },

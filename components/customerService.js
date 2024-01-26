@@ -286,7 +286,7 @@ function ForgotPass({ navigation }) {
                     justifyContent: "center",
                   },
                 ]}
-                onPress={() => navigation.navigate("Home")}
+                onPress={() => navigation.navigate("History")}
               >
                 <FontAwesome name="home" size={30} color="black" />
                 <Text style={styles.buttonLabel}>Proceed</Text>
