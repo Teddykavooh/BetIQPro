@@ -8,7 +8,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { FIREBASE_AUTH } from "../database/firebase";
+import { FIREBASE_AUTH } from "./database/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import PropTypes from "prop-types";
 import FontAwesome from "react-native-vector-icons/FontAwesome";

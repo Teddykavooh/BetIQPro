@@ -17,7 +17,7 @@ import {
   sendSignInLinkToEmail,
 } from "firebase/auth";
 import actionCodeSettings from "../database/emailLinkAuthConfigs";
-import { getUserRole } from "./dashboard";
+// import { getUserRole } from "./dashboard";
 
 export default class Login extends Component {
   constructor() {
@@ -54,7 +54,7 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
-        getUserRole();
+        // getUserRole();
         this.props.navigation.navigate("History");
       }
     } catch (error) {
@@ -87,6 +87,7 @@ export default class Login extends Component {
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        Alert.alert("Magic SignIn Error: " + errorCode + ": " + errorMessage);
         // console.log("Magic SignIn Error: " + errorCode + ": " + errorMessage);
       });
   };

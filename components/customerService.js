@@ -164,6 +164,7 @@ function ForgotPass({ navigation }) {
       } else {
         setUserRole("user");
       }
+      exUserRole = userRole;
     }
   }, [refresh]);
 
@@ -377,6 +378,9 @@ export default function MyTabs() {
 ForgotPass.propTypes = {
   navigation: PropTypes.object.isRequired, // Ensure that navigation is provided and is an object
 };
+
+// Exporting the function getUserRole
+export let exUserRole;
 
 const styles = StyleSheet.create({
   container: {
