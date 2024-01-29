@@ -82,7 +82,7 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
-        this.props.navigation.navigate("Dashboard");
+        this.props.navigation.navigate("History");
       })
       .catch(error => {
         const errorCode = error.code;

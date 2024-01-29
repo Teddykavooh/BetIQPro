@@ -65,6 +65,7 @@ function ContactUs() {
   };
 
   const submitForm = () => {
+    setIsLoading(true);
     emailjs
       .sendForm(
         "service_ui0gigj",
@@ -74,12 +75,15 @@ function ContactUs() {
       )
       .then(
         result => {
-          console.log(result.text);
+          // console.log(result.text);
+          Alert.alert("Mail sent :)" + result.text);
         },
         error => {
-          console.log(error.text);
+          // console.log(error.text);
+          Alert.alert("Mail not sent :(" + error.text);
         },
-      );
+      )
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -178,8 +182,8 @@ function ForgotPass({ navigation }) {
     if (isResettingPassword && email !== "") {
       sendPasswordResetEmail(currentUser.email)
         .then(() => Alert.alert("Password reset email sent"))
-        .catch(error => Alert.alert(error));
-      setIsLoading(false);
+        .catch(error => Alert.alert(error))
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -204,8 +208,8 @@ function ForgotPass({ navigation }) {
         // this.props.navigation.navigate("Login");
         navigation.navigate("Login");
       })
-      .catch(error => Alert.alert(error.message));
-    setIsLoading(false);
+      .catch(error => Alert.alert(error.message))
+      .finally(() => setIsLoading(false));
   };
 
   // Conditionally render TextInput based on isResettingPassword state
