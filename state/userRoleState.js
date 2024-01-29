@@ -11,10 +11,10 @@ export const userRoleSlice = createSlice({
   reducers: {
     // All reducers go here
     user: (state, action) => {
-      state.value = action.role;
+      state.value = action.payload;
     },
     admin: (state, action) => {
-      state.value = action.role;
+      state.value = action.payload;
     },
   },
 });
