@@ -62,7 +62,7 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
-        setUserRole();
+        this.setUserRole();
         this.props.navigation.navigate("History");
       }
     } catch (error) {
