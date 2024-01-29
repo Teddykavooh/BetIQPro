@@ -13,17 +13,21 @@ import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
 // import { getUserRole } from "./components/dashboard";
-import { exUserRole } from "./components/customerService";
+// import { exUserRole } from "./components/customerService";
 import { StatusBar as CustomStatusBar, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { DrawerHeader } from "./components/drawerHeader";
+import { store } from "./state/store";
+import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-const userRole = exUserRole;
+// const userRole = exUserRole;
+const userRole = useSelector(state => state.userRole.value);
 
 function SignupD() {
   return (
@@ -214,7 +218,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-        {userRole === "user" && (
+        {userRole === "admin" && (
           <>
             <Drawer.Screen
               name="Add Games"
@@ -299,8 +303,10 @@ function DrawerNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <DrawerNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <DrawerNavigator />
+      </NavigationContainer>
+    </Provider>
   );
 }

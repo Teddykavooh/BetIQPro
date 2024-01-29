@@ -18,14 +18,21 @@ import {
 } from "firebase/auth";
 import actionCodeSettings from "../database/emailLinkAuthConfigs";
 // import { getUserRole } from "./dashboard";
+import { useSelector, useDispatch } from "react-redux";
+import { admin, user } from "../state/userRoleState";
 
 export default class Login extends Component {
+  dispatch = useDispatch();
+  initialUserRole = useSelector(state => state.userRole.value);
   constructor() {
     super();
     this.state = {
       email: "",
       password: "",
       isLoading: false,
+      user: "",
+      userRole: this.initialUserRole,
+      displayName: "",
     };
   }
   updateInputVal = (val, prop) => {
@@ -33,6 +40,7 @@ export default class Login extends Component {
     state[prop] = val;
     this.setState(state);
   };
+
   userLogin = async () => {
     try {
       if (this.state.email === "" && this.state.password === "") {
@@ -54,7 +62,7 @@ export default class Login extends Component {
           email: "",
           password: "",
         });
-        // getUserRole();
+        setUserRole();
         this.props.navigation.navigate("History");
       }
     } catch (error) {
@@ -64,6 +72,32 @@ export default class Login extends Component {
       this.setState({
         isLoading: false,
       });
+    }
+  };
+
+  // Set User role on login
+  setUserRole = () => {
+    const loggedUser = FIREBASE_AUTH.currentUser;
+    // console.log("My user: " + user);
+    if (loggedUser !== null) {
+      this.setState({
+        displayName: user.displayName || "Display Name Not Set",
+        // uid: user.uid,
+        // currentUser: user,
+      });
+      if (
+        loggedUser.displayName === "Admin" &&
+        loggedUser.email === "betiqhub@gmail.com"
+      ) {
+        // this.setState({ userRole: "admin" });
+        // this.forceUpdate();
+        // setUserRole("admin");
+        this.dispatch(admin("admin"));
+      } else {
+        // this.setState({ userRole: "user" });
+        // setUserRole("admin");
+        this.dispatch(user("user"));
+      }
     }
   };
 

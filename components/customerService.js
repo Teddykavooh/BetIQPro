@@ -27,7 +27,11 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import emailjs from "@emailjs/browser";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector, useDispatch } from "react-redux";
+import { user } from "../state/userRoleState";
 
+const initUserRole = useSelector(state => state.userRole.value);
+const dispatch = useDispatch();
 const RefreshIcon = ({ onPress }) => {
   return (
     <Pressable
@@ -150,8 +154,8 @@ function ForgotPass({ navigation }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [refresh, setRefresh] = React.useState(false);
   const [displayName, setDisplayName] = React.useState("");
-  const [uid, setUid] = React.useState("");
-  const [userRole, setUserRole] = React.useState("user");
+  // const [uid, setUid] = React.useState("");
+  // const [userRole, setUserRole] = React.useState(initUserRole);
   const [currentUser, setCurrentUser] = React.useState(null);
   const [email, setEmail] = React.useState("");
   const [isResettingPassword, setIsResettingPassword] = React.useState(false);
@@ -161,14 +165,14 @@ function ForgotPass({ navigation }) {
     // console.log("My user: " + user);
     if (user !== null) {
       setDisplayName(user.displayName || "Display Name Not Set");
-      setUid(user.uid);
+      // setUid(user.uid);
       setCurrentUser(user);
-      if (user.displayName === "Admin" && user.email === "betiqhub@gmail.com") {
-        setUserRole("admin");
-      } else {
-        setUserRole("user");
-      }
-      exUserRole = userRole;
+      // if (user.displayName === "Admin" && user.email === "betiqhub@gmail.com") {
+      //   setUserRole("admin");
+      // } else {
+      //   setUserRole("user");
+      // }
+      // exUserRole = userRole;
     }
   }, [refresh]);
 
@@ -177,10 +181,15 @@ function ForgotPass({ navigation }) {
     setIsLoading(true);
     // console.log("chgpass pressed");
     // Toggle the isResettingPassword state to display/hide the TextInput
-    setIsResettingPassword(!isResettingPassword);
+    setIsResettingPassword(true);
     // If currentUser exists, initiate password reset with the user's email
-    if (isResettingPassword && email !== "") {
+    if (currentUser !== null && email === "") {
       sendPasswordResetEmail(currentUser.email)
+        .then(() => Alert.alert("Password reset email sent"))
+        .catch(error => Alert.alert(error))
+        .finally(() => setIsLoading(false));
+    } else {
+      sendPasswordResetEmail(email)
         .then(() => Alert.alert("Password reset email sent"))
         .catch(error => Alert.alert(error))
         .finally(() => setIsLoading(false));
@@ -198,8 +207,9 @@ function ForgotPass({ navigation }) {
       .then(() => {
         setDisplayName("");
         setUid("");
-        setUserRole("user");
+        // setUserRole("user");
         setCurrentUser(null);
+        dispatch(user("user"));
         setEmail("");
         // setUpdate(null);
         setIsResettingPassword(false);
@@ -384,7 +394,7 @@ ForgotPass.propTypes = {
 };
 
 // Exporting the function getUserRole
-export let exUserRole;
+// export let exUserRole;
 
 const styles = StyleSheet.create({
   container: {
