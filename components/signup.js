@@ -18,7 +18,7 @@ export default class Signup extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerLeft: () => (
-        <Button title="Back" onPress={() => navigation.navigate("Dashboard")} />
+        <Button title="Back" onPress={() => navigation.navigate("History")} />
       ),
     };
   };
