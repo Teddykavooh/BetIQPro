@@ -12,7 +12,7 @@ import { View, StyleSheet } from "react-native";
 import HeaderLogo from "../components/header";
 import Login from "../components/login";
 import Signup from "../components/signup";
-import Dashboard from "../components/dashboard";
+import Dashboard from "../dashboard";
 import History from "../components/history";
 import AddGames from "../components/admin/addGames";
 import EditGames from "../components/admin/editGames";

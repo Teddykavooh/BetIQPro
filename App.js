@@ -12,7 +12,8 @@ import CustomerService from "./components/customerService";
 import History from "./components/history";
 import AddGames from "./components/admin/addGames";
 import EditGames from "./components/admin/editGames";
-import { getUserRole } from "./components/dashboard";
+// import { getUserRole } from "./components/dashboard";
+import { exUserRole } from "./components/customerService";
 import { StatusBar as CustomStatusBar, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -22,7 +23,7 @@ import { DrawerHeader } from "./components/drawerHeader";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-const userRole = getUserRole();
+const userRole = exUserRole;
 
 function SignupD() {
   return (

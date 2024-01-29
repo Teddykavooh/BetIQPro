@@ -9,10 +9,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.12.1",
     "@expo/metro-config": "^0.10.7",
     "@expo/webpack-config": "^19.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-picker/picker": "2.4.10",
+    "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/drawer": "^6.6.4",
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.1.8",
@@ -26,7 +28,7 @@
     "firebase": "^10.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "^0.72.6",
+    "react-native": "0.72.6",
     "react-native-calendars": "^1.1302.0",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-pager-view": "6.2.0",
@@ -45,5 +47,9 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.0.3"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
   }
 }
