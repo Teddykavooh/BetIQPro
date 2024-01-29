@@ -206,7 +206,7 @@ function ForgotPass({ navigation }) {
     FIREBASE_AUTH.signOut()
       .then(() => {
         setDisplayName("");
-        setUid("");
+        // setUid("");
         // setUserRole("user");
         setCurrentUser(null);
         dispatch(user("user"));
