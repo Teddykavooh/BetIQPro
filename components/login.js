@@ -19,7 +19,7 @@ import {
 import actionCodeSettings from "../database/emailLinkAuthConfigs";
 // import { getUserRole } from "./dashboard";
 import { useSelector, useDispatch } from "react-redux";
-import { admin, user } from "../state/userRoleState";
+import { admin } from "../state/userRoleState";
 
 export default class Login extends Component {
   dispatch = useDispatch();
@@ -81,7 +81,7 @@ export default class Login extends Component {
     // console.log("My user: " + user);
     if (loggedUser !== null) {
       this.setState({
-        displayName: user.displayName || "Display Name Not Set",
+        displayName: loggedUser.displayName || "Display Name Not Set",
         // uid: user.uid,
         // currentUser: user,
       });
@@ -90,14 +90,18 @@ export default class Login extends Component {
         loggedUser.email === "betiqhub@gmail.com"
       ) {
         // this.setState({ userRole: "admin" });
-        // this.forceUpdate();
         // setUserRole("admin");
-        this.dispatch(admin("admin"));
-      } else {
-        // this.setState({ userRole: "user" });
-        // setUserRole("admin");
-        this.dispatch(user("user"));
+        this.dispatch(admin(true));
+        const newRole = useSelector(state => state.userRole.value);
+        this.setState({
+          userRole: newRole,
+        });
       }
+      // else {
+      //   // this.setState({ userRole: "user" });
+      //   // setUserRole("admin");
+      //   this.dispatch(admin(false));
+      // }
     }
   };
 

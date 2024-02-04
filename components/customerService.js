@@ -28,7 +28,7 @@ import emailjs from "@emailjs/browser";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector, useDispatch } from "react-redux";
-import { user } from "../state/userRoleState";
+import { admin } from "../state/userRoleState";
 
 const initUserRole = useSelector(state => state.userRole.value);
 const dispatch = useDispatch();
@@ -209,7 +209,7 @@ function ForgotPass({ navigation }) {
         // setUid("");
         // setUserRole("user");
         setCurrentUser(null);
-        dispatch(user("user"));
+        dispatch(admin(false));
         setEmail("");
         // setUpdate(null);
         setIsResettingPassword(false);

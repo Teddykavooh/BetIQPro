@@ -27,7 +27,7 @@ import { useSelector } from "react-redux";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 // const userRole = exUserRole;
-const userRole = useSelector(state => state.userRole.value);
+const adminRole = useSelector(state => state.userRole.value);
 
 function SignupD() {
   return (
@@ -218,7 +218,7 @@ function DrawerNavigator() {
             ),
           }}
         />
-        {userRole === "admin" && (
+        {adminRole === true && (
           <>
             <Drawer.Screen
               name="Add Games"

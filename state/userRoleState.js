@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Initial state of slice
 const initialState = {
-  value: "user",
+  value: false,
 };
 
 export const userRoleSlice = createSlice({
@@ -10,9 +10,9 @@ export const userRoleSlice = createSlice({
   initialState: initialState,
   reducers: {
     // All reducers go here
-    user: (state, action) => {
-      state.value = action.payload;
-    },
+    // user: (state, action) => {
+    //   state.value = action.payload;
+    // },
     admin: (state, action) => {
       state.value = action.payload;
     },
@@ -20,7 +20,7 @@ export const userRoleSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { user, admin } = userRoleSlice.actions;
+export const { admin } = userRoleSlice.actions;
 
 // We export the reducer function so that it can be added to the store
 export default userRoleSlice.reducer;
