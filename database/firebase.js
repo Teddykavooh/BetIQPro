@@ -23,7 +23,7 @@ const firebaseConfig = {
   measurementId: "G-M8VTV5CWCT",
 };
 
-// const reactNativePersistence = firebaseAuth.getReactNativePersistence;
+// const reactNativePersistence = FIREBASE_AUTH.getReactNativePersistence;
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 
@@ -43,6 +43,7 @@ export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
+
 // Set up AsyncStorage persistence
 // FIREBASE_AUTH.setPersistence(getAuth.Auth.Persistence.LOCAL);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);

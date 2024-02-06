@@ -27,7 +27,6 @@ import { useSelector } from "react-redux";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 // const userRole = exUserRole;
-const adminRole = useSelector(state => state.userRole.value);
 
 function SignupD() {
   return (
@@ -144,6 +143,7 @@ function EditGamesD() {
 }
 
 function DrawerNavigator() {
+  const adminRole = useSelector(state => state.userRole.value);
   return (
     <>
       <CustomStatusBar

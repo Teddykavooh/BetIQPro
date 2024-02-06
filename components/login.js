@@ -18,23 +18,27 @@ import {
 } from "firebase/auth";
 import actionCodeSettings from "../database/emailLinkAuthConfigs";
 // import { getUserRole } from "./dashboard";
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { admin } from "../state/userRoleState";
 
-export default class Login extends Component {
-  dispatch = useDispatch();
-  initialUserRole = useSelector(state => state.userRole.value);
+class Login extends Component {
   constructor() {
+    // const initialUserRole = useSelector(state => state.userRole.value);
     super();
     this.state = {
       email: "",
       password: "",
       isLoading: false,
       user: "",
-      userRole: this.initialUserRole,
+      // userRole: this.getInitRole,
       displayName: "",
     };
   }
+
+  // getInitRole = () => {
+  //   return useSelector(state => state.userRole.value);
+  // };
+
   updateInputVal = (val, prop) => {
     const state = this.state;
     state[prop] = val;
@@ -77,8 +81,9 @@ export default class Login extends Component {
 
   // Set User role on login
   setUserRole = () => {
+    const { dispatch } = this.props;
     const loggedUser = FIREBASE_AUTH.currentUser;
-    // console.log("My user: " + user);
+    // console.log("My user: " + loggedUser);
     if (loggedUser !== null) {
       this.setState({
         displayName: loggedUser.displayName || "Display Name Not Set",
@@ -91,17 +96,14 @@ export default class Login extends Component {
       ) {
         // this.setState({ userRole: "admin" });
         // setUserRole("admin");
-        this.dispatch(admin(true));
-        const newRole = useSelector(state => state.userRole.value);
-        this.setState({
-          userRole: newRole,
-        });
+        dispatch(admin(true));
+        // setTimeout(() => {
+        //   console.log("New userRole(Login): " + userRole.value);
+        //   this.setState({
+        //     userRole: userRole,
+        //   });
+        // }, 5000); // Adjust the delay as needed
       }
-      // else {
-      //   // this.setState({ userRole: "user" });
-      //   // setUserRole("admin");
-      //   this.dispatch(admin(false));
-      // }
     }
   };
 
@@ -168,7 +170,7 @@ export default class Login extends Component {
           >
             Don&apos;t have account? Click here to signup
           </Text>
-          <Text>{this.setState.errorMessage}</Text>
+          <Text>{this.state.errorMessage}</Text>
         </KeyboardAvoidingView>
       </View>
     );
@@ -178,7 +180,15 @@ export default class Login extends Component {
 // Add prop type validation for the navigation prop
 Login.propTypes = {
   navigation: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired, // Ensure dispatch is provided as a prop
+  userRole: PropTypes.object.isRequired, // Add other required props here
 };
+
+// Connect the component to the Redux store
+const mapStateToProps = state => ({
+  userRole: state.userRole,
+  // Add other props from the state that you need here
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -213,3 +223,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+
+export default connect(mapStateToProps)(Login);

@@ -30,8 +30,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useSelector, useDispatch } from "react-redux";
 import { admin } from "../state/userRoleState";
 
-const initUserRole = useSelector(state => state.userRole.value);
-const dispatch = useDispatch();
 const RefreshIcon = ({ onPress }) => {
   return (
     <Pressable
@@ -151,6 +149,10 @@ function ContactUs() {
 }
 
 function ForgotPass({ navigation }) {
+  const initUserRole = useSelector(state => state.userRole.value);
+  const dispatch = useDispatch();
+  // let initUserRole;
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [refresh, setRefresh] = React.useState(false);
   const [displayName, setDisplayName] = React.useState("");
@@ -163,6 +165,8 @@ function ForgotPass({ navigation }) {
   React.useEffect(() => {
     const user = FIREBASE_AUTH.currentUser;
     // console.log("My user: " + user);
+    // console.log("My user role state: " + initUserRole);
+    // initUserRole = useSelector(state => state.userRole.value);
     if (user !== null) {
       setDisplayName(user.displayName || "Display Name Not Set");
       // setUid(user.uid);
@@ -256,6 +260,9 @@ function ForgotPass({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Forgot Password</Text>
+        <Text style={{ backgroundColor: "pink" }}>
+          UserRole: {initUserRole.toString()}=&gt;See
+        </Text>
         <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
         </View>
