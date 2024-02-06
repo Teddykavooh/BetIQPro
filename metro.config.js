@@ -18,6 +18,6 @@ const config = getDefaultConfig(__dirname);
 //     ] // <-- cjs added here
 //   : [...config.resolver.sourceExts, "cjs"]; // <-- cjs added here
 
-config.resolver.sourceExts.push[("js", "json", "ts", "tsx", "cjs")];
+config.resolver.sourceExts.push("js", "json", "ts", "tsx", "cjs");
 
 module.exports = config;
