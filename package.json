@@ -11,7 +11,7 @@
   "dependencies": {
     "@emailjs/browser": "^3.12.1",
     "@expo/metro-config": "^0.10.7",
-    "@expo/webpack-config": "^19.0.0",
+    "@expo/webpack-config": "~19.0.1",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.11",
@@ -20,6 +20,7 @@
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.18",
+    "@reduxjs/toolkit": "^2.1.0",
     "expo": "^49.0.3",
     "expo-asset": "~8.10.1",
     "expo-constants": "~14.4.2",
@@ -38,7 +39,8 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.0.1",
     "react-native-web": "~0.19.6",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "react-redux": "^9.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
