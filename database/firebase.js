@@ -1,9 +1,13 @@
+import { Platform } from "react-native";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-// import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import {
+  initializeAuth,
+  getReactNativePersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 // import { getReactNativePersistence } from "firebase/auth";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,7 +27,6 @@ const firebaseConfig = {
   measurementId: "G-M8VTV5CWCT",
 };
 
-// const reactNativePersistence = FIREBASE_AUTH.getReactNativePersistence;
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 
@@ -38,12 +41,11 @@ export const FIREBASE_APP = initializeApp(firebaseConfig);
 
 // // You can track more events or user interactions here
 
-// Initialize Firebase Authentication and get a reference to the service
-// export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
-export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-});
+// Initialize Firebase Authentication, Persistence and get a reference to the service
+const persistence =
+  Platform.OS === "web"
+    ? browserSessionPersistence
+    : getReactNativePersistence(ReactNativeAsyncStorage);
+export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, { persistence });
 
-// Set up AsyncStorage persistence
-// FIREBASE_AUTH.setPersistence(getAuth.Auth.Persistence.LOCAL);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
