@@ -301,7 +301,7 @@ function FreeTips() {
         ) : (
           <View style={styles.content}>
             {/* <Text style={styles.contentText}>Content Section</Text> */}
-            <ScrollView>
+            <ScrollView style={styles.tableViewParent}>
               <TableView />
             </ScrollView>
           </View>
@@ -555,7 +555,7 @@ function FreeTips() {
         ) : (
           <View style={styles.content}>
             {/* <Text style={styles.contentText}>Content Section</Text> */}
-            <ScrollView>
+            <ScrollView style={styles.tableViewParent}>
               <TableView />
             </ScrollView>
           </View>
@@ -1178,6 +1178,7 @@ function VipTips() {
             contentContainerStyle={{
               gap: 10,
             }}
+            style={styles.tableViewParent}
           >
             <View style={styles.categoryView}>
               <HeaderVIP meLabel="Daily 3+" />
@@ -1459,7 +1460,7 @@ function VipSuccess() {
       ) : (
         <View style={styles.content}>
           {/* <Text style={styles.contentText}>Content Section</Text> */}
-          <ScrollView>
+          <ScrollView style={styles.tableViewParent}>
             <TableView />
           </ScrollView>
         </View>
@@ -1914,20 +1915,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     padding: 5,
+    alignItems: "center",
   },
   contentText: {
     fontSize: 16,
     color: "white",
   },
+  tableViewParent: {
+    width: "90%",
+    maxWidth: 400,
+  },
   tableContainer: {
     flexDirection: "row",
-    height: 100,
+    height: 80,
     padding: 5,
     // marginBottom: 10,
   },
   tableColumn1: {
     backgroundColor: "#141C31",
-    flex: 0.2,
+    flex: 0.25,
     borderWidth: 1,
     borderColor: "white",
     borderTopStartRadius: 10,
@@ -1938,7 +1944,7 @@ const styles = StyleSheet.create({
   },
   tableColumn2: {
     backgroundColor: "#141C31",
-    flex: 0.6,
+    flex: 0.5,
     borderWidth: 1,
     borderColor: "white",
     borderStartWidth: 0,
@@ -1948,7 +1954,7 @@ const styles = StyleSheet.create({
   },
   tableColumn3: {
     backgroundColor: "#141C31",
-    flex: 0.2,
+    flex: 0.25,
     borderWidth: 1,
     borderColor: "white",
     borderTopEndRadius: 10,
@@ -1970,7 +1976,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: 13,
     minWidth: 50,
     textAlign: "center",
   },
@@ -1981,7 +1987,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 4,
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: 13,
     minWidth: 25,
     textAlign: "center",
   },
@@ -1991,7 +1997,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     borderRadius: 5,
-    fontSize: 16,
+    fontSize: 14,
   },
   preloader: {
     left: 0,
@@ -2007,8 +2013,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerIcon: {
-    width: 40, // Adjust the width as needed
-    height: 40, // Adjust the height as needed
+    width: 30, // Adjust the width as needed
+    height: 30, // Adjust the height as needed
   },
   categoryHeader: {
     flexDirection: "row",
@@ -2051,15 +2057,15 @@ const styles = StyleSheet.create({
   textFormat1: {
     fontWeight: "700",
     color: "#B9BBC0",
-    fontSize: 16,
+    fontSize: 14,
   },
   textFormat2: {
     fontWeight: "700",
     color: "#8A91A4",
-    fontSize: 16,
+    fontSize: 14,
   },
   labelFormat: {
     fontWeight: "700",
-    fontSize: 20,
+    fontSize: 16,
   },
 });
