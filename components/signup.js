@@ -15,13 +15,13 @@ import PropTypes from "prop-types"; // Import prop-types
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 export default class Signup extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerLeft: () => (
-        <Button title="Back" onPress={() => navigation.navigate("History")} />
-      ),
-    };
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
+  //     headerLeft: () => (
+  //       <Button title="Back" onPress={() => navigation.navigate("History")} />
+  //     ),
+  //   };
+  // };
 
   constructor() {
     super();

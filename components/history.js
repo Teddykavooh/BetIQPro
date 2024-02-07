@@ -36,11 +36,9 @@ const RefreshIcon = ({ onPress }) => {
   return (
     <Pressable
       onPress={onPress}
-      style={
-        {
-          // alignSelf: "flex-end"
-        }
-      }
+      style={{
+        alignSelf: "flex-end",
+      }}
     >
       <FontAwesome name="refresh" size={30} color="black" />
     </Pressable>
@@ -51,144 +49,153 @@ RefreshIcon.propTypes = {
 };
 
 function FreeTips() {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [data, setData] = React.useState([]);
-  const [refresh, setRefresh] = React.useState(false);
+  const BetsHistory = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [data, setData] = React.useState([]);
+    const [refresh, setRefresh] = React.useState(false);
+    // const [showModal, setShowModal] = React.useState(false);
+    const [selectDate, setSelectDate] = React.useState(
+      "Select Date from Calendar",
+    );
 
-  // const [showModal, setShowModal] = React.useState(false);
-  const [selectDate, setSelectDate] = React.useState(
-    "Select Date from Calendar",
-  );
+    React.useEffect(() => {
+      const fetchData = async () => {
+        setIsLoading(true);
+        const querySnapshot = await getDocs(
+          collection(FIRESTORE_DB, "betiqprohub"),
+        );
+        const dataArr = [];
+        try {
+          if (querySnapshot.size !== 0) {
+            querySnapshot.forEach(doc => {
+              // doc.data() is never undefined for query doc snapshots
+              const data = doc.data();
+              const status = data.status;
+              // Find the key where the N/A value is false and later is true
+              for (const key in status) {
+                if (key !== "N/A") {
+                  if (
+                    status[key] === true &&
+                    data.category === "Free" &&
+                    data.isShow === true
+                  ) {
+                    // console.log(doc.id, " => ", doc.data());
+                    dataArr.push({
+                      id: doc.id,
+                      data: doc.data(),
+                      trueKey: key,
+                    });
+                    break;
+                  }
+                }
+              }
+            });
+            setData(dataArr);
+          } else {
+            // console.log("Nothing to query or Check your internet");
+            Alert.alert(
+              "Nothing to query or" + "\n" + "Check your internet :(",
+            );
+          }
+        } catch (error) {
+          // console.log("Fetch failed");
+          Alert.alert("Fetching data failed :(");
+        }
+        setIsLoading(false);
+      };
+      fetchData();
+      if (refresh === true) {
+        setRefresh(false);
+      }
+      // Triggers to the useEffect()
+    }, [refresh]);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const querySnapshot = await getDocs(
-        collection(FIRESTORE_DB, "betiqprohub"),
-      );
-      const dataArr = [];
-      try {
-        if (querySnapshot.size !== 0) {
-          querySnapshot.forEach(doc => {
+    React.useEffect(() => {
+      const fetchDataByQuery = async () => {
+        setIsLoading(true);
+        const dataArr = [];
+        let q;
+        q = query(
+          collection(FIRESTORE_DB, "betiqprohub"),
+          where("selectDate", "==", selectDate),
+        );
+        try {
+          const querySnapshot2 = await getDocs(q);
+          // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+          querySnapshot2.forEach(doc => {
             // doc.data() is never undefined for query doc snapshots
             const data = doc.data();
             const status = data.status;
-            //Find key=N/A
+            // Find the key where the N/A value is false and later is true
             for (const key in status) {
-              if (
-                key === "N/A" &&
-                data.category === "Free" &&
-                data.isShow === true
-              ) {
-                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
-                // console.log(doc.id, " => ", doc.data());
-                break;
+              if (key !== "N/A") {
+                if (
+                  status[key] === true &&
+                  data.category === "Free" &&
+                  data.isShow === true
+                ) {
+                  // console.log(doc.id, " => ", doc.data());
+                  dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                  break;
+                }
               }
             }
           });
           setData(dataArr);
-        } else {
-          // console.log("Nothing to query or Check your internet");
-          Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
+          setIsLoading(false);
+          Alert.alert("Query successful :)");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          // Handle the error as needed
+          setIsLoading(false);
+          Alert.alert("Error fetching data by query :(");
+          // setFilter(null);
         }
-      } catch (error) {
-        // console.log("Fetch failed");
-        Alert.alert("Fetching data failed :(");
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-    if (refresh === true) {
-      setRefresh(false);
-    }
-    // Triggers to the useEffect()
-  }, [refresh]);
+      };
 
-  React.useEffect(() => {
-    const fetchDataByQuery = async () => {
-      setIsLoading(true);
-      //Empty array
-      const dataArr = [];
-      let q;
-      q = query(
-        collection(FIRESTORE_DB, "betiqprohub"),
-        where("selectDate", "==", selectDate),
+      if (selectDate !== "Select Date from Calendar") {
+        fetchDataByQuery();
+      } else {
+        // console.log("Shite happened");
+        // console.log("Filter: " + filter);
+        setSelectDate("Select Date from Calendar");
+        // setDataUpdated(!dataUpdated);
+      }
+      // Triggers to the useEffect()
+    }, [selectDate]);
+
+    function TableView() {
+      return (
+        <View>
+          {data.map(item => (
+            <View key={item.id} style={styles.tableContainer}>
+              <View style={styles.tableColumn1}>
+                <Ionicons name="time-outline" size={17} color="#FFF" />
+                <Text style={styles.textFormat1}>{item.data.time}</Text>
+              </View>
+              <View style={styles.tableColumn2}>
+                <Text style={styles.textFormat2}>{item.data.league}</Text>
+                <View style={styles.textLayout1}>
+                  <Text style={styles.textFormat1}>{item.data.home}</Text>
+                  <Text style={styles.textFormat1}>{item.data.away}</Text>
+                </View>
+                <View style={styles.textLayout1}>
+                  <Text style={styles.cl2_oddLabel}>
+                    {item.data.predictions}
+                  </Text>
+                  <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+                </View>
+              </View>
+              <View style={styles.tableColumn3}>
+                <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+                <Text style={styles.cl3_odd}>{item.data.score}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
       );
-      try {
-        const querySnapshot2 = await getDocs(q);
-        // console.log("Query Snapshot2 Size:", querySnapshot2.size);
-        querySnapshot2.forEach(doc => {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log("Do i get here?");
-          const data = doc.data();
-          const status = data.status;
-          for (const key in status) {
-            if (
-              key === "N/A" &&
-              data.category !== "Free" &&
-              data.isShow === true
-            ) {
-              dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
-              // console.log(doc.id, " => ", doc.data());
-              break;
-            }
-          }
-        });
-        setData(dataArr);
-        // console.log("My dataArr: " + dataArr);
-        setIsLoading(false);
-        Alert.alert("Query successful :)");
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle the error as needed
-        setIsLoading(false);
-        Alert.alert("Error fetching data by query :(");
-        // setFilter(null);
-      }
-    };
-
-    if (selectDate !== "Select Date from Calendar") {
-      fetchDataByQuery();
-    } else {
-      // console.log("Shite happened");
-      // console.log("Filter: " + filter);
-      setSelectDate("Select Date from Calendar");
-      // setDataUpdated(!dataUpdated);
     }
-    // Triggers to the useEffect()
-  }, [selectDate]);
 
-  function TableView() {
-    return (
-      <View>
-        {data.map(item => (
-          <View key={item.id} style={styles.tableContainer}>
-            <View style={styles.tableColumn1}>
-              <Ionicons name="time-outline" size={20} color="#FFF" />
-              <Text style={styles.textFormat1}>{item.data.time}</Text>
-            </View>
-            <View style={styles.tableColumn2}>
-              <Text style={styles.textFormat2}>{item.data.league}</Text>
-              <View style={styles.textLayout1}>
-                <Text style={styles.textFormat1}>{item.data.home}</Text>
-                <Text style={styles.textFormat1}>{item.data.away}</Text>
-              </View>
-              <View style={styles.textLayout1}>
-                <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
-                <Text style={styles.cl2_odd}>{item.data.odds}</Text>
-              </View>
-            </View>
-            <View style={styles.tableColumn3}>
-              <Text style={styles.cl3_odd}>{item.trueKey}</Text>
-              <Text style={styles.cl3_odd}>{item.data.score}</Text>
-            </View>
-          </View>
-        ))}
-      </View>
-    );
-  }
-
-  const BetsHistory = () => {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -304,6 +311,145 @@ function FreeTips() {
   };
 
   const Bets = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [data, setData] = React.useState([]);
+    const [refresh, setRefresh] = React.useState(false);
+    // const [showModal, setShowModal] = React.useState(false);
+    const [selectDate, setSelectDate] = React.useState(
+      "Select Date from Calendar",
+    );
+
+    React.useEffect(() => {
+      const fetchData = async () => {
+        setIsLoading(true);
+        const querySnapshot = await getDocs(
+          collection(FIRESTORE_DB, "betiqprohub"),
+        );
+        const dataArr = [];
+        try {
+          if (querySnapshot.size !== 0) {
+            querySnapshot.forEach(doc => {
+              // doc.data() is never undefined for query doc snapshots
+              const data = doc.data();
+              const status = data.status;
+              //Find key=N/A
+              for (const key in status) {
+                if (
+                  key === "N/A" &&
+                  data.category === "Free" &&
+                  data.isShow === true
+                ) {
+                  dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                  // console.log(doc.id, " => ", doc.data());
+                  break;
+                }
+              }
+            });
+            setData(dataArr);
+          } else {
+            // console.log("Nothing to query or Check your internet");
+            Alert.alert(
+              "Nothing to query or" + "\n" + "Check your internet :(",
+            );
+          }
+        } catch (error) {
+          // console.log("Fetch failed");
+          Alert.alert("Fetching data failed :(");
+        }
+        setIsLoading(false);
+      };
+      fetchData();
+      if (refresh === true) {
+        setRefresh(false);
+      }
+      // Triggers to the useEffect()
+    }, [refresh]);
+
+    React.useEffect(() => {
+      const fetchDataByQuery = async () => {
+        setIsLoading(true);
+        //Empty array
+        const dataArr = [];
+        let q;
+        q = query(
+          collection(FIRESTORE_DB, "betiqprohub"),
+          where("selectDate", "==", selectDate),
+        );
+        try {
+          const querySnapshot2 = await getDocs(q);
+          // console.log("Query Snapshot2 Size:", querySnapshot2.size);
+          querySnapshot2.forEach(doc => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log("Do i get here?");
+            const data = doc.data();
+            const status = data.status;
+            for (const key in status) {
+              if (
+                key === "N/A" &&
+                data.category !== "Free" &&
+                data.isShow === true
+              ) {
+                dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
+                // console.log(doc.id, " => ", doc.data());
+                break;
+              }
+            }
+          });
+          setData(dataArr);
+          // console.log("My dataArr: " + dataArr);
+          setIsLoading(false);
+          Alert.alert("Query successful :)");
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          // Handle the error as needed
+          setIsLoading(false);
+          Alert.alert("Error fetching data by query :(");
+          // setFilter(null);
+        }
+      };
+
+      if (selectDate !== "Select Date from Calendar") {
+        fetchDataByQuery();
+      } else {
+        // console.log("Shite happened");
+        // console.log("Filter: " + filter);
+        setSelectDate("Select Date from Calendar");
+        // setDataUpdated(!dataUpdated);
+      }
+      // Triggers to the useEffect()
+    }, [selectDate]);
+
+    function TableView() {
+      return (
+        <View>
+          {data.map(item => (
+            <View key={item.id} style={styles.tableContainer}>
+              <View style={styles.tableColumn1}>
+                <Ionicons name="time-outline" size={20} color="#FFF" />
+                <Text style={styles.textFormat1}>{item.data.time}</Text>
+              </View>
+              <View style={styles.tableColumn2}>
+                <Text style={styles.textFormat2}>{item.data.league}</Text>
+                <View style={styles.textLayout1}>
+                  <Text style={styles.textFormat1}>{item.data.home}</Text>
+                  <Text style={styles.textFormat1}>{item.data.away}</Text>
+                </View>
+                <View style={styles.textLayout1}>
+                  <Text style={styles.cl2_oddLabel}>
+                    {item.data.predictions}
+                  </Text>
+                  <Text style={styles.cl2_odd}>{item.data.odds}</Text>
+                </View>
+              </View>
+              <View style={styles.tableColumn3}>
+                <Text style={styles.cl3_odd}>{item.trueKey}</Text>
+                <Text style={styles.cl3_odd}>{item.data.score}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -1750,7 +1896,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -1762,7 +1908,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "#554D5A",
     padding: 5,
-    marginRight: 10,
+    // marginRight: 10,
   },
   content: {
     flex: 1,
