@@ -1927,7 +1927,7 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     flexDirection: "row",
-    height: 80,
+    height: 90,
     padding: 5,
     // marginBottom: 10,
   },
@@ -1964,7 +1964,10 @@ const styles = StyleSheet.create({
   },
   textLayout1: {
     flexDirection: "row",
-    gap: 45,
+    width: "90%",
+    justifyContent: "space-evenly",
+    // gap: 45,
+    // backgroundColor: "pink",
   },
   textLayout2: {
     flexDirection: "column",
@@ -1972,11 +1975,11 @@ const styles = StyleSheet.create({
   cl2_oddLabel: {
     color: "black",
     backgroundColor: "#FFFFFF",
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: "white",
-    borderRadius: 6,
+    borderRadius: 4,
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
     minWidth: 50,
     textAlign: "center",
   },
@@ -1987,7 +1990,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 4,
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
     minWidth: 25,
     textAlign: "center",
   },
@@ -2050,14 +2053,14 @@ const styles = StyleSheet.create({
   refV: {
     flex: 0.5,
     // flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    // alignItems: "center",
+    justifyContent: "center",
     // backgroundColor: "pink",
   },
   textFormat1: {
     fontWeight: "700",
     color: "#B9BBC0",
-    fontSize: 14,
+    fontSize: 13,
   },
   textFormat2: {
     fontWeight: "700",
