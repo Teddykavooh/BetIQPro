@@ -23,6 +23,8 @@ import { DrawerHeader } from "./components/drawerHeader";
 import { store } from "./state/store";
 import { Provider } from "react-redux";
 import { useSelector } from "react-redux";
+import SubscriptionType from "./components/subType";
+import SubscriptionUI from "./components/subscriptionUI";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -75,6 +77,20 @@ function LoginD() {
           headerLeft: null,
         }}
       />
+      <Stack.Screen
+        name="SubType"
+        component={SubscriptionType}
+        options={{
+          title: "Subscribe",
+        }}
+      />
+      <Stack.Screen
+        name="SubUI"
+        component={SubscriptionUI}
+        options={{
+          title: "Subscription Details",
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -99,6 +115,16 @@ function UserStack() {
             height: 0, // Set the header height to 0 to effectively remove the title space
           },
         }}
+      />
+      <Stack.Screen
+        name="SubType"
+        component={SubscriptionType}
+        options={{ title: "Subscribe" }}
+      />
+      <Stack.Screen
+        name="SubUI"
+        component={SubscriptionUI}
+        options={{ title: "Subscription Details" }}
       />
     </Stack.Navigator>
   );
@@ -296,6 +322,19 @@ function DrawerNavigator() {
             ),
           }}
         />
+        {/* <Drawer.Screen
+          name="SubType"
+          component={subscription_type}
+          options={{ title: "Subscribe", drawerItemStyle: { display: "none" } }}
+        />
+        <Drawer.Screen
+          name="SubUI"
+          component={subscription_ui}
+          options={{
+            title: "Subscription Details",
+            drawerItemStyle: { display: "none" },
+          }}
+        /> */}
       </Drawer.Navigator>
     </>
   );

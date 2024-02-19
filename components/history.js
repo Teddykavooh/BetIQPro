@@ -606,7 +606,7 @@ function FreeTips() {
   );
 }
 
-function VipTips() {
+function VipTips({ navigation }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [data_3, setData_3] = React.useState([]);
   const [data_5, setData_5] = React.useState([]);
@@ -1031,7 +1031,13 @@ function VipTips() {
 
   const HeaderVIP = ({ meLabel }) => {
     return (
-      <View style={styles.categoryHeader}>
+      <Pressable
+        style={styles.categoryHeader}
+        onPress={() => {
+          // console.log("Category Press !!");
+          navigation.navigate("SubType");
+        }}
+      >
         <View style={styles.hLogo}>
           <Image
             style={styles.headerIcon}
@@ -1041,7 +1047,10 @@ function VipTips() {
         <View style={styles.hLabel}>
           <Text style={styles.labelFormat}>{meLabel}</Text>
         </View>
-      </View>
+        <View style={styles.hIcon}>
+          <FontAwesome name="caret-right" size={35} color="#000" />
+        </View>
+      </Pressable>
     );
   };
   HeaderVIP.propTypes = {
@@ -1050,7 +1059,13 @@ function VipTips() {
 
   const HeaderVIPDark = ({ meLabel }) => {
     return (
-      <View style={styles.categoryHeader}>
+      <Pressable
+        style={styles.categoryHeader}
+        onPress={() => {
+          // console.log("Category Press !!");
+          navigation.navigate("SubType");
+        }}
+      >
         <View style={styles.hLogo}>
           <Image
             style={styles.headerIcon}
@@ -1060,7 +1075,10 @@ function VipTips() {
         <View style={styles.hLabel}>
           <Text style={styles.labelFormat}>{meLabel}</Text>
         </View>
-      </View>
+        <View style={styles.hIcon}>
+          <FontAwesome name="caret-right" size={35} color="#000" />
+        </View>
+      </Pressable>
     );
   };
   HeaderVIPDark.propTypes = {
@@ -1469,389 +1487,6 @@ function VipSuccess() {
   );
 }
 
-// function FreeHistory() {
-//   const [isLoading, setIsLoading] = React.useState(false);
-//   const [data, setData] = React.useState([]);
-//   const [refresh, setRefresh] = React.useState(false);
-
-//   // const [showModal, setShowModal] = React.useState(false);
-//   const [selectDate, setSelectDate] = React.useState(
-//     "Select Date from Calendar",
-//   );
-
-//   React.useEffect(() => {
-//     const fetchData = async () => {
-//       setIsLoading(true);
-//       const querySnapshot = await getDocs(
-//         collection(FIRESTORE_DB, "betiqprohub"),
-//       );
-//       const dataArr = [];
-//       try {
-//         if (querySnapshot.size !== 0) {
-//           querySnapshot.forEach(doc => {
-//             // doc.data() is never undefined for query doc snapshots
-//             const data = doc.data();
-//             const status = data.status;
-//             // Find the key where the N/A value is false and later is true
-//             for (const key in status) {
-//               if (key !== "N/A") {
-//                 if (
-//                   status[key] === true &&
-//                   data.category === "Free" &&
-//                   data.isShow === true
-//                 ) {
-//                   // console.log(doc.id, " => ", doc.data());
-//                   dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
-//                   break;
-//                 }
-//               }
-//             }
-//           });
-//           setData(dataArr);
-//         } else {
-//           // console.log("Nothing to query or Check your internet");
-//           Alert.alert("Nothing to query or" + "\n" + "Check your internet :(");
-//         }
-//       } catch (error) {
-//         // console.log("Fetch failed");
-//         Alert.alert("Fetching data failed :(");
-//       }
-//       setIsLoading(false);
-//     };
-//     fetchData();
-//     if (refresh === true) {
-//       setRefresh(false);
-//     }
-//     // Triggers to the useEffect()
-//   }, [refresh]);
-
-//   React.useEffect(() => {
-//     const fetchDataByQuery = async () => {
-//       setIsLoading(true);
-//       const dataArr = [];
-//       let q;
-//       q = query(
-//         collection(FIRESTORE_DB, "betiqprohub"),
-//         where("selectDate", "==", selectDate),
-//       );
-//       try {
-//         const querySnapshot2 = await getDocs(q);
-//         // console.log("Query Snapshot2 Size:", querySnapshot2.size);
-//         querySnapshot2.forEach(doc => {
-//           // doc.data() is never undefined for query doc snapshots
-//           const data = doc.data();
-//           const status = data.status;
-//           // Find the key where the N/A value is false and later is true
-//           for (const key in status) {
-//             if (key !== "N/A") {
-//               if (
-//                 status[key] === true &&
-//                 data.category === "Free" &&
-//                 data.isShow === true
-//               ) {
-//                 // console.log(doc.id, " => ", doc.data());
-//                 dataArr.push({ id: doc.id, data: doc.data(), trueKey: key });
-//                 break;
-//               }
-//             }
-//           }
-//         });
-//         setData(dataArr);
-//         setIsLoading(false);
-//         Alert.alert("Query successful :)");
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//         // Handle the error as needed
-//         setIsLoading(false);
-//         Alert.alert("Error fetching data by query :(");
-//         // setFilter(null);
-//       }
-//     };
-
-//     if (selectDate !== "Select Date from Calendar") {
-//       fetchDataByQuery();
-//     } else {
-//       // console.log("Shite happened");
-//       // console.log("Filter: " + filter);
-//       setSelectDate("Select Date from Calendar");
-//       // setDataUpdated(!dataUpdated);
-//     }
-//     // Triggers to the useEffect()
-//   }, [selectDate]);
-
-//   function TableView() {
-//     return (
-//       <View>
-//         {data.map(item => (
-//           <View key={item.id} style={styles.tableContainer}>
-//             <View style={styles.tableColumn1}>
-//               <Ionicons name="time-outline" size={17} color="#FFF" />
-//               <Text style={styles.textFormat1}>{item.data.time}</Text>
-//             </View>
-//             <View style={styles.tableColumn2}>
-//               <Text style={styles.textFormat2}>{item.data.league}</Text>
-//               <View style={styles.textLayout1}>
-//                 <Text style={styles.textFormat1}>{item.data.home}</Text>
-//                 <Text style={styles.textFormat1}>{item.data.away}</Text>
-//               </View>
-//               <View style={styles.textLayout1}>
-//                 <Text style={styles.cl2_oddLabel}>{item.data.predictions}</Text>
-//                 <Text style={styles.cl2_odd}>{item.data.odds}</Text>
-//               </View>
-//             </View>
-//             <View style={styles.tableColumn3}>
-//               <Text style={styles.cl3_odd}>{item.trueKey}</Text>
-//               <Text style={styles.cl3_odd}>{item.data.score}</Text>
-//             </View>
-//           </View>
-//         ))}
-//       </View>
-//     );
-//   }
-
-//   const BetsHistory = () => {
-//     return (
-//       <View style={styles.container}>
-//         <View style={styles.header}>
-//           <View style={styles.dateV}>
-//             <Pressable
-//               onPress={() => {
-//                 // console.log("Text date: " + formattedDate);
-//                 // console.log("Text raw date: " + today);
-//                 setSelectDate(formattedDate);
-//               }}
-//               style={{ alignSelf: "flex-start" }}
-//             >
-//               <Text style={styles.headerTextRounded}>
-//                 Today: {formattedDate}
-//               </Text>
-//             </Pressable>
-//           </View>
-//           {/* <View style={styles.calV}>
-//           <Modal
-//             visible={showModal}
-//             animationType="fade"
-//             transparent={true}
-//             onRequestClose={() => setShowModal(false)}
-//           >
-//             <View
-//               style={{
-//                 flex: 0.5,
-//                 justifyContent: "center",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <View
-//                 style={{
-//                   width: 350,
-//                   height: 200,
-//                 }}
-//               >
-//                 <View>Content of the small view modal</View>
-//                 <Calendar
-//                   onDayPress={day => {
-//                     // console.log("selected day", day);
-//                     setSelectDate(day.dateString);
-//                     setShowModal(false);
-//                   }}
-//                   renderArrow={direction => {
-//                     if (direction == "left")
-//                       return (
-//                         <FontAwesome
-//                           name="chevron-left"
-//                           size={20}
-//                           color="#000"
-//                         />
-//                       );
-//                     if (direction == "right")
-//                       return (
-//                         <FontAwesome
-//                           name="chevron-right"
-//                           size={20}
-//                           color="#000"
-//                         />
-//                       );
-//                   }}
-//                 />
-//                 <Pressable
-//                   onPress={() => setShowModal(false)}
-//                   style={{
-//                     alignSelf: "center",
-//                     alignItems: "center",
-//                     backgroundColor: "white",
-//                     width: 100,
-//                   }}
-//                 >
-//                   <MaterialIcons name="cancel" size={30} color="#000" />
-//                 </Pressable>
-//               </View>
-//             </View>
-//           </Modal>
-//           <CalendarIcon
-//             onPress={() => {
-//               // Prevent reload on calender click
-//               // setDataUpdated(false);
-//               setShowModal(true);
-//               // console.log("Calendar pressed");
-//               // Debugger
-//               // console.log("Me status_update: " + dataUpdated);
-//               // console.log("Me status_fetch: " + fetchDataOnMount);
-//               // console.log("......Updating.......");
-//               // setDataUpdated(true);
-//               // console.log("Me status_update: " + dataUpdated);
-//               // setFetchDataOnMount(true);
-//               // console.log("Me status_fetch: " + fetchDataOnMount);
-//             }}
-//           />
-//         </View> */}
-//           <View style={styles.refV}>
-//             <RefreshIcon onPress={() => setRefresh(true)} />
-//           </View>
-//         </View>
-//         {isLoading ? ( // Check isLoading state
-//           <View style={styles.preloader}>
-//             <ActivityIndicator size="large" color="#9E9E9E" />
-//           </View>
-//         ) : (
-//           <View style={styles.content}>
-//             {/* <Text style={styles.contentText}>Content Section</Text> */}
-//             <ScrollView>
-//               <TableView />
-//             </ScrollView>
-//           </View>
-//         )}
-//       </View>
-//     );
-//   };
-
-//   const Bets = () => {
-//     return (
-//       <View style={styles.container}>
-//         <View style={styles.header}>
-//           <View style={styles.dateV}>
-//             <Pressable
-//               onPress={() => {
-//                 // console.log("Text date: " + formattedDate);
-//                 // console.log("Text raw date: " + today);
-//                 setSelectDate(formattedDate);
-//               }}
-//               style={{ alignSelf: "flex-start" }}
-//             >
-//               <Text style={styles.headerTextRounded}>
-//                 Today: {formattedDate}
-//               </Text>
-//             </Pressable>
-//           </View>
-//           {/* <View style={styles.calV}>
-//             <Modal
-//               visible={showModal}
-//               animationType="fade"
-//               transparent={true}
-//               onRequestClose={() => setShowModal(false)}
-//             >
-//               <View
-//                 style={{
-//                   flex: 0.5,
-//                   justifyContent: "center",
-//                   alignItems: "center",
-//                 }}
-//               >
-//                 <View
-//                   style={{
-//                     width: 350,
-//                     height: 200,
-//                   }}
-//                 >
-//                   <View>Content of the small view modal</View>
-//                   <Calendar
-//                     onDayPress={day => {
-//                       // console.log("selected day", day);
-//                       setSelectDate(day.dateString);
-//                       setShowModal(false);
-//                     }}
-//                     renderArrow={direction => {
-//                       if (direction == "left")
-//                         return (
-//                           <FontAwesome
-//                             name="chevron-left"
-//                             size={20}
-//                             color="#000"
-//                           />
-//                         );
-//                       if (direction == "right")
-//                         return (
-//                           <FontAwesome
-//                             name="chevron-right"
-//                             size={20}
-//                             color="#000"
-//                           />
-//                         );
-//                     }}
-//                   />
-//                   <Pressable
-//                     onPress={() => setShowModal(false)}
-//                     style={{
-//                       alignSelf: "center",
-//                       alignItems: "center",
-//                       backgroundColor: "white",
-//                       width: 100,
-//                     }}
-//                   >
-//                     <MaterialIcons name="cancel" size={30} color="#000" />
-//                   </Pressable>
-//                 </View>
-//               </View>
-//             </Modal>
-//             <CalendarIcon
-//               onPress={() => {
-//                 // Prevent reload on calender click
-//                 // setDataUpdated(false);
-//                 setShowModal(true);
-//                 // console.log("Calendar pressed");
-//                 // Debugger
-//                 // console.log("Me status_update: " + dataUpdated);
-//                 // console.log("Me status_fetch: " + fetchDataOnMount);
-//                 // console.log("......Updating.......");
-//                 // setDataUpdated(true);
-//                 // console.log("Me status_update: " + dataUpdated);
-//                 // setFetchDataOnMount(true);
-//                 // console.log("Me status_fetch: " + fetchDataOnMount);
-//               }}
-//             />
-//           </View> */}
-//           <View style={styles.refV}>
-//             <RefreshIcon onPress={() => setRefresh(true)} />
-//           </View>
-//         </View>
-//         {isLoading ? ( // Check isLoading state
-//           <View style={styles.preloader}>
-//             <ActivityIndicator size="large" color="#9E9E9E" />
-//           </View>
-//         ) : (
-//           <View style={styles.content}>
-//             {/* <Text style={styles.contentText}>Content Section</Text> */}
-//             <ScrollView>
-//               <TableView />
-//             </ScrollView>
-//           </View>
-//         )}
-//       </View>
-//     );
-//   };
-
-//   // Get today's date
-//   const today = new Date();
-//   const formattedDate = today.toISOString().split("T")[0];
-//   const Tab = createBottomTabNavigator();
-
-//   return (
-//     <Tab.Navigator>
-//       <Tab.Screen name="Bets" component={Bets} />
-//       <Tab.Screen name="Bets History" component={BetsHistory} />
-//     </Tab.Navigator>
-//   );
-// }
-
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyTabs() {
@@ -1888,6 +1523,10 @@ export default function MyTabs() {
   );
 }
 
+VipTips.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -1897,7 +1536,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     flexDirection: "row",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
   },
   headerText: {
     fontSize: 20,
@@ -1922,7 +1561,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   tableViewParent: {
-    width: "90%",
+    width: "95%",
     maxWidth: 400,
   },
   tableContainer: {
@@ -2016,15 +1655,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerIcon: {
-    width: 30, // Adjust the width as needed
-    height: 30, // Adjust the height as needed
+    width: 40, // Adjust the width as needed
+    height: 40, // Adjust the height as needed
   },
   categoryHeader: {
     flexDirection: "row",
     // alignItems: "center",
     // justifyContent: "space-evenly",
     backgroundColor: "#DDD",
-    borderRadius: 10,
+    borderRadius: 8,
+    height: 50,
   },
   categoryView: {
     // gap: 20,
@@ -2041,8 +1681,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  hIcon: {
+    flex: 0.2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   dateV: {
-    flex: 0.5,
+    // flex: 0.5,
     // backgroundColor: "pink",
   },
   // calV: {
@@ -2051,7 +1696,7 @@ const styles = StyleSheet.create({
   //   justifyContent: "center",
   // },
   refV: {
-    flex: 0.5,
+    // flex: 0.5,
     // flexDirection: "row",
     // alignItems: "center",
     justifyContent: "center",
@@ -2069,6 +1714,6 @@ const styles = StyleSheet.create({
   },
   labelFormat: {
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 20,
   },
 });
