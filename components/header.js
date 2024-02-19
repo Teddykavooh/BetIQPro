@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     flexDirection: "row", // Arrange the image and text horizontally
     alignItems: "center", // Center them vertically
+    justifyContent: "center",
   },
   logoIcon: {
     width: 30, // Adjust the width as needed
@@ -29,6 +30,12 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontWeight: "700",
     fontSize: 30,
+    height: 35,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
   },
   whiteText: {
     color: "white", // Set the color to white for the "IQ" letters.
