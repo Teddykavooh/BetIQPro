@@ -54,22 +54,22 @@ const handlePress = () => {
 
 function ContactUs() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [refresh, setRefresh] = React.useState(false);
+  // const [refresh, setRefresh] = React.useState(false);
   const [name, setName] = React.useState("Client");
   const [query, setQuery] = React.useState("");
   const [email, setEmail] = React.useState("");
 
   let templateParams = {
-    from_name: { name },
+    from_name: name,
     to_name: "BetIqPro Support",
-    message: { query },
-    reply_mail: { email },
+    message: query,
+    reply_mail: email,
   };
 
   const submitForm = () => {
     setIsLoading(true);
     emailjs
-      .sendForm(
+      .send(
         "service_ui0gigj",
         "template_dyr4cnd",
         templateParams,
@@ -92,9 +92,9 @@ function ContactUs() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Contact Us</Text>
-        <View style={styles.refV}>
+        {/* <View style={styles.refV}>
           <RefreshIcon onPress={() => setRefresh(true)} />
-        </View>
+        </View> */}
       </View>
       {isLoading ? ( // Check isLoading state
         <View style={styles.preloader}>
@@ -155,7 +155,7 @@ function ForgotPass({ navigation }) {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [refresh, setRefresh] = React.useState(false);
-  const [displayName, setDisplayName] = React.useState("");
+  const [displayName, setDisplayName] = React.useState("Guest");
   // const [uid, setUid] = React.useState("");
   // const [userRole, setUserRole] = React.useState(initUserRole);
   const [currentUser, setCurrentUser] = React.useState(null);
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "550",
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -609,6 +609,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
+    borderBottomStartRadius: 7,
+    borderBottomEndRadius: 7,
   },
   // Forgot password
   content_1: {
