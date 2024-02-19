@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
   whiteText: {
     color: "white", // Set the color to white for the "IQ" letters.
