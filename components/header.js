@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     flexDirection: "row", // Arrange the image and text horizontally
     alignItems: "center", // Center them vertically
     justifyContent: "center",
+    // borderWidth: 2,
+    // borderColor: "#000",
   },
   logoIcon: {
     width: 30, // Adjust the width as needed
@@ -30,7 +32,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontWeight: "700",
     fontSize: 30,
-    height: 35,
+    // height: 35,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
