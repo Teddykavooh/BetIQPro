@@ -177,8 +177,10 @@ function ForgotPass({ navigation }) {
       //   setUserRole("user");
       // }
       // exUserRole = userRole;
+    } else {
+      setDisplayName("Guest");
     }
-  }, [refresh]);
+  }, [refresh, initUserRole]);
 
   // Change password
   const changePassword = () => {
@@ -313,30 +315,6 @@ function ForgotPass({ navigation }) {
                 <FontAwesome name="home" size={30} color="black" />
                 <Text style={styles.buttonLabel}>Proceed</Text>
               </Pressable>
-              {currentUser && (
-                <Pressable
-                  style={({ pressed }) => [
-                    {
-                      backgroundColor: pressed ? "#FFF" : "#FEF202",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      padding: 10,
-                      borderRadius: 5,
-                      marginVertical: 10,
-                      borderWidth: 2,
-                      borderColor: pressed ? "#000" : "#AF640D",
-                      width: 130,
-                      justifyContent: "center",
-                    },
-                  ]}
-                  onPress={() => signOut()}
-                >
-                  <Entypo name="log-out" size={30} color="black" />
-                  <Text style={styles.buttonLabel}>Logout</Text>
-                </Pressable>
-              )}
-            </View>
-            <View style={styles.buttonContainer}>
               <Pressable
                 style={({ pressed }) => [
                   {
@@ -361,6 +339,30 @@ function ForgotPass({ navigation }) {
                 />
                 <Text style={styles.buttonLabel}>Reset Password</Text>
               </Pressable>
+            </View>
+            <View style={styles.buttonContainer}>
+              {currentUser && (
+                <Pressable
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? "#FFF" : "#FEF202",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      padding: 10,
+                      borderRadius: 5,
+                      marginVertical: 10,
+                      borderWidth: 2,
+                      borderColor: pressed ? "#000" : "#AF640D",
+                      width: 130,
+                      justifyContent: "center",
+                    },
+                  ]}
+                  onPress={() => signOut()}
+                >
+                  <Entypo name="log-out" size={30} color="black" />
+                  <Text style={styles.buttonLabel}>Logout</Text>
+                </Pressable>
+              )}
             </View>
           </ScrollView>
         </View>
@@ -417,7 +419,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "550",
+    fontWeight: "500",
   },
   headerTextRounded: {
     backgroundColor: "#E7DFEC", // Background color
@@ -609,8 +611,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    borderBottomStartRadius: 7,
-    borderBottomEndRadius: 7,
+    borderRadius: 7,
+    // borderBottomEndRadius: 7,
+    margin: 10,
   },
   // Forgot password
   content_1: {
